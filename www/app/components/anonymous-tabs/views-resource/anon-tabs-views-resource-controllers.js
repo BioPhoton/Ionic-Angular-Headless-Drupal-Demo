@@ -1,7 +1,7 @@
 /* Controllers of apiServicesControllers component */
 //______________________________________________
 
-var anonViewsResourceControllers = angular.module('anon-tabs.views-resource.controllers', ['drupalApiService']);
+var anonViewsResourceControllers = angular.module('anon-tabs.views-resource.controllers', ['common.drupal.api-services']);
 
 
 /* User Resource Controller */

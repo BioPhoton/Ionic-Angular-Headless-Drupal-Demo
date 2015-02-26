@@ -7,7 +7,8 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'drupalIonicAngularJSAPIClient.configuration',
   'common.services.localstorage',
   'common.drupal.drupalApiServices',
-  'drupalApiService',
+  //this is the good one
+  'common.drupal.api-services',
   'LocalForageModule',
   'app.controllers',
   'tour.controllers',
@@ -37,7 +38,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope', '$location', '$ionicPlatform', 
       $state.go('app.authed-tabs.profile');
     });
     //access redirects
-   /* $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
+    $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
       var firstVisit = $localstorage.getItem('firstVisit');
       var hasLoggedIn = $localstorage.getItem('hasLoggedIn');
 
@@ -64,7 +65,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope', '$location', '$ionicPlatform', 
         }
       }
 
-    });*/
+    });
 
     $rootScope.logout = function () {
       AuthenticationService

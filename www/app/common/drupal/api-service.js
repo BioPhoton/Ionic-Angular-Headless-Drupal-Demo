@@ -1,6 +1,6 @@
 /* Drupals api depending services*/
 //______________________________________________
-var drupalApiService = angular.module('drupalApiService', ['ngCookies']);
+var drupalApiService = angular.module('common.drupal.api-services', ['ngCookies']);
 
 /*localStorage helper*/
 drupalApiService.factory('$localstorage', ['$window', function ($window) {
@@ -20,6 +20,7 @@ drupalApiService.factory('$localstorage', ['$window', function ($window) {
       },
       getObject: function (key, emptyValue) {
         emptyValue = (emptyValue) ? emptyValue : '{}';
+        if(!$window.localStorage[key]) { return emptyValue; }
         return JSON.parse($window.localStorage[key] || emptyValue);
       },
       removeObject: function (key) {
@@ -52,7 +53,7 @@ drupalApiService.constant("drupalApiServiceConfig", {
 			  // Resources of your endpoint
 			  // Resources: defualt or alias
 			  // NOTE: if you set custom aliases for your recources in [your.domain.org]/admin/structure/services/list/api/resources change value here
-			  resources	: { 
+			  defaut_resources	: { 
 				  //comment 				: 'comment/', 	
 				  //file					: 'file/', 	
 				  node	 				: 'node',
@@ -61,6 +62,10 @@ drupalApiService.constant("drupalApiServiceConfig", {
 				  //taxonomy_vocabulary 	: 'taxonomy_vocabulary/', 	
 				  user 					: 'user/',	
 				  views 				: 'views/', 					
+			  },
+			  //resources enabled through a custom drupal module
+			  defaut_resources	: { 
+				  customResource 	: 'customResource',
 			  },
 			  // available formats of your service
 			  // drupal settings under [your.domain.org]/admin/structure/services/list/api/resources/[]
@@ -93,15 +98,18 @@ drupalApiService.constant("drupalApiServiceConfig", {
 	// User resource
 	//
 	// Actions:
+	// Token action
+	user_tokenConfirmed  	: 'event:drupal-user-tokenConfirmed',
+	user_tokenFailed  		: 'event:drupal-user-tokenFailed',
 	// Register action
-	use_registerConfirmed  	: 'event:drupal-user-registerConfirmed',
-	use_registerFailed  	: 'event:drupal-user-registerFailed',
+	user_registerConfirmed  : 'event:drupal-user-registerConfirmed',
+	user_registerFailed  	: 'event:drupal-user-registerFailed',
 	// Login action
-	use_loginConfirmed  	: 'event:drupal-user-loginConfirmed',
-	use_loginFailed  		: 'event:drupal-user-loginFailed',
+	user_loginConfirmed  	: 'event:drupal-user-loginConfirmed',
+	user_loginFailed  		: 'event:drupal-user-loginFailed',
 	// Logout action
-	use_logoutConfirmed  	: 'event:drupal-user-logoutConfirmed',
-	use_logoutFailed  		: 'event:drupal-user-logoutFailed',
+	user_logoutConfirmed  	: 'event:drupal-user-logoutConfirmed',
+	user_logoutFailed  		: 'event:drupal-user-logoutFailed',
 	
 	// Views resource
 	//
@@ -177,25 +185,49 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
 	// User resource
 	//
     
+    // Token action
+
+	// Publish user token confirmed event
+    var publishUserTokenConfirmed = function (respons) {
+        $rootScope.$broadcast(drupalApiServiceConfig.user_registerConfirmed, {token: token});
+    };
+    // Subscribe to user token confirmed event
+    var onUserTokenConfirmed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.user_registerConfirmed, function(event, args) {
+	    handler(args.token);
+	   });	
+    };
+    
+    // Publish user token failed event
+    var publishUserTokenFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.user_registerFailed, {error: error});
+    };
+    // Subscribe to user token failed event
+    var onUserTokenFailed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.user_registerFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
     // Register action
 
 	// Publish user register confirmed event
-    var publishUseRegisterConfirmed = function (respons) {
+    var publishUserRegisterConfirmed = function (respons) {
         $rootScope.$broadcast(drupalApiServiceConfig.user_registerConfirmed, {respons: respons});
     };
     // Subscribe to user register confirmed event
-    var onUseRegisterConfirmed = function($scope, handler) {
+    var onUserRegisterConfirmed = function($scope, handler) {
     	$scope.$on(drupalApiServiceConfig.user_registerConfirmed, function(event, args) {
-	    handler(args.user);
+	    handler(args.respons);
 	   });	
     };
     
     // Publish user register failed event
-    var publishUseRegisterFailed = function (error) {
+    var publishUserRegisterFailed = function (error) {
         $rootScope.$broadcast(drupalApiServiceConfig.user_registerFailed, {error: error});
     };
     // Subscribe to user register failed event
-    var onUseRegisterFailed = function($scope, handler) {
+    var onUserRegisterFailed = function($scope, handler) {
     	$scope.$on(drupalApiServiceConfig.user_registerFailed, function(event, args) {
 	    handler(args.error);
 	   });	
@@ -204,22 +236,22 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     //Login action
     
 	// Publish user login confirmed event
-    var publishUseLoginConfirmed = function (user) {
+    var publishUserLoginConfirmed = function (user) {
         $rootScope.$broadcast(drupalApiServiceConfig.user_loginConfirmed, {user: user});
     };
     // Subscribe to user login confirmed event
-    var onUseLoginConfirmed = function($scope, handler) {
+    var onUserLoginConfirmed = function($scope, handler) {
     	$scope.$on(drupalApiServiceConfig.user_loginConfirmed, function(event, args) {
 	    handler(args.user);
 	   });	
     };
     
     // Publish user login failed event
-    var publishUseLoginFailed = function (respons) {
+    var publishUserLoginFailed = function (respons) {
         $rootScope.$broadcast(drupalApiServiceConfig.user_loginFailed, {error: error});
     };
     // Subscribe to user login failed event
-    var onUseLoginFailed = function($scope, handler) {
+    var onUserLoginFailed = function($scope, handler) {
     	$scope.$on(drupalApiServiceConfig.user_loginFailed, function(event, args) {
 	    handler(args.error);
 	   });	
@@ -228,22 +260,22 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     //Logout action
     
 	// Publish user login confirmed event
-    var publishUseLogoutConfirmed = function (user) {
+    var publishUserLogoutConfirmed = function (user) {
         $rootScope.$broadcast(drupalApiServiceConfig.user_logoutConfirmed, {user: user});
     };
     // Subscribe to user login confirmed event
-    var onUseLogoutConfirmed = function($scope, handler) {
+    var onUserLogoutConfirmed = function($scope, handler) {
     	$scope.$on(drupalApiServiceConfig.user_logoutConfirmed, function(event, args) {
 	    handler(args.user);
 	   });	
     };
     
     // Publish user login failed event
-    var publishUseLogoutFailed = function (respons) {
+    var publishUserLogoutFailed = function (respons) {
         $rootScope.$broadcast(drupalApiServiceConfig.user_logoutFailed, {error: error});
     };
     // Subscribe to user login failed event
-    var onUseLogoutFailed = function($scope, handler) {
+    var onUserLogoutFailed = function($scope, handler) {
     	$scope.$on(drupalApiServiceConfig.user_logoutFailed, function(event, args) {
 	    handler(args.error);
 	   });	
@@ -294,21 +326,26 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
 	   onSystemConnectFailed 			: onSystemConnectFailed,
 	  
 	   // User events
+	   // Token events
+	   publishUserTokenConfirmed 		: publishUserTokenConfirmed,
+	   onUserTokenConfirmed				: onUserTokenConfirmed,
+	   publishUserTokenFailed			: publishUserTokenFailed,
+	   onUserTokenFailed				: onUserTokenFailed,
 	   // Register events
-	   publishUseRegisterConfirmed 		: publishUseRegisterConfirmed,
-	   onUseRegisterConfirmed			: onUseRegisterConfirmed,
-	   publishUseRegisterFailed			: publishUseRegisterFailed,
-	   onUseRegisterFailed				: onUseRegisterFailed,
+	   publishUserRegisterConfirmed 	: publishUserRegisterConfirmed,
+	   onUserRegisterConfirmed			: onUserRegisterConfirmed,
+	   publishUserRegisterFailed		: publishUserRegisterFailed,
+	   onUserRegisterFailed				: onUserRegisterFailed,
 	   // Login events
-	   publishUseLoginConfirmed			: publishUseLoginConfirmed,
-	   onUseLoginConfirmed				: onUseLoginConfirmed,
-	   publishUseLoginFailed			: publishUseLoginFailed,
-	   onUseLoginFailed					: onUseLoginFailed,
+	   publishUserLoginConfirmed		: publishUserLoginConfirmed,
+	   onUserLoginConfirmed				: onUserLoginConfirmed,
+	   publishUserLoginFailed			: publishUserLoginFailed,
+	   onUserLoginFailed				: onUserLoginFailed,
 	   // Logout events
-	   publishUseLogoutConfirmed 		: publishUseLogoutConfirmed,
-	   onUseLogoutConfirmed				: onUseLogoutConfirmed,
-	   publishUseLogoutFailed			: publishUseLogoutFailed,
-	   onUseLogoutFailed				: onUseLogoutFailed,
+	   publishUserLogoutConfirmed 		: publishUserLogoutConfirmed,
+	   onUserLogoutConfirmed				: onUserLogoutConfirmed,
+	   publishUserLogoutFailed			: publishUserLogoutFailed,
+	   onUserLogoutFailed				: onUserLogoutFailed,
 	   
 	   //Views events
 	   //Retrieve event
@@ -339,6 +376,7 @@ drupalAPI.factory('DrupalAuthenticationService', function($rootScope, $http, $q,
 	var token = $localstorage.getItem('token') || '';
 	
 	if (token) {
+		console.log('set token from localStorage');
 		$http.defaults.headers.common.Authorization = token;
 		$http.defaults.headers.post['X-CSRF-TOKEN'] = token;
 	}
@@ -371,7 +409,9 @@ drupalAPI.factory('DrupalAuthenticationService', function($rootScope, $http, $q,
 		$rootScope.isAuthed = false;
 	};
 	
-	//
+	
+	
+	/**/
 	
 	
 	return {
@@ -381,16 +421,37 @@ drupalAPI.factory('DrupalAuthenticationService', function($rootScope, $http, $q,
 })
 .run(
 function($rootScope, AuthenticationService, drupalApiNotificationChannel, $http) {
-	console.log('AuthenticationService'); 	
+	console.log('AuthenticationService run'); 	
 	
-	var onUseLoginConfirmedHandler = function(data) {
+	//on token request confirmed
+	var onUserTokenConfirmedHandler = function(data) { 
+      $localstorage.setItem('token', data.token);
+	  $http.defaults.headers.common.Authorization = data.token;
+	  $http.defaults.headers.post['X-CSRF-TOKEN'] = data.token;
+	};
+	drupalApiNotificationChannel.onUserTokenConfirmed(scope, onUserTokenConfirmedHandler);
+	
+	//on register request confirmed
+	var onUserRegisterConfirmedHandler = function(data) {
 		console.log(data); 
+	};
+	
+	drupalApiNotificationChannel.onUserRegisterConfirmed($rootScope, onUserRegisterConfirmedHandler);
+	
+	//on login request confirmed
+	var onUserLoginConfirmedHandler = function(data) {
 		$http.defaults.headers.common.Authorization = data.token;
 		$http.defaults.headers.post['X-CSRF-TOKEN'] = data.token;
 		$http.defaults.withCredentials = true;
 		AuthenticationService.storeAuthData(data);
 	};
-	drupalApiNotificationChannel.onUseLoginConfirmed($rootScope, onUseLoginConfirmedHandler);
+	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, onUserLoginConfirmedHandler);
+	
+	//on logout request confirmed
+	var onUserLogoutConfirmedHandler = function(data) {
+		AuthenticationService.deleteAuthData();
+	};
+	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);
 	
 });
 
@@ -846,11 +907,11 @@ drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $l
              $http.defaults.headers.post['X-CSRF-TOKEN'] = data.token;
              $http.defaults.withCredentials = true;
                          
-			 drupalApiNotificationChannel.publishUseLoginConfirmed(data);
+			 drupalApiNotificationChannel.publishUserLoginConfirmed(data);
             defer.resolve(data);
          })
          .error(function (data, status, headers, config) {
-        	 drupalApiNotificationChannel.publishUseLoginFailed(data);
+        	 drupalApiNotificationChannel.publishUserLoginFailed(data);
         	 defer.reject(data);
          });
 		
@@ -885,11 +946,11 @@ drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $l
 		 
 		 $http(requestConfig)
          .success(function (data, status, headers, config) {
-           drupalApiNotificationChannel.publishUseLogoutConfirmed(data);
+           drupalApiNotificationChannel.publishUserLogoutConfirmed(data);
            defer.resolve(data);
          })
          .error(function (data, status, headers, config) {
-           drupalApiNotificationChannel.publishUseLogoutFailed(data);
+           drupalApiNotificationChannel.publishUserLogoutFailed(data);
            defer.reject(data);
          });
          
@@ -918,13 +979,12 @@ drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	       method: 'GET',
 	       withCredentials: true
 	     })
-         .success(function (data) {
-           //$localstorage.setItem('token', data);
-           //$http.defaults.headers.common.Authorization = data;
-           //$http.defaults.headers.post['X-CSRF-TOKEN'] = data;
+         .success(function (token) {
+           drupalApiNotificationChannel.publishUserTokenConfirmed(token);
            defer.resolve(data);
          })
          .error(function (data) {
+           drupalApiNotificationChannel.publishUserTokenFailed(data);
            defer.reject(data);
          });
 
@@ -984,11 +1044,11 @@ drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $l
 		
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
-			drupalApiNotificationChannel.publishUseRegisterConfirmed(data);
+			drupalApiNotificationChannel.publishUserRegisterConfirmed(data);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
-			drupalApiNotificationChannel.publishUseRegisterFailed(data);
+			drupalApiNotificationChannel.publishUserRegisterFailed(data);
 			defer.reject(data);
 		});
 		

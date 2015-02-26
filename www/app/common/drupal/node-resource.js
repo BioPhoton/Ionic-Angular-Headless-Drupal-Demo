@@ -9,7 +9,7 @@ var drupalResources = angular.module('common.drupal.node-resources', []);
  * your_api_endpoint/node/*|<mirror>|POST|Content-Type
  * 
 **/
-drupalResources.factory('NodeResource', function($http, $q, DrupalAPISettings) {
+drupalResources.factory('NodeResource', function($http, $q, common.drupal.api-services) {
 	
 	/*
 	 * getPreparedIndexParams
