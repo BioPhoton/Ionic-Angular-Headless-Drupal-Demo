@@ -1,0 +1,113 @@
+<ion-view> <ion-nav-title> Drupal Api Tests </ion-nav-title> <ion-content class="has-header">
+<h1>UserResource</h1>
+
+<h2>Register User</h2>
+<b>registerData:</b>
+<pre>
+	{{registerData | json}}
+</pre>
+<form name="registerForm" novalidate="" ng-submit="register(registerForm)">
+	<div class="form-errors" ng-show="registerForm.$submitted">
+		<div ng-bind-html="error" class="form-error"
+			ng-repeat="error in registerServerErrors"></div>
+	</div>
+	<div class="list">
+		<label class="item item-input"
+			ng-class="{ 'has-error' : registerForm.username.$invalid && registerForm.username.$dirty}">
+			<input type="text" ng-init="registerData.username = '00000'"
+			ng-model="registerData.username" placeholder="Username"
+			name="username" autocorrect="off" autocapitalize="off"
+			ng-minlength="5" ng-maxlength="15" required spellcheck="false">
+		</label>
+		<div class="form-errors"
+			ng-show="registerForm.username.$invalid && registerForm.username.$dirty"
+			ng-messages="registerForm.username.$error"
+			ng-messages-include="templates/form-errors.html">
+			<div class="form-error" ng-message="maxlength">This field must
+				be less than 15 characters</div>
+		</div>
+		<label class="item item-input"
+			ng-class="{ 'has-error' : registerForm.email.$invalid && registerForm.email.$dirty}">
+			<input type="email" ng-init="registerData.email = '00@000.com'"
+			placeholder="Email Address" name="email"
+			ng-model="registerData.email" required>
+		</label>
+		<div class="form-errors"
+			ng-show="registerForm.email.$invalid && registerForm.email.$dirty"
+			ng-messages="registerForm.email.$error"
+			ng-messages-include="templates/form-errors.html">
+			<div class="form-error" ng-message="email">This field is not a
+				propper email address.</div>
+		</div>
+		<label class="item item-input"
+			ng-class="{ 'has-error' : registerForm.password.$invalid && registerForm.password.$dirty}">
+			<input type="password" ng-init="registerData.password = '000000'"
+			placeholder="Password" name="password"
+			ng-model="registerData.password" ng-minlength="5" ng-maxlength="15"
+			required>
+		</label>
+		<div class="form-errors"
+			ng-show="registerForm.password.$invalid && registerForm.password.$dirty"
+			ng-messages="registerForm.password.$error"
+			ng-messages-include="templates/form-errors.html">
+			<div class="form-error" ng-message="maxlength">This field must
+				be less than 15 characters</div>
+		</div>
+		<div class="button-bar">
+			<button class="padding-top button button-block button-positive"
+				ng-click="createAccount()">Create Account</button>
+		</div>
+		<div class="button-bar">
+			<button class="button button-block button-positive"
+				ng-click="loginFacebook()">Register with Facebook</button>
+		</div>
+		<a class="button button-block button-positive" menu-close href="#/login">Already got an account? Login</a>
+		</div>
+	</form>
+		<!-- general meaasges -->
+		<script id="templates/form-errors.html" type="text/ng-template">
+		<div class="form-error" ng-message="required">This field is required.</div>
+		<div class="form-error" ng-message="minlength">This field must be at least 5 characters.</div>
+		</script> 
+	
+	<b>loginData:<b /><b /> <pre>
+			{{loginData | json}}
+		</pre>
+	<form name="loginForm" class="css-form" novalidate>
+		<div class="list list-inset">
+			<label class="item item-input item-floating-label"> <span
+				class="input-label">Username</span> <!--@TODO remove ng-Init when publish  -->
+				<input type="text" ng-Init="loginData.username = 'admin'"
+				placeholder="What is you username" name="name"
+				ng-model="loginData.username">
+			</label> <label class="item item-input item-floating-label"> <span
+				class="input-label">Password</span> <!--@TODO remove ng-Init when publish  -->
+				<input type="password" ng-Init="loginData.password = 'password'"
+				placeholder="What is your password?" name="password"
+				ng-model="loginData.password">
+
+			</label>
+			<div class="error-container">
+				<small class="error">Error</small>
+			</div>
+
+			<button type="submit" class="button  button-block button-positive"
+				ng-click="callUserResourceLogin(loginData)">call
+				UserResourceLogin.login</button>
+			<button class="button">Forgot Pasword?</button>
+
+			<button type="submit" class="button button-balanced"
+				ui-sref="app.profile.register">Register</button>
+
+		</div>
+	</form> 
+
+	<b>lastTimeRequestToUserResourceLogin:</b>{{lastTimeRequestToUserResourceLogin | date:'medium'}}<br/> 
+	<b>lastResultRequestToUserResourceLogin:</b>
+	<pre>
+	{{ lastResultRequestToUserResourceLogin | json}}
+	</pre>
+
+	<hr/>
+	
+	</ion-content> </ion-view>

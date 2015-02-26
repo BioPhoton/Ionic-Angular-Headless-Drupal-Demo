@@ -1,0 +1,20 @@
+<ion-view> 
+<ion-nav-title> Drupal Api Tests </ion-nav-title> 
+
+<ion-content class="has-header">
+
+<h1>SystemResource</h1>
+
+<b>lastTimeRequestToSystemConnect:</b> {{lastTimeRequestToSystemConnect
+| date:'medium'}}<br />
+<b>lastResultRequestToSystemConnect:</b> <pre>
+			{{ lastResultRequestToSystemConnect | json}}
+		</pre>
+
+<button class="button button-small"
+	ng-click="callSystemRecourceConncet()">call
+	SystemRecource.conncet</button>
+
+<hr />
+
+</ion-content> </ion-view>

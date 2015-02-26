@@ -1,0 +1,13 @@
+<div class="modal">
+  <!-- Modal header bar -->
+  <ion-header-bar class="bar-header bar-positive">
+    <h1 class="title">{{termsNode.title}}</h1>
+    <div class="button button-clear" ng-click="closeTermsModal()"><span class="icon ion-close"></span></div>
+  </ion-header-bar>
+
+  <!-- Modal content area -->
+  <ion-content has-header="true" padding="true">
+    <div ng-bind-html="termsNode.body.und[0].value"></div>
+  </ion-content>
+
+</div>

@@ -1,0 +1,18 @@
+<ion-view title="Profile">
+
+  <ion-content ng-class="{'has-loading': isOffline}">
+    <div class="bar bar-network bar-assertive" ng-if="isOffline">
+      no network connection
+    </div>
+
+    <div id="content" ng-show="user">
+      <div id="profile-info">
+        <img id="profile-image"
+             ng-src="https://www---ionic-e7ch2k53a4qd6.eu.platform.sh/sites/default/files/styles/thumbnail/public/pictures/{{user.picture.filename}}">
+        <h3 id="profile-name">{{user.name}}</h3>
+        <span id="profile-description">{{user.name}}</span>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>

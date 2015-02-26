@@ -1,0 +1,43 @@
+<ion-view> <ion-nav-title> Drupal Api Tests </ion-nav-title> <ion-content class="has-header">
+
+<h1>NodeResource</h1>
+<h2>Retrieve</h2>
+<div ng-repeat="request in nodeRetrieveRequests">
+	<b>Time of Request:</b> {{request.requestTime| date:'medium'}}<br />
+	<b>Data:</b> 
+	<pre>
+	{{ request.data | json}}
+	</pre>
+</div>
+
+<label class="item item-input">
+<input type="text" ng-init="nodeRetrieve.nid=1" ng-model="nodeRetrieve.nid" placeholder="nid" >
+</label>
+<button class="button button-small" ng-click="callNodeRecourceRetrieve(nodeRetrieve.nid)">callNodeRecourceRetrieve</button>
+
+<hr />
+<h2>Index</h2>
+<div ng-repeat="request in nodeIndexRequests">
+	<b>Time of Request:</b> {{request.requestTime| date:'medium'}}<br />
+	<b>Data:</b> 
+	<pre>
+	{{ request.data | json}}
+	</pre>
+</div>
+
+<label class="item item-input">
+<input type="text" ng-init="nodeIndex.page=1" ng-model="nodeIndex.page" placeholder="page" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="nodeIndex.pagesize=5" ng-model="nodeIndex.pagesize" placeholder="pagesize" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="nodeIndex.fields='fields=[type]=page'" ng-model="nodeIndex.fields" placeholder="fields" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="nodeIndex.parameters='parameters[type]=article'" ng-model="nodeIndex.parameters" placeholder="fields" >
+</label>
+<button class="button button-small" ng-click="callNodeRecourceIndex(nodeIndex)">callNodeRecourceRetrieve</button>
+
+<hr />
+</ion-content> </ion-view>

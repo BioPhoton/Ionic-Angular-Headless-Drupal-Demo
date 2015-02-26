@@ -1,0 +1,29 @@
+<ion-view title="Login">
+  <ion-content>
+    <form name="loginForm" novalidate="" ng-submit="login(loginForm)">
+
+      <ion-list>
+        <label class="item item-input" ng-class="{ 'has-error' : loginForm.username.$invalid && loginForm.$dirty}">
+          <input type="text" placeholder="Username" name="username" ng-model="loginData.username" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </label>
+        <label class="item item-input" ng-class="{ 'has-error' : loginForm.password.$invalid && loginForm.$dirty, 'valid' : loginForm.password.$valid && loginForm.$dirty}">
+          <input type="password" placeholder="Password" name="password" ng-model="loginData.password">
+        </label>
+
+        <div class="form-errors" ng-show="loginForm.$submitted">
+          <div class="form-error" ng-bind-html="error" ng-repeat="error in loginServerErrors" ></div>
+        </div>
+
+        <div class="button-bar" >
+          <button class="button button-block button-positive" >Log in</button>
+        </div>
+
+        <div class="button-bar" >
+          <button class="button button-block button-positive" ng-click="loginFacebook()">Log in with Facebook</button>
+        </div>
+
+        <a class="button button-block button-positive" menu-close ui-sref="app.register">Not got an account? Create one now</a>
+      </ion-list>
+    </form>
+  </ion-content>
+</ion-view>
