@@ -5,7 +5,7 @@ var anonSystemResourceControllers = angular.module('anon-tabs.system-resource.co
 
 
 /* System Resource Controller */
-anonSystemResourceControllers.controller('anonsystemResourceCtrl', 
+anonSystemResourceControllers.controller('anonTabSystemResourceCtrl', 
 		   ['$scope', 'SystemResource', 'drupalApiNotificationChannel', 
     function($scope,   SystemResource,   drupalApiNotificationChannel) {
 			   

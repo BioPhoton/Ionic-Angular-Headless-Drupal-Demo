@@ -1,8 +1,8 @@
 angular.module('drupalIonicAngularJSAPIClient.configuration', [])
         .constant('DrupalAPISettings', {
         	
-          drupal_instance: 'https://www---ionic-e7ch2k53a4qd6.eu.platform.sh/',
-          api: 'bettracks_app/v3/',
+          drupal_instance: 'http://dev-drupal-headless-ionic.pantheon.io/',
+          api: 'api/v1/',
           resources: {
             node: 'node/',
             node_retrieve : 'node/',
@@ -31,7 +31,7 @@ angular.module('drupalIonicAngularJSAPIClient.configuration', [])
                'admin': ['admin']
            },      
           
-          terms_and_conditions_nid: 68,
+          terms_and_conditions_nid: 1,
         });
 
         

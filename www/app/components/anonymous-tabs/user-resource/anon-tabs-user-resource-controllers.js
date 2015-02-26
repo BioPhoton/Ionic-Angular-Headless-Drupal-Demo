@@ -5,7 +5,7 @@ var userResourceControllers = angular.module('anon-tabs.user-resource.controller
 
 
 /* User Resource Controller */
-userResourceControllers.controller('userResourceController', 
+userResourceControllers.controller('anonTabUserResourceCtrl', 
 		   ['$scope', 'UserResource', 'drupalApiNotificationChannel', 
     function($scope,   UserResource,   drupalApiNotificationChannel) {
 			   

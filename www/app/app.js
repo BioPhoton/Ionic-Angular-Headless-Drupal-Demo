@@ -142,8 +142,8 @@ drupalIonicAngularJSAPIClient.config(function ($stateProvider, $urlRouterProvide
            
       //Abstract states for anonymous tabs
 	  //______________________________________________
-	  .state('app.anonymous-tabs', {
-	    url: '/anonymous-tabs',
+	  .state('app.anon-tabs', {
+	    url: '/anon-tabs',
 	    abstract: true,
 	    views: {
 		      'menuContent': {
@@ -154,7 +154,7 @@ drupalIonicAngularJSAPIClient.config(function ($stateProvider, $urlRouterProvide
 	 
 	  //Node Resource
 	  //______________________________________________
-	   .state('app.anonymous-tabs.node-resource', {
+	   .state('app.anon-tabs.node-resource', {
 	    url: '/node-recource',
 	    views: {
 		      'node-resource': {
@@ -163,30 +163,41 @@ drupalIonicAngularJSAPIClient.config(function ($stateProvider, $urlRouterProvide
 		      }
 		    }
 	   })
-	   /*
+	   /**/
 	  //System Resource
 	  //______________________________________________
-	   .state('app.anonymous-tabs.system-resource', {
+	   .state('app.anon-tabs.system-resource', {
 	    url: '/system-recource',
 	    views: {
 		      'system-resource': {
 		    	templateUrl: 'app/components/anonymous-tabs/system-resource/anon-tabs-system-resource.html',
-		  		controller:  'systemResourceCtrl' 
+		  		controller:  'anonTabSystemResourceCtrl' 
 		      }
 		    }
 	   })
 	   
 	   //User Resource
 	   //______________________________________________
-	   .state('app.anonymous-tabs.user-resource', {
+	   .state('app.anon-tabs.user-resource', {
 	    url: '/user-recource',
 	    views: {
 		      'user-resource': {
 		    	templateUrl: 'app/components/anonymous-tabs/user-resource/anon-tabs-user-resource.html',
-		  		controller:  'userResourceCtrl' 
+		  		controller:  'anonTabUserResourceCtrl' 
 		      }
 		    }
-	   })*/
+	   })
+	    //Views Resource
+	   //______________________________________________
+	   .state('app.anon-tabs.views-resource', {
+	    url: '/views-recource',
+	    views: {
+		      'views-resource': {
+		    	templateUrl: 'app/components/anonymous-tabs/views-resource/anon-tabs-views-resource.html',
+		  		controller:  'anonTabViewsResourceCtrl' 
+		      }
+		    }
+	   })
 
           //states for authenticted user
           //=================================================================
