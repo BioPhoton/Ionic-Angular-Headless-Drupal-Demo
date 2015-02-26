@@ -36,7 +36,7 @@ drupalApiService.factory('$localstorage', ['$window', function ($window) {
 
 /* Constants for drupalApiService */
 drupalApiService.constant("drupalApiServiceConfig", {
-   //
+   //					   
    // Drupal depending settings
    //
 	
@@ -64,7 +64,7 @@ drupalApiService.constant("drupalApiServiceConfig", {
 				  views 				: 'views/', 					
 			  },
 			  //resources enabled through a custom drupal module
-			  defaut_resources	: { 
+			  custom_resources	: { 
 				  customResource 	: 'customResource',
 			  },
 			  // available formats of your service
@@ -373,16 +373,18 @@ drupalAPI.factory('DrupalAuthenticationService', function($rootScope, $http, $q,
 	//http://stackoverflow.com/questions/16477123/how-do-i-use-on-in-a-service-in-angular
 	var scope = $rootScope.$new(); // or $new(true) if you want an isolate scope
 	
-	var token = $localstorage.getItem('token') || '';
 	
-	if (token) {
-		console.log('set token from localStorage');
-		$http.defaults.headers.common.Authorization = token;
-		$http.defaults.headers.post['X-CSRF-TOKEN'] = token;
+	var initToken = function () {
+		var token = $localstorage.getItem('token') || '';
+		
+		if (token) {
+			$http.defaults.headers.common.Authorization = token;
+			$http.defaults.headers.post['X-CSRF-TOKEN'] = token;
+		}
 	}
 	
 	var storeAuthData = function (data, password) {
-		console.log('storeAuthData');
+	
 		$localstorage.setItem('uid', data.user.uid);
 		$localstorage.setObject('user', data.user);
 		$localstorage.setItem('username', data.user.name);
@@ -390,13 +392,17 @@ drupalAPI.factory('DrupalAuthenticationService', function($rootScope, $http, $q,
 		$localstorage.setItem('token', data.token);
 		$localstorage.setItem('sessid', data.sessid);
 		$localstorage.setItem('session_name', data.session_name);
+		//store session cookies
 		$cookieStore.put(data.session_name, data.sessid);
+		//@TODO replace this with custom directive for hide show menu itme over acl
 		$rootScope.isAuthed = true;
 	};
+	
 	var deleteAuthData = function (data, password) {
 		//delete token
+		//@TODO check if this is needed
 		delete $http.defaults.headers.common.Authorization;
-		//delete cookies data
+		//delete session cookies
 		$cookieStore.remove($localstorage.getItem('session_name'));
 		//delete local storage data
 		$localstorage.removeItem('uid');
@@ -406,21 +412,19 @@ drupalAPI.factory('DrupalAuthenticationService', function($rootScope, $http, $q,
 		$localstorage.removeItem('token');
 		$localstorage.removeItem('sessid');
 		$localstorage.removeItem('session_name');
+		//@TODO replace this with custom directive for hide show menu itme over acl
 		$rootScope.isAuthed = false;
 	};
 	
-	
-	
-	/**/
-	
-	
+	//public methods
 	return {
-		storeAuthData : storeAuthData,
-		deleteAuthData : deleteAuthData,
+		initToken 		: initToken,
+		storeAuthData 	: storeAuthData,
+		deleteAuthData 	: deleteAuthData,
 	}
 })
 .run(
-function($rootScope, AuthenticationService, drupalApiNotificationChannel, $http) {
+function($rootScope, SystemResource, DrupalAuthenticationService, drupalApiNotificationChannel, $http) {
 	console.log('AuthenticationService run'); 	
 	
 	//on token request confirmed
@@ -429,7 +433,7 @@ function($rootScope, AuthenticationService, drupalApiNotificationChannel, $http)
 	  $http.defaults.headers.common.Authorization = data.token;
 	  $http.defaults.headers.post['X-CSRF-TOKEN'] = data.token;
 	};
-	drupalApiNotificationChannel.onUserTokenConfirmed(scope, onUserTokenConfirmedHandler);
+	drupalApiNotificationChannel.onUserTokenConfirmed($rootScope, onUserTokenConfirmedHandler);
 	
 	//on register request confirmed
 	var onUserRegisterConfirmedHandler = function(data) {
@@ -443,16 +447,29 @@ function($rootScope, AuthenticationService, drupalApiNotificationChannel, $http)
 		$http.defaults.headers.common.Authorization = data.token;
 		$http.defaults.headers.post['X-CSRF-TOKEN'] = data.token;
 		$http.defaults.withCredentials = true;
-		AuthenticationService.storeAuthData(data);
+		DrupalAuthenticationService.storeAuthData(data);
 	};
 	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, onUserLoginConfirmedHandler);
 	
 	//on logout request confirmed
 	var onUserLogoutConfirmedHandler = function(data) {
-		AuthenticationService.deleteAuthData();
+		DrupalAuthenticationService.deleteAuthData();
 	};
 	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);
 	
+	DrupalAuthenticationService.initToken();
+	
+	SystemResource.connect().then(
+            function (data) {
+              var user_id = data.user.uid;
+              if (user_id == 0) {
+                $rootScope.isAuthed = false;
+              }
+              else {
+              	 $rootScope.isAuthed = true;
+              }
+
+    });
 });
 
 /**
@@ -572,7 +589,7 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	 */
 	var retrieve = function(nid){
 
-		var retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.resources.node + (nid?'/'+nid:''),
+		var retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + (nid?'/'+nid:''),
 			defer = $q.defer(),
 			requestConfig = {
 				method :'GET',
@@ -618,7 +635,7 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	var index = function(page, fields, parameters, pagesize) {
 		
 		var IndexParams = getPreparedIndexParams(page, fields, parameters, pagesize),
-			retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.resources.node + (IndexParams?'?'+IndexParams:''),
+			retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + (IndexParams?'?'+IndexParams:''),
 			defer = $q.defer(),
 			requestConfig = {
 				method :'GET',
@@ -669,7 +686,7 @@ drupalAPI.factory('SystemResource', function($http, $q, drupalApiServiceConfig, 
 	 * useage: SystemResource.connect().success(yourSuccessCallback).error(yourErrorCallback);
 	*/
 	var connect = function(token){
-		var connectPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.resources.system + 'connect';
+		var connectPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + 'connect';
 		var defer = $q.defer();
 		
 		$http({
@@ -884,7 +901,7 @@ drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	 */	
 	 var login = function( username, password ) {
 					
-		var pathToLogin = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.resources.user + 'login';
+		var pathToLogin = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + 'login';
 			requestConfig = {
 					method :'POST',
 					url : pathToLogin,
@@ -931,7 +948,7 @@ drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	 * useage: UserResource.logout(username, password).then(yourSuccessCallback,yourErrorCallback);
 	 */
 	var logout = function() {
-		 var pathToLogout = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.resources.user + 'logout';
+		 var pathToLogout = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + 'logout';
 		 	 requestConfig = {
 		 			method: 'POST',
 					url : pathToLogout,
@@ -972,7 +989,7 @@ drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	 */
 	var token = function() {
 		 var defer = $q.defer(),
-         pathToToken = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.resources.user + 'token';
+         pathToToken = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + 'token';
 
 	     $http({
 	       url: pathToToken,
@@ -1025,7 +1042,7 @@ drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	 */
 	var register = function(account){
 		
-		 var pathToRegister = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api + drupalApiServiceConfig.resources.register;
+		 var pathToRegister = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api + drupalApiServiceConfig.defaut_resources.register;
 	 	 	 requestConfig = {
 	 			method: 'POST',
 				url : pathToRegister,
@@ -1166,7 +1183,7 @@ drupalAPI.factory('ViewsResource', function($http, $q, drupalApiServiceConfig, U
 	*/
 	var retrieve = function(view_name, display_id, args, offset, limit, format_output, filters){
 		
-		var retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.resources.views + view_name;
+		var retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.views + view_name;
 		var defer = $q.defer();
 		
 		$http({
