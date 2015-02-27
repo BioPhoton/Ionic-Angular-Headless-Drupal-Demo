@@ -343,7 +343,7 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
 	   onUserLoginFailed				: onUserLoginFailed,
 	   // Logout events
 	   publishUserLogoutConfirmed 		: publishUserLogoutConfirmed,
-	   onUserLogoutConfirmed				: onUserLogoutConfirmed,
+	   onUserLogoutConfirmed			: onUserLogoutConfirmed,
 	   publishUserLogoutFailed			: publishUserLogoutFailed,
 	   onUserLogoutFailed				: onUserLogoutFailed,
 	   
@@ -359,7 +359,7 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
 /**
 * Drupal services module
 */
-var drupalAPI = angular.module('drupalApi', []);
+var drupalAPI = angular.module('common.drupal.api-resources', []);
 
 
 /**
@@ -374,17 +374,18 @@ drupalAPI.factory('DrupalAuthenticationService', function($rootScope, $http, $q,
 	var scope = $rootScope.$new(); // or $new(true) if you want an isolate scope
 	
 	
-	var initToken = function () {
+	var refreshTokenFromLocalStorage = function () {
 		var token = $localstorage.getItem('token') || '';
 		
 		if (token) {
+			//@TODO check if really needed
 			$http.defaults.headers.common.Authorization = token;
 			$http.defaults.headers.post['X-CSRF-TOKEN'] = token;
 		}
 	}
 	
 	var storeAuthData = function (data, password) {
-	
+		//
 		$localstorage.setItem('uid', data.user.uid);
 		$localstorage.setObject('user', data.user);
 		$localstorage.setItem('username', data.user.name);
@@ -418,7 +419,7 @@ drupalAPI.factory('DrupalAuthenticationService', function($rootScope, $http, $q,
 	
 	//public methods
 	return {
-		initToken 		: initToken,
+		refreshTokenFromLocalStorage 		: refreshTokenFromLocalStorage,
 		storeAuthData 	: storeAuthData,
 		deleteAuthData 	: deleteAuthData,
 	}
@@ -429,6 +430,8 @@ function($rootScope, SystemResource, DrupalAuthenticationService, drupalApiNotif
 	
 	//on token request confirmed
 	var onUserTokenConfirmedHandler = function(data) { 
+	  //
+	  console.log('set token to: ' + data); 
       $localstorage.setItem('token', data.token);
 	  $http.defaults.headers.common.Authorization = data.token;
 	  $http.defaults.headers.post['X-CSRF-TOKEN'] = data.token;
@@ -439,7 +442,6 @@ function($rootScope, SystemResource, DrupalAuthenticationService, drupalApiNotif
 	var onUserRegisterConfirmedHandler = function(data) {
 		console.log(data); 
 	};
-	
 	drupalApiNotificationChannel.onUserRegisterConfirmed($rootScope, onUserRegisterConfirmedHandler);
 	
 	//on login request confirmed
@@ -457,10 +459,13 @@ function($rootScope, SystemResource, DrupalAuthenticationService, drupalApiNotif
 	};
 	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);
 	
-	DrupalAuthenticationService.initToken();
-	
+	//
+	DrupalAuthenticationService.refreshTokenFromLocalStorage();
+	//update loginstate
 	SystemResource.connect().then(
+			//success
             function (data) {
+            	console.log(data); 
               var user_id = data.user.uid;
               if (user_id == 0) {
                 $rootScope.isAuthed = false;
