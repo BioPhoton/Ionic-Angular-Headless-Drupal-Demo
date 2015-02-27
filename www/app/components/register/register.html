@@ -80,13 +80,11 @@
         <div class="form-errors"
              ng-show="registerForm.termsAgreed.$invalid && registerForm.termsAgreed.$dirty"
              ng-messages="registerForm.termsAgreed.$error" 
-             ng-messages-include="templates/form-errors.html"
-             >
+             ng-messages-include="templates/form-errors.html">
         </div>
         <button class="button button-block button-positive" ng-click="createAccount()">Create Account</button>
         <button class="button button-block button-positive" ng-click="loginFacebook()">Register with Facebook</button>
         <a class="button button-block button-positive" menu-close ui-sref="app.login">Already got an account? Login</a>
-
 
       </ion-list>
 

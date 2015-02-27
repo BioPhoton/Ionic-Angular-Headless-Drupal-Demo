@@ -669,7 +669,7 @@ function($rootScope, SystemResource, DrupalAuthenticationService, drupalApiNotif
 	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);
 	
 	//
-	DrupalAuthenticationService.refreshTokenFromLocalStorage();
+	//DrupalAuthenticationService.refreshTokenFromLocalStorage();
 	//update loginstate
 	SystemResource.connect().then(
 			//success

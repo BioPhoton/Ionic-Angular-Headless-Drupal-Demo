@@ -7030,6 +7030,15 @@ label.item.valid-lr {
   padding: 2px 0 2px 16px;
   color: red; }
 
+/*start slideshoe
+===========================================================================*/
+.slider {
+  height: 100%;
+  text-align: center; }
+
+.scroll {
+  height: 100%; }
+
 /*start profile
 ===========================================================================*/
 #content {

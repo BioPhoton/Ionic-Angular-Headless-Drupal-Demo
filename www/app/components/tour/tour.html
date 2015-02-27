@@ -1,23 +1,50 @@
-<ion-view hide-nav-bar="true" title="Welcome" class="tour">
-  <ion-nav-title>
-    The <b>tour</b>
-  </ion-nav-title>
-  <ion-nav-buttons side="left">
+<!-- 
+<ion-view  title="Dynamic Slides">
+<ion-nav-bar class="bar-stable">
+      <ion-nav-buttons side="left">
+    <button class="button button-positive button-clear no-animation"
+            ng-click="previous()" ng-if="data.slideIndex > 0">
+      Previous Slide
+    </button>
   </ion-nav-buttons>
+  <ion-nav-buttons side="right"> 
+    <button class="button button-positive button-clear no-animation" ng-click="next()" ng-if="data.slideIndex < data.numViewableSlides - 1">
+    Next
+    </button>
+  </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-slide-box class="has-header" on-slide-changed="slideChanged(index)">
+    <ion-slide ng-repeat="slide in data.slides | filter:{viewable : true}">
+      <div ng-include src="slide.template"></div>
+    </ion-slide>
 
-  <ion-slide-box>
-    <ion-slide>
-      <h2>This is the deom of <br /><b>Drupal-Ionic-AngularJS-API-Client</b></h2>
-    </ion-slide>
-    <ion-slide>
-      <h3>Drupal-Ionic-AngularJS-API-Client</h3>
-      <p>
-      API Client for Drupal 7 Services 3.x module
-      </p>
-    </ion-slide>
-    <ion-slide>
-      Get started register or login
-      <button class="button button-full button-positive" ng-click="start()">Get Started</button>
-    </ion-slide>
   </ion-slide-box>
 </ion-view>
+ -->
+
+
+<ion-view  title="Tour Slides">
+  <ion-nav-bar class="bar-stable">
+	  <ion-nav-buttons side="left">
+	 
+	    <button class="button button-positive button-clear no-animation"
+	            ng-click="previous()" ng-if="data.slideIndex > 0">
+	      Previous Slide
+	    </button>
+	  </ion-nav-buttons>
+	  <ion-nav-buttons side="right"> 
+	    <button class="button button-positive button-clear no-animation" ng-click="next()" ng-if="data.slideIndex < data.numViewableSlides - 1">
+	    Next
+	    </button>
+	  </ion-nav-buttons>
+  </ion-nav-bar>
+  
+  <ion-content direction="x" >
+   <ion-slide-box class="has-header" show-pager="true"   on-slide-changed="slideChanged(index)">
+    <ion-slide ng-repeat="slide in data.slides | filter:{viewable : true}">
+      <div ng-include src="slide.template"></div>
+    </ion-slide>
+  </ion-content>
+  
+</ion-view>
+ 

@@ -29,8 +29,7 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', '$state',
                           function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   drupalApiNotificationChannel,   DrupalAuthenticationService,   $state) {
    
-    //access redirects
-	/*
+    //restricetd access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
       var firstVisit = $localstorage.getItem('firstVisit');
       var hasLoggedIn = $localstorage.getItem('hasLoggedIn');
@@ -49,14 +48,15 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
           $state.go('app.tour');
         };
       }
-
+      
+      //custom redirections
       if (toState.name == 'app.login' || toState.name == 'app.register') {
         if ($rootScope.isAuthed) {
           event.preventDefault();
           $state.go('app.authed-tabs.profile');
         }
       }
-    })*/;
+    });
 
 }]);
 
@@ -66,6 +66,7 @@ drupalIonicAngularJSAPIClient.config(function ($stateProvider, $urlRouterProvide
   $httpProvider.defaults.withCredentials = true;
 	 
   $stateProvider
+ 
           .state('app', {
             url: "/app",
             abstract: true,
