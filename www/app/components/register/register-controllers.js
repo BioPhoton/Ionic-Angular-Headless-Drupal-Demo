@@ -1,7 +1,7 @@
-var registerControllers = angular.module('register.controllers', [])
+var registerControllers = angular.module('register.controllers', ['common.drupal.api-resources'])
 
-registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicModal', '$state', 'AuthenticationService',
-  function ($scope, $rootScope, $ionicModal, $state, AuthenticationService) {
+registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicModal', '$state', 'UserResource',
+  function ($scope, $rootScope, $ionicModal, $state, UserResource) {
 
 	//$scope.termsNode = termsNodeObj;
 	
@@ -14,11 +14,11 @@ registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicM
     
     $scope.register = function (form) {
       if (form.$valid) {
-        AuthenticationService.register($scope.registerData)
+    	  UserResource.register($scope.registerData)
                 .then(
                         function (data) {
                           //login user
-                          AuthenticationService.login($scope.registerData.username, $scope.registerData.password)
+                        	UserResource.login($scope.registerData.username, $scope.registerData.password)
                                   .then(
                                           function (data) {
                                             $state.go('app.tabs.coupon');

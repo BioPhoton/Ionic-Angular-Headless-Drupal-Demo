@@ -31,7 +31,7 @@ drupalApiService.factory('$localstorage', ['$window', function ($window) {
         $window.localStorage = [];
       },
     }
-  }])
+}])
 
 
 /* Constants for drupalApiService */
@@ -41,7 +41,7 @@ drupalApiService.constant("drupalApiServiceConfig", {
    //
 	
 	  // Your sites domain
-	  drupal_instance	: 'http://www.hladky.at/headless/',
+	  drupal_instance	: 'http://dev-drupal-headless-ionic.pantheon.io/',
 	 
 	  // Your service endpoints
 	 
@@ -54,12 +54,13 @@ drupalApiService.constant("drupalApiServiceConfig", {
 			  // Resources: defualt or alias
 			  // NOTE: if you set custom aliases for your recources in [your.domain.org]/admin/structure/services/list/api/resources change value here
 			  defaut_resources	: { 
-				  //comment 				: 'comment/', 	
-				  //file					: 'file/', 	
+				  session 				: 'services/session/',
+				  //comment 			: 'comment/', 	
+				  //file				: 'file/', 	
 				  node	 				: 'node',
 				  system				: 'system/',
-				  //taxonomy_term	 		: 'taxonomy_term/',	
-				  //taxonomy_vocabulary 	: 'taxonomy_vocabulary/', 	
+				  //taxonomy_term	 	: 'taxonomy_term/',	
+				  //taxonomy_vocabulary : 'taxonomy_vocabulary/', 	
 				  user 					: 'user/',	
 				  views 				: 'views/', 					
 			  },
@@ -81,6 +82,24 @@ drupalApiService.constant("drupalApiServiceConfig", {
 	//
 	// Constants for drupalApiNotificationChannel
 	//
+  
+	// Session resource
+	//
+	// Actions:
+	// Token action
+	session_tokenConfirmed	: 'event:drupal-session-TokenConfirmed',
+	session_tokenFailed		: 'event:drupal-session-TokenFailed',
+	  
+	// Comment resource
+	//
+	// Actions:
+	//@TODO
+	
+	// File resource
+	//
+	// Actions:	
+	//@TODO
+	
 	// Node resource
 	//
 	// Actions:
@@ -94,7 +113,26 @@ drupalApiService.constant("drupalApiServiceConfig", {
 	// Connect action
 	system_connectConfirmed	: 'event:drupal-system-connectConfirmed',
 	system_connectFailed  	: 'event:drupal-system-connectFailed',
+	// Get variable action
+	system_getVariableConfirmed	: 'event:drupal-system-getVariableConfirmed',
+	system_getVariableFailed  	: 'event:drupal-system-getVariableFailed',
+	// Set variable action
+	system_setVariableConfirmed	: 'event:drupal-system-setVariableConfirmed',
+	system_setVariableFailed  	: 'event:drupal-system-setVariableFailed',
+	// Del variable action
+	system_delVariableConfirmed	: 'event:drupal-system-delVariableConfirmed',
+	system_delVariableFailed  	: 'event:drupal-system-delVariableFailed',
 
+	// Taxonomy term resource
+	//
+	// Actions:
+	//@TODO
+	
+	// Taxonomy vocabulary resource
+	//
+	// Actions:
+	//@TODO
+	
 	// User resource
 	//
 	// Actions:
@@ -124,7 +162,45 @@ drupalApiService.constant("drupalApiServiceConfig", {
 //http://codingsmackdown.tv/blog/2013/04/29/hailing-all-frequencies-communicating-in-angularjs-with-the-pubsub-design-pattern/
 drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalApiServiceConfig', 
                                                  function ($rootScope,   drupalApiServiceConfig) {
-   
+   	
+	//
+	// Session resource
+	//
+	
+	// Token Action
+	
+	// Publish session token confirmed event
+    var publishSessionTokenConfirmed = function () {
+        $rootScope.$broadcast(drupalApiServiceConfig.session_tokenConfirmed, {token: token});
+    };
+    // Subscribe to session token confirmed event
+    var onSessionTokenConfirmed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.session_tokenConfirmed, function(event, args) {
+	    handler(args.token);
+	   });	
+    };
+    
+	// Publish session token failed event
+    var publishSessionTokenFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.session_tokenFailed, {error: error});
+    };
+    // Subscribe to session token failed event
+    var onSessionTokenFailed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.session_tokenFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    //
+    // Comment resource
+	//
+    
+    //@TODO
+	//
+	// File resource
+	//
+    //@TODO
+    
 	//
 	// Node resource
 	//
@@ -171,15 +247,97 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     };
     
     // Publish system connect failed event
-    var publishSystemConnectFailed = function (response) {
-        $rootScope.$broadcast(drupalApiServiceConfig.system_connectConfirmed, {error: error});
+    var publishSystemConnectFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.system_connectFailed, {error: error});
     };
     // Subscribe to system connect failed event
     var onSystemConnectFailed = function($scope, handler) {
-    	$scope.$on(drupalApiServiceConfig.system_connectConfirmed, function(event, args) {
+    	$scope.$on(drupalApiServiceConfig.system_connectFailed, function(event, args) {
 	    handler(args.error);
 	   });	
     };
+    
+    // Get Variable Action
+	
+	// Publish system get variable confirmed event
+    var publishSystemGetVariableConfirmed = function (variable) {
+        $rootScope.$broadcast(drupalApiServiceConfig.system_getVariableConfirmed, {variable: variable});
+    };
+    // Subscribe to system get variable confirmed event
+    var onSystemGetVariableConfirmed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.system_getVariableConfirmed, function(event, args) {
+	    handler(args.variable);
+	   });	
+    };
+    
+    // Publish system get variable failed event
+    var publishSystemGetVariableFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.system_GetVariableFailed, {error: error});
+    };
+    // Subscribe to system get variable failed event
+    var onSystemGetVariableFailed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.system_GetVariableFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    // Set Variable Action
+	
+	// Publish system set variable confirmed event
+    var publishSystemSetVariableConfirmed = function (variable) {
+        $rootScope.$broadcast(drupalApiServiceConfig.system_setVariableConfirmed, {variable: variable});
+    };
+    // Subscribe to system connect set variable event
+    var onSystemSetVariableConfirmed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.system_setVariableConfirmed, function(event, args) {
+	    handler(args.variable);
+	   });	
+    };
+    
+    // Publish system set variable failed event
+    var publishSystemSetVariableFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.system_SetVariableFailed, {error: error});
+    };
+    // Subscribe to system set variable failed event
+    var onSystemSetVariableFailed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.system_SetVariableFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    // Del Variable Action
+	
+	// Publish system del variable confirmed event
+    var publishSystemDelVariableConfirmed = function (variable) {
+        $rootScope.$broadcast(drupalApiServiceConfig.system_delVariableConfirmed, {variable: variable});
+    };
+    // Subscribe to system connect set variable event
+    var onSystemDelVariableConfirmed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.system_delVariableConfirmed, function(event, args) {
+	    handler(args.variable);
+	   });	
+    };
+    
+    // Publish system del variable failed event
+    var publishSystemDelVariableFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.system_DelVariableFailed, {error: error});
+    };
+    // Subscribe to system set variable failed event
+    var onSystemDelVariableFailed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.system_DelVariableFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    //
+    // Taxonomy term resource
+	//
+    //@TODO
+	
+    //
+	// Taxonomy vocabulary resource
+    //
+    //@TODO
     
     //
 	// User resource
@@ -188,7 +346,7 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     // Token action
 
 	// Publish user token confirmed event
-    var publishUserTokenConfirmed = function (respons) {
+    var publishUserTokenConfirmed = function (token) {
         $rootScope.$broadcast(drupalApiServiceConfig.user_registerConfirmed, {token: token});
     };
     // Subscribe to user token confirmed event
@@ -247,7 +405,7 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     };
     
     // Publish user login failed event
-    var publishUserLoginFailed = function (respons) {
+    var publishUserLoginFailed = function (error) {
         $rootScope.$broadcast(drupalApiServiceConfig.user_loginFailed, {error: error});
     };
     // Subscribe to user login failed event
@@ -260,18 +418,18 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     //Logout action
     
 	// Publish user login confirmed event
-    var publishUserLogoutConfirmed = function (user) {
-        $rootScope.$broadcast(drupalApiServiceConfig.user_logoutConfirmed, {user: user});
+    var publishUserLogoutConfirmed = function (respons) {
+        $rootScope.$broadcast(drupalApiServiceConfig.user_logoutConfirmed, {respons: respons});
     };
     // Subscribe to user login confirmed event
     var onUserLogoutConfirmed = function($scope, handler) {
     	$scope.$on(drupalApiServiceConfig.user_logoutConfirmed, function(event, args) {
-	    handler(args.user);
+	    handler(args.respons);
 	   });	
     };
     
     // Publish user login failed event
-    var publishUserLogoutFailed = function (respons) {
+    var publishUserLogoutFailed = function (error) {
         $rootScope.$broadcast(drupalApiServiceConfig.user_logoutFailed, {error: error});
     };
     // Subscribe to user login failed event
@@ -311,6 +469,20 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
         
    // Return the publicly accessible methods
    return {
+	   
+	   // Session events
+	   // Token events
+	   publishSessionTokenConfirmed 		: publishSessionTokenConfirmed,
+	   onSessionTokenConfirmed				: onSessionTokenConfirmed,
+	   publishSessionTokenFailed			: publishSessionTokenFailed,
+	   onSessionTokenFailed					: onSessionTokenFailed,
+	   
+	   // Comment events
+	   //@TODO
+	   
+	   // File events
+	   //@TODO
+	   
 	   //Node events
 	   //Retrieve event
 	   publishNodeRetrieveConfirmed		: publishNodeRetrieveConfirmed,
@@ -324,7 +496,28 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
 	   onSystemConnectConfirmed			: onSystemConnectConfirmed,
 	   publishSystemConnectFailed 		: publishSystemConnectFailed,
 	   onSystemConnectFailed 			: onSystemConnectFailed,
+	   // Get varaible events
+	   publishSystemGetVariableConfirmed 	: publishSystemGetVariableConfirmed,
+	   onSystemGetVariableConfirmed			: onSystemGetVariableConfirmed,
+	   publishSystemGetVariableFailed 		: publishSystemGetVariableFailed,
+	   onSystemGetVariableFailed 			: onSystemGetVariableFailed,
+	   // Set varaible events
+	   publishSystemSetVariableConfirmed 	: publishSystemSetVariableConfirmed,
+	   onSystemSetVariableConfirmed			: onSystemSetVariableConfirmed,
+	   publishSystemSetVariableFailed 		: publishSystemSetVariableFailed,
+	   onSystemSetVariableFailed 			: onSystemSetVariableFailed,
+	   // Del varaible events
+	   publishSystemDelVariableConfirmed 	: publishSystemDelVariableConfirmed,
+	   onSystemDelVariableConfirmed			: onSystemDelVariableConfirmed,
+	   publishSystemDelVariableFailed 		: publishSystemDelVariableFailed,
+	   onSystemDelVariableFailed 			: onSystemDelVariableFailed,
 	  
+	   // Taxonomy term events
+	   //@TODO
+	   
+	   // Taxonomy vocabulary events
+	   //@TODO
+	   
 	   // User events
 	   // Token events
 	   publishUserTokenConfirmed 		: publishUserTokenConfirmed,
@@ -354,30 +547,24 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
 	   publishViewsRetrieveFailed		: publishViewsRetrieveFailed,
 	   onViewsRetrieveFailed			: onViewsRetrieveFailed,
    	};
-}]);
-
-/**
-* Drupal services module
-*/
-var drupalAPI = angular.module('common.drupal.api-resources', []);
-
+}])
 
 /**
  * AuthenticationService
  * 
- * groups actions for auth (headers ... )
+ * 
  * 
  */
-drupalAPI.factory('DrupalAuthenticationService', function($rootScope, $http, $q, drupalApiServiceConfig, drupalApiNotificationChannel, $localstorage, $cookieStore) {
+drupalApiService.factory('DrupalAuthenticationService', function($rootScope, $http, $q, drupalApiServiceConfig, drupalApiNotificationChannel, $localstorage, $cookieStore) {
 	 //needed to use the $on method in the bleNotoficationChannel
 	//http://stackoverflow.com/questions/16477123/how-do-i-use-on-in-a-service-in-angular
 	var scope = $rootScope.$new(); // or $new(true) if you want an isolate scope
 	
-	
 	var refreshTokenFromLocalStorage = function () {
 		var token = $localstorage.getItem('token') || '';
-		
+		console.log('refreshTokenFromLocalStorage: ' + token); 
 		if (token) {
+			
 			//@TODO check if really needed
 			$http.defaults.headers.common.Authorization = token;
 			$http.defaults.headers.post['X-CSRF-TOKEN'] = token;
@@ -385,7 +572,7 @@ drupalAPI.factory('DrupalAuthenticationService', function($rootScope, $http, $q,
 	}
 	
 	var storeAuthData = function (data, password) {
-		//
+		//store local storage data
 		$localstorage.setItem('uid', data.user.uid);
 		$localstorage.setObject('user', data.user);
 		$localstorage.setItem('username', data.user.name);
@@ -400,11 +587,6 @@ drupalAPI.factory('DrupalAuthenticationService', function($rootScope, $http, $q,
 	};
 	
 	var deleteAuthData = function (data, password) {
-		//delete token
-		//@TODO check if this is needed
-		delete $http.defaults.headers.common.Authorization;
-		//delete session cookies
-		$cookieStore.remove($localstorage.getItem('session_name'));
 		//delete local storage data
 		$localstorage.removeItem('uid');
 		$localstorage.removeObject('user');
@@ -413,15 +595,42 @@ drupalAPI.factory('DrupalAuthenticationService', function($rootScope, $http, $q,
 		$localstorage.removeItem('token');
 		$localstorage.removeItem('sessid');
 		$localstorage.removeItem('session_name');
+		//delete session cookies
+		$cookieStore.remove($localstorage.getItem('session_name'));
 		//@TODO replace this with custom directive for hide show menu itme over acl
 		$rootScope.isAuthed = false;
+	};
+	
+	//@TODO move this into AcessControlService
+	var authorize = function(accessLevel, role) {
+		 //if no user is given set unauthorized user
+		 currentUser = $localstorage.getObject('user', { uid: 0, roles: {1: "anonymous user"}});
+		 //
+	     if(role === undefined) {
+			role = currentUser.roles[1]; 
+        }
+	    
+	     //
+	     if(accessLevel == '*') { return true;}
+	     
+	     var isGranted = false;
+		 for (var i = 0; i < accessLevel.length; i++) {
+			 for (var prop in currentUser.roles) {
+				if(accessLevel[i] == currentUser.roles[prop]) {
+					 accessLevel, role
+					 isGranted = true;
+				}
+			 }
+	     }
+        return isGranted;
 	};
 	
 	//public methods
 	return {
 		refreshTokenFromLocalStorage 		: refreshTokenFromLocalStorage,
-		storeAuthData 	: storeAuthData,
-		deleteAuthData 	: deleteAuthData,
+		storeAuthData 						: storeAuthData,
+		deleteAuthData 						: deleteAuthData,
+		authorize							: authorize
 	}
 })
 .run(
@@ -430,8 +639,6 @@ function($rootScope, SystemResource, DrupalAuthenticationService, drupalApiNotif
 	
 	//on token request confirmed
 	var onUserTokenConfirmedHandler = function(data) { 
-	  //
-	  console.log('set token to: ' + data); 
       $localstorage.setItem('token', data.token);
 	  $http.defaults.headers.common.Authorization = data.token;
 	  $http.defaults.headers.post['X-CSRF-TOKEN'] = data.token;
@@ -455,6 +662,8 @@ function($rootScope, SystemResource, DrupalAuthenticationService, drupalApiNotif
 	
 	//on logout request confirmed
 	var onUserLogoutConfirmedHandler = function(data) {
+		//@TODO check if this is needed
+		delete $http.defaults.headers.common.Authorization;
 		DrupalAuthenticationService.deleteAuthData();
 	};
 	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);
@@ -465,21 +674,29 @@ function($rootScope, SystemResource, DrupalAuthenticationService, drupalApiNotif
 	SystemResource.connect().then(
 			//success
             function (data) {
-            	console.log(data); 
+              //@TODO check if needed here
               var user_id = data.user.uid;
               if (user_id == 0) {
-                $rootScope.isAuthed = false;
+                //$rootScope.isAuthed = false;
               }
               else {
-              	 $rootScope.isAuthed = true;
+              	//$rootScope.isAuthed = true;
               }
-
     });
+	
 });
+
+
+/**
+ * Drupal resources module
+ * 
+ * 
+ */
+var drupalAPI = angular.module('common.drupal.api-resources', []);
 
 /**
  * Session
- * 
+ * @TODO check if needed
  */
  drupalAPI.factory('SessionResource', function($http, $q, drupalApiServiceConfig, drupalApiNotificationChannel) {
 		
@@ -492,7 +709,7 @@ function($rootScope, SystemResource, DrupalAuthenticationService, drupalApiNotif
 		*/
 		var token = function(nid){
 
-			var tokenPath = drupalApiServiceConfig.drupal_instance + 'services/session/token',
+			var tokenPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.session + 'token',
 				defer = $q.defer(),
 				requestConfig = {
 					method :'GET',
@@ -691,17 +908,19 @@ drupalAPI.factory('SystemResource', function($http, $q, drupalApiServiceConfig, 
 	 * useage: SystemResource.connect().success(yourSuccessCallback).error(yourErrorCallback);
 	*/
 	var connect = function(token){
-		var connectPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + 'connect';
-		var defer = $q.defer();
 		
-		$http({
-			method :'POST',
-			url : connectPath,
-			headers : {
-				//"Accept" 		: "application/json",
-				"Content-Type"	: "application/json",
-			}
-		})
+		var connectPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + 'connect',
+		defer = $q.defer(),
+		requestConfig = {
+				method :'POST',
+				url : connectPath,
+				headers : {
+					//"Accept" 		: "application/json",
+					"Content-Type"	: "application/json",
+				}
+		};
+		
+		$http(requestConfig)
 		.success(function(data, status, headers, config){
 			defer.resolve(data);
 		})
@@ -729,7 +948,35 @@ drupalAPI.factory('SystemResource', function($http, $q, drupalApiServiceConfig, 
 	 *  useage: SystemResource.get_variable().then(yourSuccessCallback,yourErrorCallback);
 	 */
 	var get_variable = function(name, _default){
-		return;
+		
+		var getVariablePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + 'get_variable',
+		defer = $q.defer(),
+		requestConfig = {
+				method 	:'POST',
+				url 	: getVariablePath,
+				headers : {
+					//"Accept" 		: "application/json",
+					"Content-Type"	: "application/json",
+				},
+				data 	: {
+					name : name
+				}
+		};
+		
+		if(!name) { 
+			defer.reject(['Param name is required.']); 
+			return defer.promise;
+		}
+		
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			defer.reject(data);
+		});
+		
+		return defer.promise;
 	};
 	
 	/*
@@ -748,7 +995,33 @@ drupalAPI.factory('SystemResource', function($http, $q, drupalApiServiceConfig, 
 	 *  useage: SystemResource.set_variable().success(yourSuccessCallback).error(yourErrorCallback);
 	 */
 	var set_variable = function(name, value){
-		return;
+		var setVariablePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + 'set_variable',
+		defer = $q.defer(),
+		requestConfig = {
+				method 	:'POST',
+				url 	: setVariablePath,
+				headers : {
+					//"Accept" 		: "application/json",
+					"Content-Type"	: "application/json",
+				},
+				data 	: {
+					name 	: name,
+					value 	: value
+				}
+		};
+
+		if(!value) { defer.reject(['Param value is required.']); return defer.promise;}
+		if(!name) { defer.reject(['Param name is required.']); return defer.promise;}
+		
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			defer.reject(data);
+		});
+		
+		return defer.promise;
 	};
 	
 	/*
@@ -766,15 +1039,39 @@ drupalAPI.factory('SystemResource', function($http, $q, drupalApiServiceConfig, 
 	 *  useage: SystemResource.del_variable().then(yourSuccessCallback,yourErrorCallback);
 	 */
 	var del_variable = function(name){
-		return;
+		var delVariablePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + 'del_variable',
+		defer = $q.defer(),
+		requestConfig = {
+				method 	:'POST',
+				url 	: delVariablePath,
+				headers : {
+					//"Accept" 		: "application/json",
+					"Content-Type"	: "application/json",
+				},
+				data 	: {
+					name : name
+				}
+		};
+		
+		if(!name) { defer.reject(['Param name is required.']); }
+		
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			defer.reject(data);
+		});
+		
+		return defer.promise;
 	};
 
 	//public methods	
 	return {
 		connect : connect,
-		//get_variable : get_variable,
-		//set_variable : set_variable,
-		//del_variable : del_variable
+		get_variable : get_variable,
+		set_variable : set_variable,
+		del_variable : del_variable
 	};
 
 });

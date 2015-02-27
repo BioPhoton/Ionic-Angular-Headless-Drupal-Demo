@@ -1,7 +1,7 @@
-var loginControllers = angular.module('login.controllers', [])
+var loginControllers = angular.module('login.controllers', ['common.drupal.api-resources'])
 
-loginControllers.controller('LoginCtrl', ['$scope', '$localstorage', '$state', '$rootScope', 'AuthenticationService',
-  function ($scope, $localstorage, $state, $rootScope, AuthenticationService) {
+loginControllers.controller('LoginCtrl', ['$scope', '$localstorage', '$state', '$rootScope', 'UserResource',
+  function ($scope, $localstorage, $state, $rootScope, UserResource) {
     $scope.message = "";
     $scope.doingLogin = false;
     $scope.loginData = {
@@ -13,7 +13,7 @@ loginControllers.controller('LoginCtrl', ['$scope', '$localstorage', '$state', '
       if (form.$valid) {
 
         $scope.doingLogin = true;
-        AuthenticationService.login($scope.loginData.username,
+        UserResource.login($scope.loginData.username,
           $scope.loginData.password).then(function (data) {
           //reset form data
           $scope.loginData = {};

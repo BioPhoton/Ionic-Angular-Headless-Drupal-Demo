@@ -22,8 +22,8 @@
     </ion-header-bar>
 
     <ion-content drag-content="true">
-      <ng-include  src="'app/templates/menus/anonymous-user-menu.html'"></ng-include>
-      <ng-include  src="'app/templates/menus/authenticated-user-menu.html'"></ng-include>
+      <ng-include ng-if="!isAuthed" src="'app/templates/menus/anonymous-user-menu.html'"></ng-include>
+      <ng-include ng-if="isAuthed" src="'app/templates/menus/authenticated-user-menu.html'"></ng-include>
     </ion-content>
 
   </ion-side-menu>

@@ -3,7 +3,9 @@
 <h1>NodeResource</h1>
 <h2>Retrieve</h2>
 <div ng-repeat="request in nodeRetrieveRequests">
-	<b>Time of Request:</b> {{request.requestTime| date:'medium'}}<br />
+	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
+	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
+	<b>Duration:</b> {{request.requestDuration}}<br />
 	<b>Data:</b> 
 	<pre>
 	{{ request.data | json}}
@@ -18,7 +20,9 @@
 <hr />
 <h2>Index</h2>
 <div ng-repeat="request in nodeIndexRequests">
-	<b>Time of Request:</b> {{request.requestTime| date:'medium'}}<br />
+	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
+	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
+	<b>Duration:</b> {{request.requestDuration}}<br />
 	<b>Data:</b> 
 	<pre>
 	{{ request.data | json}}

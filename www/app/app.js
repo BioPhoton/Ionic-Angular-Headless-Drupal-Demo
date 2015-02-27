@@ -6,7 +6,7 @@
 var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClient', ['ionic',
   'drupalIonicAngularJSAPIClient.configuration',
   'common.services.localstorage',
-  'common.drupal.drupalApiServices',
+
   //this is the good one
   'common.drupal.api-services',
   'LocalForageModule',
@@ -26,18 +26,11 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 
 ]);
 
-drupalIonicAngularJSAPIClient.run(['$rootScope', '$location', '$ionicPlatform', '$localstorage', 'AuthenticationService', '$ionicLoading', '$state',
-  function ($rootScope, $location, $ionicPlatform, $localstorage, AuthenticationService, $ionicLoading, $state) {
-    $rootScope.isAuthed = false;
+drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', '$state',
+                          function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   drupalApiNotificationChannel,   DrupalAuthenticationService,   $state) {
    
-    //updates the isAuthed value
-    AuthenticationService.updataLoginstate();
-
-    //login redirect
-    $rootScope.$on('event:auth-loginConfirmed', function () {
-      $state.go('app.authed-tabs.profile');
-    });
     //access redirects
+	/*
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
       var firstVisit = $localstorage.getItem('firstVisit');
       var hasLoggedIn = $localstorage.getItem('hasLoggedIn');
@@ -46,7 +39,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope', '$location', '$ionicPlatform', 
         event.preventDefault();
       }
 
-      else if (!AuthenticationService.authorize(toState.data.access)) {
+      else if (!DrupalAuthenticationService.authorize(toState.data.access)) {
         event.preventDefault();
         if (firstVisit && hasLoggedIn) {
           $state.go('app.login');
@@ -54,8 +47,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope', '$location', '$ionicPlatform', 
           $state.go('app.register');
         } else {
           $state.go('app.tour');
-        }
-        ;
+        };
       }
 
       if (toState.name == 'app.login' || toState.name == 'app.register') {
@@ -64,35 +56,15 @@ drupalIonicAngularJSAPIClient.run(['$rootScope', '$location', '$ionicPlatform', 
           $state.go('app.authed-tabs.profile');
         }
       }
+    })*/;
 
-    });
-
-    $rootScope.logout = function () {
-      AuthenticationService
-              .logout().then(
-              function () {
-                $state.go('app.login');
-              });
-    };
-  }]);
+}]);
 
 drupalIonicAngularJSAPIClient.config(function ($stateProvider, $urlRouterProvider, $httpProvider, DrupalAPISettings) {
-
+	
+  //@TODO move this into authservice
   $httpProvider.defaults.withCredentials = true;
-
-  $httpProvider.interceptors.push(function ($rootScope) {
-    return {
-      request: function (config) {
-        $rootScope.$broadcast('loading:show')
-        return config
-      },
-      response: function (response) {
-        $rootScope.$broadcast('loading:hide')
-        return response
-      }
-    }
-  });
-  
+	 
   $stateProvider
           .state('app', {
             url: "/app",
@@ -133,12 +105,12 @@ drupalIonicAngularJSAPIClient.config(function ($stateProvider, $urlRouterProvide
                 templateUrl: 'app/components/register/register.html',
                 controller: 'RegisterCtrl'
               }
-          },
-          /*  resolve: {
+	        },
+            resolve: {
               termsNodeObj: function (NodeResource, DrupalAPISettings) {
                 return NodeResource.retrieve(DrupalAPISettings.terms_and_conditions_nid);
               }
-            }*/
+            }
           })
            
       //Abstract states for anonymous tabs
@@ -227,15 +199,14 @@ drupalIonicAngularJSAPIClient.config(function ($stateProvider, $urlRouterProvide
           })
           .state('app.authed-tabs.profile', {
             url: "/profile",
-            
+            cache: false,
             views: {
               'profile-tab': {
                 templateUrl: "app/components/authed-tabs/profile/profile.html",
                 controller: 'authedTabProfileCtrl'
               }
             }
-          })
-          ;
+          });
   
   $urlRouterProvider.otherwise('/app/authed-tabs/profile');
 }

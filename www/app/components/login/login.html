@@ -4,10 +4,10 @@
 
       <ion-list>
         <label class="item item-input" ng-class="{ 'has-error' : loginForm.username.$invalid && loginForm.$dirty}">
-          <input type="text" placeholder="Username" name="username" ng-model="loginData.username" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <input ng-init="loginData.username = 'basic-user'" type="text" placeholder="Username" name="username" ng-model="loginData.username" autocorrect="off" autocapitalize="off" spellcheck="false">
         </label>
         <label class="item item-input" ng-class="{ 'has-error' : loginForm.password.$invalid && loginForm.$dirty, 'valid' : loginForm.password.$valid && loginForm.$dirty}">
-          <input type="password" placeholder="Password" name="password" ng-model="loginData.password">
+          <input ng-init="loginData.password = 'basic-user'" type="password" placeholder="Password" name="password" ng-model="loginData.password">
         </label>
 
         <div class="form-errors" ng-show="loginForm.$submitted">
