@@ -29,13 +29,13 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', '$state',
                           function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   drupalApiNotificationChannel,   DrupalAuthenticationService,   $state) {
    
-    //restricetd access redirects
+    //restrict access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
       var firstVisit = $localstorage.getItem('firstVisit');
       var hasLoggedIn = $localstorage.getItem('hasLoggedIn');
 
       if (!('data' in toState) || !('access' in toState.data)) {
-        event.preventDefault();
+        //event.preventDefault();
       }
 
       else if (!DrupalAuthenticationService.authorize(toState.data.access)) {
@@ -49,7 +49,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
         };
       }
       
-      //custom redirections
+      //custom redirects
       if (toState.name == 'app.login' || toState.name == 'app.register') {
         if ($rootScope.isAuthed) {
           event.preventDefault();

@@ -39,7 +39,7 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotifica
 		console.log('login app');    
 		$localstorage.setItem('hasLoggedIn', 1);
 		$scope.isAuthed = true;
-		//$state.go('app.authed-tabs.profile'); 
+		$state.go('app.authed-tabs.profile'); 
 	};
 	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, onUserLoginConfirmedHandler);
 	
@@ -48,7 +48,7 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotifica
 		console.log('logout app');
 		$localstorage.removeItem('hasLoggedIn');
 		$scope.isAuthed = false;
-		//$state.go('app.login');
+		$state.go('app.login');
 	};
 	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);
     
