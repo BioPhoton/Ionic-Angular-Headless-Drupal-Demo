@@ -21,10 +21,6 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotifica
 	// if its the user first visit to the app play the apps tour
     if (!$localstorage.getItem('firstVisit')) { $state.go('app.tour'); }
     
-    $scope.toggleIsOffline = function() { $scope.isOffline = !$scope.isOffline; }
-    
-    $scope.isOffline = true;
-
     // @TODO replace this with acl service
     $scope.isAuthed = false;
 
@@ -55,7 +51,11 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotifica
     //
     // Show hide network connection bar
     //
+	  
+	$scope.isOffline = false;
     
+	$scope.toggleIsOffline = function() { $scope.isOffline = !$scope.isOffline; }
+	
     // on inet offline
     $ionicPlatform.on('offline', function () {
       $scope.isOffline = true;

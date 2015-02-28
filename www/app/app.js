@@ -137,7 +137,7 @@ drupalIonicAngularJSAPIClient.config(function ($stateProvider, $urlRouterProvide
 		      }
 		    }
 	   })
-	   /**/
+	 
 	  //System Resource
 	  //______________________________________________
 	   .state('app.anon-tabs.system-resource', {

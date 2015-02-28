@@ -556,7 +556,7 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
  * 
  */
 drupalApiService.factory('DrupalAuthenticationService', function($rootScope, $http, $q, drupalApiServiceConfig, drupalApiNotificationChannel, $localstorage, $cookieStore) {
-	 //needed to use the $on method in the bleNotoficationChannel
+	//needed to use the $on method in the notification channel
 	//http://stackoverflow.com/questions/16477123/how-do-i-use-on-in-a-service-in-angular
 	var scope = $rootScope.$new(); // or $new(true) if you want an isolate scope
 	
@@ -677,10 +677,10 @@ function($rootScope, SystemResource, DrupalAuthenticationService, drupalApiNotif
               //@TODO check if needed here
               var user_id = data.user.uid;
               if (user_id == 0) {
-                //$rootScope.isAuthed = false;
+                $rootScope.isAuthed = false;
               }
               else {
-              	//$rootScope.isAuthed = true;
+              	$rootScope.isAuthed = true;
               }
     });
 	
@@ -705,6 +705,7 @@ var drupalAPI = angular.module('common.drupal.api-resources', []);
 		 * Token
 		 * 
 		 * Drupal CORS settings: 
+		 * @TODO check settings
 		 * "services/session/token|<mirror>|POST, GET|Content-Type,Authorization,X-CSRF-TOKEN|true
 		*/
 		var token = function(nid){
@@ -742,7 +743,7 @@ var drupalAPI = angular.module('common.drupal.api-resources', []);
  * This service mirrors the Drupal node resource of the services 3.x module.
  * To use this you have to set following line in your Drupal CORS module settings
  * @TODO check
- * your_api_endpoint/node/*|<mirror>|POST|Content-Type
+ * your_api_endpoint/node*|<mirror>|POST|Content-Type
  * 
 **/
 drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, drupalApiNotificationChannel) {
@@ -753,41 +754,42 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	var getPreparedIndexParams = function(page, fields, parameters, pagesize) {
 		
 		var preparedIndexParams = '',
-			colon = '&';
+			ampersand = '&';
 		
 		//Prepare page param
 		page = (page)?page:false;
 		if(page !== false) { page = (parseInt(page) != NaN)?parseInt(page):false; }
-		if(page !== false) { preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?colon:'') +  "page="+page; }
+		if(page !== false) { preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?ampersand:'') +  "page="+page; }
 		
 		
 		//Prepare fields param
 		fields = (fields)?fields:false;
 		if(fields !== false) {
 			//parse array
-			//@TODO parse array to get params or set false
+			//@TODO parse array to getparams or set false
 		}
 		if(fields !== false) { 
-			preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?colon:'') + fields;
+			preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?ampersand:'') + fields;
 		}
 		
 		//Prepare parameters param
 		parameters = (parameters)?parameters:false;
 		if(parameters !== false) {
 			//parse array
-			//@TODO parse array to get params or set false
+			//@TODO parse array to getparams or set false
 		}
 		if(parameters !== false) { 
-			preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?colon:'') + parameters;
+			preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?ampersand:'') + parameters;
 		}
 		
 		//Prepare pagesize param
 		pagesize = (pagesize)?pagesize:false;
 		if(pagesize !== false) { pagesize = (parseInt(pagesize) != NaN)?parseInt(pagesize):false; }
-		if(pagesize !== false) { preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?colon:'') +  "pagesize="+pagesize; }
+		if(pagesize !== false) { preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?ampersand:'') +  "pagesize="+pagesize; }
 		
 		return preparedIndexParams;
 	}
+
 	
 	/*
 	 * 
@@ -815,7 +817,7 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 			defer = $q.defer(),
 			requestConfig = {
 				method :'GET',
-				url : retrievePath,
+				url : retrievePath
 			};
 		
 		if(!nid) { defer.reject(['Param nid is required.']); }
@@ -830,6 +832,128 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		}
 		return defer.promise;
 
+	};
+	
+	/*
+	 * create
+	 * 
+	 * Retrieve a node
+	 * Method: POST
+	 * Url: http://drupal_instance/api_endpoint/node
+	 * Headers: Content-Type:application/json
+	 * 
+	 * @param 	{Array} node The node data to create, required:true, source:post body
+	 * 
+	 * @return 	{Promise}
+	 * 
+	 * useage: NodeResource.create(node).then(yourSuccessCallback,yourErrorCallback);
+	 */
+	var create = function( node ) {
+		var createPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node,
+		defer = $q.defer(),
+		requestConfig = {
+			method :'POST',
+			url : createPath,
+			data : {
+				node : node
+			}
+		};
+	
+		//if not given
+		if(!node) { defer.reject(['Param node is required.']); return defer.promise; }
+		//if is not an array
+		if( node instanceof Array ) { defer.reject(['Param node has to be an array.']); return defer.promise; }
+		
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			defer.reject(data);
+		});
+		
+		return defer.promise;
+	};
+
+	/*
+	 * update
+	 * 
+	 * Update a user
+	 * Method: PUT
+	 * Url: http://drupal_instance/api_endpoint/node/{NID}
+	 * Headers: Content-Type:application/json
+	 * 
+	 * @param 	{Integer} uid The nid of the node to update, required:true, source:path
+	 * @param 	{Array} data The node data to update, required:true, source:post body
+	 * 
+	 * @return 	{Promise}
+	 * 
+	 * useage: UserResource.update(nid, node).then(yourSuccessCallback,yourErrorCallback);
+	 */
+	var update = function( nid, node ) {
+		var createPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node,
+		defer = $q.defer(),
+		requestConfig = {
+			method :'PUT',
+			url : createPath,
+			data : {
+				node : node
+			}
+		};
+	
+		//if not given
+		if(!nid) { defer.reject(['Param nid is required.']); return defer.promise;}
+		//if not given
+		if(!node) { defer.reject(['Param node is required.']); return defer.promise;}
+		//if is not an array
+		if( node instanceof Array ) { defer.reject(['Param node has to be an array.']); return defer.promise;}
+
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			defer.reject(data);
+		});
+	
+		return defer.promise;
+	};
+
+	/*
+	 * _delete
+	 * 
+	 * Delete a node
+	 * Method: DELETE
+	 * Url: http://drupal_instance/api_endpoint/node/{NID}
+	 * Headers: Content-Type:application/json
+	 * 
+	 * @param 	{Integer} nid The nid of the node to delete, required:true, source:path
+	 * 
+	 * @return 	{Promise}
+	 * 
+	 * useage: UserResource._delete(nid).then(yourSuccessCallback,yourErrorCallback);
+	 */
+	var _delete = function( nid ) {
+		
+		var createPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + (nid?'/'+nid:''),
+		defer = $q.defer(),
+		requestConfig = {
+			method :'DELETE',
+			url : createPath
+		};
+	
+		//if not given
+		if(!nid) { defer.reject(['Param nid is required.']); return defer.promise;}
+
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			defer.reject(data);
+		});
+	
+		return defer.promise;
 	};
 	
 	/*
@@ -873,13 +997,157 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		});
 		
 		return defer.promise;
-
 	};
-
+	
+	/*
+	 * Attach files
+	 * Drupal CORS settings api_endpoint/node/attach_file/*|<mirror>|GET|Content-Type
+	 * 
+	 * Upload and attach file(s) to a node. POST multipart/form-data to node/123/attach_file
+	 * 
+	 * Method: POST 
+	 * Url: http://drupal_instance/api_endpoint/node/attach_file/{NID}
+	 * Headers: Content-Type:application/json
+	 * 
+	 * @param {Integer} nid The nid of the node to attach a file to, required:true, source:path
+	 * @param {Sting} field_name The file field name, required:true, source:post body
+	 * @param {Integer} attach Attach the file(s) to the node. If FALSE, this clears ALL files attached, and attaches the files, required:false, source:post body
+	 * @param {Array} field_values The extra field values, required:false, source:post body
+	 * 
+	 * @return 	{Promise}
+	 * 
+	 * useage: NodeResource.index(nid, field_name, attach, field_values).success(yourSuccessCallback(data)).error(yourErrorCallback(error));
+	 */
+	var attach_file = function(nid, field_name, attach, field_values) {
+		
+		var attachFilePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + '/attach_file/'+nid,
+			defer = $q.defer(),
+			requestConfig = {
+				method :'GET',
+				url : attachFilePath,
+				data {
+					field_name   : field_name,
+					attach 		 : attach,
+					field_values : field_values,
+				}
+			};
+		
+		//if not given
+		if(!nid) { defer.reject(['Param nid is required.']); return defer.promise;}
+	
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			defer.reject(data);
+		});
+		
+		return defer.promise;
+	};
+	
+	/*
+	 * Files
+	 * Drupal CORS settings api_endpoint/node/files/*|<mirror>|GET|Content-Type
+	 * 
+	 * This method returns files associated with a node.
+	 * 
+	 * Method: POST 
+	 * Url: http://drupal_instance/api_endpoint/node/files/{NID}/{FILE_CONTENTS}/{IMAGE_STYLES}
+	 * Headers: Content-Type:application/json
+	 * 
+	 * @param {Integer} nid The nid of the node whose files we are getting, required:true, source:path
+	 * @param {Integer} file_contents To return file contents or not., required:false, source:path
+	 * @param {Integer} image_styles To return image styles or not., required:false, source:path
+	 * 
+	 * @return 	{Promise}
+	 * 
+	 * useage: NodeResource.files(nid, file_contents, image_styles).success(yourSuccessCallback(data)).error(yourErrorCallback(error));
+	 */
+	var files = function(nid, file_contents, image_styles) {
+		
+		var attachFilePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + '/files/'+nid,
+			defer = $q.defer(),
+			requestConfig = {
+				method :'GET',
+				url : attachFilePath,
+				data {
+					field_name   : field_name,
+					attach 		 : attach,
+					field_values : field_values,
+				}
+			};
+		
+		//if not given
+		if(!nid) { defer.reject(['Param nid is required.']); return defer.promise;}
+	
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			defer.reject(data);
+		});
+		
+		return defer.promise;
+	};
+	
+	/*
+	 * Comments
+	 * Drupal CORS settings api_endpoint/node/comments/*|<mirror>|GET|Content-Type
+	 * 
+	 * This method returns the number of new comments on a given node.
+	 * 
+	 * Method: POST 
+	 * Url: http://drupal_instance/api_endpoint/node/comments/{NID}
+	 * Headers: Content-Type:application/json
+	 * 
+	 * @param {Integer} nid The node id to load comments for., required:true, source:path
+	 * @param {Integer} count Number of comments to load., required:false, source:param
+	 * @param {Integer} offset If count is set to non-zero value, you can pass also non-zero value for start. For example to get comments from 5 to 15, pass count=10 and start=5., required:false, source:param
+	 * 
+	 * @return 	{Promise}
+	 * 
+	 * useage: NodeResource.files(nid, count, offset).success(yourSuccessCallback(data)).error(yourErrorCallback(error));
+	 */
+	var comments = function(nid, count, offset) {
+		
+		var attachFilePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + '/' + nid,
+			defer = $q.defer(),
+			requestConfig = {
+				method :'GET',
+				url : attachFilePath,
+				data {
+					field_name   : field_name,
+					attach 		 : attach,
+					field_values : field_values,
+				}
+			};
+		
+		//if not given
+		if(!nid) { defer.reject(['Param nid is required.']); return defer.promise;}
+	
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			defer.reject(data);
+		});
+		
+		return defer.promise;
+	};
+	
 	//public methods	
 	return {
-		retrieve : retrieve,
-		index	 : index
+		retrieve 	: retrieve,
+		create 		: create,
+		update		: update,
+		_delete 	: _delete,
+		attach_file : attach_file,
+		file		: file,
+		comments 	: comments,
+		index	 	: index,
 	};
 
 });
@@ -1112,13 +1380,13 @@ drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	 * Url: http://drupal_instance/api_endpoint/user
 	 * Headers: Content-Type:application/json
 	 * 
-	 * @param 	{Array} uid The user object, required:true, source:post body
+	 * @param 	{Array} account The user object, required:true, source:post body
 	 * 
 	 * @return 	{Promise}
 	 * 
-	 * useage: UserResource.create(uid).then(yourSuccessCallback,yourErrorCallback);
+	 * useage: UserResource.create(account).then(yourSuccessCallback,yourErrorCallback);
 	 */
-	var create = function( uid ) {
+	var create = function( account ) {
 		return;
 	};
 
