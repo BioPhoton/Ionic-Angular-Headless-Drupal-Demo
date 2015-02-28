@@ -13,23 +13,27 @@ loginControllers.controller('LoginCtrl', ['$scope', '$localstorage', '$state', '
       if (form.$valid) {
 
         $scope.doingLogin = true;
-        UserResource.login($scope.loginData.username,
-          $scope.loginData.password).then(function (data) {
-          //reset form data
-          $scope.loginData = {};
-          
-          //reste form
-          //@TODO create formhelper for reste function
-          form.$error = {};
-          form.$pristine = true;
-          form.$dirty = false;
-          form.$valid = true;
-          form.$invalid = false;
-          
-        }, function (data) {
-          $rootScope.$broadcast('loading:hide');
-          $scope.loginServerErrors = data;
-        });
+        UserResource.login($scope.loginData.username, $scope.loginData.password)
+        .then(
+        		
+    		function (data) {
+	          //reset form data
+	          $scope.loginData = {};
+	          
+	          //reste form
+	          //@TODO create formhelper for reste function
+	          form.$error = {};
+	          form.$pristine = true;
+	          form.$dirty = false;
+	          form.$valid = true;
+	          form.$invalid = false;
+	          
+	        }, 
+	        //error
+	        function (data) {
+	          $scope.loginServerErrors = data;
+	        }
+	     );
       }
     };
 

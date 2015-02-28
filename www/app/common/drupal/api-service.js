@@ -2,36 +2,6 @@
 //______________________________________________
 var drupalApiService = angular.module('common.drupal.api-services', ['ngCookies']);
 
-/*localStorage helper*/
-drupalApiService.factory('$localstorage', ['$window', function ($window) {
-    return {
-      setItem: function (key, value) {
-        $window.localStorage[key] = value;
-      },
-      getItem: function (key, emptyValue) {
-        emptyValue = (emptyValue) ? emptyValue : undefined;
-        return $window.localStorage[key] || emptyValue;
-      },
-      removeItem: function (key) {
-        delete $window.localStorage[key];
-      },
-      setObject: function (key, value) {
-        $window.localStorage[key] = JSON.stringify(value);
-      },
-      getObject: function (key, emptyValue) {
-        emptyValue = (emptyValue) ? emptyValue : '{}';
-        if(!$window.localStorage[key]) { return emptyValue; }
-        return JSON.parse($window.localStorage[key] || emptyValue);
-      },
-      removeObject: function (key) {
-        delete $window.localStorage[key];
-      },
-      clearAll: function (key) {
-        delete $window.localStorage[key];
-        $window.localStorage = [];
-      },
-    }
-}])
 
 
 /* Constants for drupalApiService */
@@ -155,12 +125,15 @@ drupalApiService.constant("drupalApiServiceConfig", {
 	// Retrieve action
 	views_retrieveConfirmed	: 'event:drupal-views-retrieveConfirmed',
 	views_retrieveFailed  	: 'event:drupal-views-retrieveFailed',
+	
+	//DrupalAuthenticationService 
+	authService_connectionStateUpdated  : 'event:drupal-authService-connectionStateUpdated'
 
 });
 
 /*Notification service for spi events*/
 //http://codingsmackdown.tv/blog/2013/04/29/hailing-all-frequencies-communicating-in-angularjs-with-the-pubsub-design-pattern/
-drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalApiServiceConfig', 
+drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalApiServiceConfig', 
                                                  function ($rootScope,   drupalApiServiceConfig) {
    	
 	//
@@ -394,13 +367,13 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     //Login action
     
 	// Publish user login confirmed event
-    var publishUserLoginConfirmed = function (user) {
-        $rootScope.$broadcast(drupalApiServiceConfig.user_loginConfirmed, {user: user});
+    var publishUserLoginConfirmed = function (data) {
+        $rootScope.$broadcast(drupalApiServiceConfig.user_loginConfirmed, {data: data});
     };
     // Subscribe to user login confirmed event
     var onUserLoginConfirmed = function($scope, handler) {
     	$scope.$on(drupalApiServiceConfig.user_loginConfirmed, function(event, args) {
-	    handler(args.user);
+	    handler(args.data);
 	   });	
     };
     
@@ -466,7 +439,22 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
 	    handler(args.error);
 	   });	
     };
-        
+    
+    //
+    //Authentication service
+    // 
+    
+    // Publish sonnectionState updated event
+    var publishConnectionStateUpdated = function (state) {
+        $rootScope.$broadcast(drupalApiServiceConfig.authService_connectionStateUpdated, {state: state});
+    };
+    // Subscribe to sonnectionStateUpdated event
+    var onConnectionStateUpdated = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.authService_connectionStateUpdated, function(event, args) {
+	    handler(args.state);
+	   });	
+    };
+    
    // Return the publicly accessible methods
    return {
 	   
@@ -546,32 +534,76 @@ drupalApiService.factory('drupalApiNotificationChannel', ['$rootScope', 'drupalA
 	   onViewsRetrieveConfirmed 		: onViewsRetrieveConfirmed,
 	   publishViewsRetrieveFailed		: publishViewsRetrieveFailed,
 	   onViewsRetrieveFailed			: onViewsRetrieveFailed,
+	   
+	   //DrupalAuthenticationService events
+	   //ConnectionStateUpdated event
+	   publishConnectionStateUpdated 	: publishConnectionStateUpdated,
+	   onConnectionStateUpdated 		: onConnectionStateUpdated
+	   
    	};
-}])
+}]);
 
-/**
- * AuthenticationService
- * 
- * 
- * 
- */
-drupalApiService.factory('DrupalAuthenticationService', function($rootScope, $http, $q, drupalApiServiceConfig, drupalApiNotificationChannel, $localstorage, $cookieStore) {
+drupalApiService.service('DrupalAuthenticationService', function($rootScope, $http, $q, drupalApiServiceConfig, drupalApiNotificationChannel, SystemResource, $localstorage, $cookieStore) {
 	//needed to use the $on method in the notification channel
 	//http://stackoverflow.com/questions/16477123/how-do-i-use-on-in-a-service-in-angular
 	var scope = $rootScope.$new(); // or $new(true) if you want an isolate scope
+	var userIsConected = false,
+		currentUser	 = undefined;
+	
+	//this functions should be private
+	var setConnectionState = function(newState) {
+        if(newState != userIsConected) {
+          userIsConected = newState;
+      	  drupalApiNotificationChannel.publishConnectionStateUpdated(userIsConected);
+        }
+	};
+	
+	var getConnectionState = function() {
+		return userIsConected;
+	};
+	
+	var refreshConnection = function () {
+		var defer = $q.defer();
+		
+		SystemResource.connect().then(
+				//success
+	            function (data) {
+	            	
+	              var user_id = data.user.uid,
+	                  oldConnectionState = userIsConected;
+	              
+	              if (user_id == 0) { setConnectionState(false); }
+	              else {  setConnectionState(true); }
+	             
+	              defer.resolve(data);
+	            },
+	            //error
+	            function(data) {
+	            	defer.reject(data);
+	            }
+	    );
+		return defer.promise;
+	};
 	
 	var refreshTokenFromLocalStorage = function () {
 		var token = $localstorage.getItem('token') || '';
 		console.log('refreshTokenFromLocalStorage: ' + token); 
 		if (token) {
-			
 			//@TODO check if really needed
 			$http.defaults.headers.common.Authorization = token;
 			$http.defaults.headers.post['X-CSRF-TOKEN'] = token;
 		}
-	}
+	};
+	
+	var refreshTokenFromServer = function (token) {
+		console.log('refreshTokenFromServer: ' + token); 
+		 $localstorage.setItem('token', token);
+		 $http.defaults.headers.common.Authorization = token;
+		 $http.defaults.headers.post['X-CSRF-TOKEN'] = token;
+	};
 	
 	var storeAuthData = function (data, password) {
+		
 		//store local storage data
 		$localstorage.setItem('uid', data.user.uid);
 		$localstorage.setObject('user', data.user);
@@ -582,8 +614,10 @@ drupalApiService.factory('DrupalAuthenticationService', function($rootScope, $ht
 		$localstorage.setItem('session_name', data.session_name);
 		//store session cookies
 		$cookieStore.put(data.session_name, data.sessid);
-		//@TODO replace this with custom directive for hide show menu itme over acl
-		$rootScope.isAuthed = true;
+		//set ConnectionState to connected
+		setConnectionState(true);
+		//
+		currentUser = data.user;
 	};
 	
 	var deleteAuthData = function (data, password) {
@@ -597,8 +631,10 @@ drupalApiService.factory('DrupalAuthenticationService', function($rootScope, $ht
 		$localstorage.removeItem('session_name');
 		//delete session cookies
 		$cookieStore.remove($localstorage.getItem('session_name'));
-		//@TODO replace this with custom directive for hide show menu itme over acl
-		$rootScope.isAuthed = false;
+		//set ConnectionState to unconnected
+		setConnectionState(false);
+		//
+		currentUser = undefined;
 	};
 	
 	//@TODO move this into AcessControlService
@@ -625,64 +661,53 @@ drupalApiService.factory('DrupalAuthenticationService', function($rootScope, $ht
         return isGranted;
 	};
 	
+	
+	
 	//public methods
 	return {
 		refreshTokenFromLocalStorage 		: refreshTokenFromLocalStorage,
+		refreshTokenFromServer 				: refreshTokenFromServer,
+		getConnectionState 					: getConnectionState,
+		refreshConnection 					: refreshConnection,
 		storeAuthData 						: storeAuthData,
 		deleteAuthData 						: deleteAuthData,
 		authorize							: authorize
-	}
+	};
 })
 .run(
-function($rootScope, SystemResource, DrupalAuthenticationService, drupalApiNotificationChannel, $http) {
-	console.log('AuthenticationService run'); 	
+function($rootScope, SystemResource, UserResource, DrupalAuthenticationService, drupalApiNotificationChannel, $http, $localstorage) {
 	
-	//on token request confirmed
+	//on token request confirmed set new token in request headers
 	var onUserTokenConfirmedHandler = function(data) { 
       $localstorage.setItem('token', data.token);
+      
 	  $http.defaults.headers.common.Authorization = data.token;
 	  $http.defaults.headers.post['X-CSRF-TOKEN'] = data.token;
 	};
 	drupalApiNotificationChannel.onUserTokenConfirmed($rootScope, onUserTokenConfirmedHandler);
 	
-	//on register request confirmed
-	var onUserRegisterConfirmedHandler = function(data) {
-		console.log(data); 
-	};
-	drupalApiNotificationChannel.onUserRegisterConfirmed($rootScope, onUserRegisterConfirmedHandler);
-	
-	//on login request confirmed
+	//on login request confirmed store data and set new token in request headers
 	var onUserLoginConfirmedHandler = function(data) {
+		DrupalAuthenticationService.storeAuthData(data);
+		
 		$http.defaults.headers.common.Authorization = data.token;
 		$http.defaults.headers.post['X-CSRF-TOKEN'] = data.token;
 		$http.defaults.withCredentials = true;
-		DrupalAuthenticationService.storeAuthData(data);
 	};
 	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, onUserLoginConfirmedHandler);
 	
-	//on logout request confirmed
+	//on logout request confirmed delete data and remove token from request headers
 	var onUserLogoutConfirmedHandler = function(data) {
 		//@TODO check if this is needed
 		delete $http.defaults.headers.common.Authorization;
 		DrupalAuthenticationService.deleteAuthData();
 	};
 	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);
-	
 	//
-	//DrupalAuthenticationService.refreshTokenFromLocalStorage();
+	//
+	DrupalAuthenticationService.refreshTokenFromLocalStorage();
 	//update loginstate
-	SystemResource.connect().then(
-			//success
-            function (data) {
-              //@TODO check if needed here
-              var user_id = data.user.uid;
-              if (user_id == 0) {
-                $rootScope.isAuthed = false;
-              }
-              else {
-              	$rootScope.isAuthed = true;
-              }
-    });
+	DrupalAuthenticationService.refreshConnection();
 	
 });
 
@@ -698,7 +723,7 @@ var drupalAPI = angular.module('common.drupal.api-resources', []);
  * Session
  * @TODO check if needed
  */
- drupalAPI.factory('SessionResource', function($http, $q, drupalApiServiceConfig, drupalApiNotificationChannel) {
+ drupalAPI.service('SessionResource', function($http, $q, drupalApiServiceConfig, drupalApiNotificationChannel) {
 		
 		/*
 		 * 
@@ -746,7 +771,7 @@ var drupalAPI = angular.module('common.drupal.api-resources', []);
  * your_api_endpoint/node*|<mirror>|POST|Content-Type
  * 
 **/
-drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, drupalApiNotificationChannel) {
+drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, drupalApiNotificationChannel) {
 	
 	/*
 	 * getPreparedIndexParams
@@ -766,7 +791,7 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		fields = (fields)?fields:false;
 		if(fields !== false) {
 			//parse array
-			//@TODO parse array to getparams or set false
+			//@TODO parse array to get params or set false
 		}
 		if(fields !== false) { 
 			preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?ampersand:'') + fields;
@@ -776,7 +801,7 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		parameters = (parameters)?parameters:false;
 		if(parameters !== false) {
 			//parse array
-			//@TODO parse array to getparams or set false
+			//@TODO parse array to get params or set false
 		}
 		if(parameters !== false) { 
 			preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?ampersand:'') + parameters;
@@ -788,7 +813,7 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		if(pagesize !== false) { preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?ampersand:'') +  "pagesize="+pagesize; }
 		
 		return preparedIndexParams;
-	}
+	};
 
 	
 	/*
@@ -1023,9 +1048,9 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		var attachFilePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + '/attach_file/'+nid,
 			defer = $q.defer(),
 			requestConfig = {
-				method :'GET',
+				method :'POST',
 				url : attachFilePath,
-				data {
+				data : {
 					field_name   : field_name,
 					attach 		 : attach,
 					field_values : field_values,
@@ -1069,9 +1094,9 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		var attachFilePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + '/files/'+nid,
 			defer = $q.defer(),
 			requestConfig = {
-				method :'GET',
+				method :'POST',
 				url : attachFilePath,
-				data {
+				data : {
 					field_name   : field_name,
 					attach 		 : attach,
 					field_values : field_values,
@@ -1117,7 +1142,7 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 			requestConfig = {
 				method :'GET',
 				url : attachFilePath,
-				data {
+				data : {
 					field_name   : field_name,
 					attach 		 : attach,
 					field_values : field_values,
@@ -1145,7 +1170,7 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		update		: update,
 		_delete 	: _delete,
 		attach_file : attach_file,
-		file		: file,
+		files		: files,
 		comments 	: comments,
 		index	 	: index,
 	};
@@ -1160,7 +1185,7 @@ drupalAPI.factory('NodeResource', function($http, $q, drupalApiServiceConfig, dr
  * your_api_endpoint/system/*|<mirror>|POST|Content-Type,Authorization|true
  * 
 **/
-drupalAPI.factory('SystemResource', function($http, $q, drupalApiServiceConfig, UserResource) {
+drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, UserResource) {
 	
 	/*
 	 * connect
@@ -1352,7 +1377,7 @@ drupalAPI.factory('SystemResource', function($http, $q, drupalApiServiceConfig, 
  * your_api_endpoint/user/*|<mirror>|GET, PUT, POST, DELETE|Content-Type,Authorization
  * 
 **/
-drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $localstorage, drupalApiNotificationChannel) {
+drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $localstorage, drupalApiNotificationChannel) {
 
 	/*
 	 * retrieve
@@ -1495,7 +1520,7 @@ drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $l
              $http.defaults.withCredentials = true;
                          
 			 drupalApiNotificationChannel.publishUserLoginConfirmed(data);
-            defer.resolve(data);
+             defer.resolve(data);
          })
          .error(function (data, status, headers, config) {
         	 drupalApiNotificationChannel.publishUserLoginFailed(data);
@@ -1563,12 +1588,12 @@ drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $l
 
 	     $http({
 	       url: pathToToken,
-	       method: 'GET',
+	       method: 'POST',
 	       withCredentials: true
 	     })
          .success(function (token) {
            drupalApiNotificationChannel.publishUserTokenConfirmed(token);
-           defer.resolve(data);
+           defer.resolve(token);
          })
          .error(function (data) {
            drupalApiNotificationChannel.publishUserTokenFailed(data);
@@ -1728,7 +1753,7 @@ drupalAPI.factory('UserResource', function($http, $q, drupalApiServiceConfig, $l
  * your_api_endpoint/views/*|<mirror>|POST|Content-Type
  * 
 **/
-drupalAPI.factory('ViewsResource', function($http, $q, drupalApiServiceConfig, UserResource) {
+drupalAPI.service('ViewsResource', function($http, $q, drupalApiServiceConfig, UserResource) {
 	
 	/*
 	 * Retrieve

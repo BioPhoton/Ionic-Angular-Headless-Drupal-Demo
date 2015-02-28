@@ -4,8 +4,9 @@ tourControllers.controller('TourCtrl', ['$scope', '$state', '$localstorage', '$i
   function ($scope, $state, $localstorage, $ionicSlideBoxDelegate) {
     $scope.start = function () {
       $localstorage.setItem('firstVisit', 1);
-      console.log('first visit set to true'); 
+    
       $state.go('app.register');
+      console.log('first visit set to true'); 
     }
  
   $scope.data = {

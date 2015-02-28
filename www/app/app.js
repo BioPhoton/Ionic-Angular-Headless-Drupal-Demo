@@ -4,11 +4,13 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClient', ['ionic',
+  
+  'common.drupal.api-services',
+  'common.drupal.api-resources',
   'drupalIonicAngularJSAPIClient.configuration',
   'common.services.localstorage',
-
   //this is the good one
-  'common.drupal.api-services',
+
   'LocalForageModule',
   'app.controllers',
   'tour.controllers',
@@ -28,45 +30,64 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 
 drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', '$state',
                           function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   drupalApiNotificationChannel,   DrupalAuthenticationService,   $state) {
-   
+	
+	// if its the user first visit to the app play the apps tour
+	if ( !$localstorage.getItem('firstVisit') ) { 
+		event.preventDefault();
+		$state.go('app.tour'); 	
+	}
+	  
     //restrict access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
+    	
       var firstVisit = $localstorage.getItem('firstVisit');
       var hasLoggedIn = $localstorage.getItem('hasLoggedIn');
-
+            
       if (!('data' in toState) || !('access' in toState.data)) {
-        //event.preventDefault();
+        event.preventDefault();
+        console.log('no data set'); 
       }
 
       else if (!DrupalAuthenticationService.authorize(toState.data.access)) {
         event.preventDefault();
+        console.log('not authorized'); 
         if (firstVisit && hasLoggedIn) {
+        	console.log('firstVisit && hasLoggedIn'); 
           $state.go('app.login');
+          return;
         } else if (firstVisit && !hasLoggedIn) {
+        	console.log('firstVisit && !hasLoggedIn'); 
           $state.go('app.register');
+          return;
         } else {
+        	console.log('else'); 
           $state.go('app.tour');
+          return;
         };
       }
-      
-      //custom redirects
-      if (toState.name == 'app.login' || toState.name == 'app.register') {
+           
+      //custom redirect
+      if  (toState.name == 'app.login' || toState.name == 'app.register') {
         if ($rootScope.isAuthed) {
           event.preventDefault();
           $state.go('app.authed-tabs.profile');
+          return;
         }
       }
+       
     });
-
+    /**/
 }]);
 
-drupalIonicAngularJSAPIClient.config(function ($stateProvider, $urlRouterProvider, $httpProvider, DrupalAPISettings) {
+drupalIonicAngularJSAPIClient
+
+	.config( [ '$stateProvider', '$urlRouterProvider', '$httpProvider', 'DrupalAPISettings', 
+     function ( $stateProvider,   $urlRouterProvider,   $httpProvider,   DrupalAPISettings) {
 	
   //@TODO move this into authservice
   $httpProvider.defaults.withCredentials = true;
 	 
   $stateProvider
- 
           .state('app', {
             url: "/app",
             abstract: true,
@@ -137,7 +158,7 @@ drupalIonicAngularJSAPIClient.config(function ($stateProvider, $urlRouterProvide
 		      }
 		    }
 	   })
-	 
+	   /**/
 	  //System Resource
 	  //______________________________________________
 	   .state('app.anon-tabs.system-resource', {
@@ -210,5 +231,4 @@ drupalIonicAngularJSAPIClient.config(function ($stateProvider, $urlRouterProvide
           });
   
   $urlRouterProvider.otherwise('/app/authed-tabs/profile');
-}
-);
+}]);

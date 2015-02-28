@@ -1,9 +1,9 @@
 var registerControllers = angular.module('register.controllers', ['common.drupal.api-resources'])
 
-registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicModal', '$state', 'UserResource',
-  function ($scope, $rootScope, $ionicModal, $state, UserResource) {
+registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicModal', '$state', 'UserResource', 'termsNodeObj',
+  function ($scope, $rootScope, $ionicModal, $state, UserResource, termsNodeObj) {
 
-	//$scope.termsNode = termsNodeObj;
+	$scope.termsNode = termsNodeObj;
 	
     $scope.registerData = { 
       username: '',
