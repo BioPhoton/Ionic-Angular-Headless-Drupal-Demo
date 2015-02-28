@@ -126,7 +126,8 @@ drupalApiService.constant("drupalApiServiceConfig", {
 	views_retrieveFailed  	: 'event:drupal-views-retrieveFailed',
 	
 	//DrupalAuthenticationService 
-	authService_connectionStateUpdated  : 'event:drupal-authService-connectionStateUpdated'
+	authService_connectionStateUpdated  : 'event:drupal-authService-connectionStateUpdated',
+	authService_currentUserUpdated		: 'event:drupal-authService-currentUserUpdated',
 
 });
 
