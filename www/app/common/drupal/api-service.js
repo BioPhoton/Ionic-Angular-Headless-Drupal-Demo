@@ -2,8 +2,6 @@
 //______________________________________________
 var drupalApiService = angular.module('common.drupal.api-services', ['ngCookies']);
 
-
-
 /* Constants for drupalApiService */
 drupalApiService.constant("drupalApiServiceConfig", {
    //					   
@@ -47,8 +45,9 @@ drupalApiService.constant("drupalApiServiceConfig", {
 		  },
 		  // other endpoint [path/to/endpoint]
 	  },
-	
-
+	 //the drupals guest user obj
+	 anonymousUser : { uid: 0, roles: {1: "anonymous user"}},
+	  
 	//
 	// Constants for drupalApiNotificationChannel
 	//
@@ -455,6 +454,17 @@ drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalA
 	   });	
     };
     
+    // Publish currentUser updated event
+    var publishCurrentUserUpdated = function (user) {
+        $rootScope.$broadcast(drupalApiServiceConfig.authService_currentUserUpdated, {user: user});
+    };
+    // Subscribe to currentUserUpdated event
+    var onCurrentUserUpdated = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.authService_currentUserUpdated, function(event, args) {
+	    handler(args.user);
+	   });	
+    };
+    
    // Return the publicly accessible methods
    return {
 	   
@@ -538,7 +548,9 @@ drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalA
 	   //DrupalAuthenticationService events
 	   //ConnectionStateUpdated event
 	   publishConnectionStateUpdated 	: publishConnectionStateUpdated,
-	   onConnectionStateUpdated 		: onConnectionStateUpdated
+	   onConnectionStateUpdated 		: onConnectionStateUpdated,
+	   publishCurrentUserUpdated		: publishCurrentUserUpdated,
+	   onCurrentUserUpdated				: onCurrentUserUpdated,
 	   
    	};
 }]);
@@ -550,7 +562,22 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 	var userIsConected = false,
 		currentUser	 = undefined;
 	
-	//this functions should be private
+	
+	var getCurrentUser = function() {
+		return currentUser;
+	}
+	//
+	var setCurrentUser = function(newUser) {
+        if(newUser != newUser) {
+        	currentUser = newUser;
+      	  drupalApiNotificationChannel.publishCurrentUserUpdated(currentUser);
+        }
+	};
+	
+	var getConnectionState = function() {
+		return userIsConected;
+	};
+	//
 	var setConnectionState = function(newState) {
         if(newState != userIsConected) {
           userIsConected = newState;
@@ -558,9 +585,7 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
         }
 	};
 	
-	var getConnectionState = function() {
-		return userIsConected;
-	};
+	
 	
 	var refreshConnection = function () {
 		var defer = $q.defer();
@@ -661,13 +686,12 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
         return isGranted;
 	};
 	
-	
-	
 	//public methods
 	return {
 		refreshTokenFromLocalStorage 		: refreshTokenFromLocalStorage,
 		refreshTokenFromServer 				: refreshTokenFromServer,
 		getConnectionState 					: getConnectionState,
+		getCurrentUser 						: getCurrentUser,
 		refreshConnection 					: refreshConnection,
 		storeAuthData 						: storeAuthData,
 		deleteAuthData 						: deleteAuthData,
