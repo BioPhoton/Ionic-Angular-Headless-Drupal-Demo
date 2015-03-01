@@ -19,12 +19,12 @@ userResourceControllers.controller('anonTabUserResourceCtrl',
 					    .then(
 					    		//success
 					    		function(data) {
-					    			console.log('success');
+					    			
 					    			$scope.lastResultRequestToUserResourceLogin = data;
 					    		},
 					    		//error
 					    		function(data) {
-					    			console.log(data);
+					    			
 					    			$scope.lastResultRequestToUserResourceLogin = data;
 					    		}
 					    );
@@ -34,18 +34,7 @@ userResourceControllers.controller('anonTabUserResourceCtrl',
 		   $scope.lastResultRequestToUserResourceLogout = null;
 		   
 		   $scope.callUserResourceLogout = function() {
-				console.log('callUserResourceLogin'); 
-				UserResource.logout( )
-			    .then(
-			    		//success
-			    		function(data) {
-			    			console.log(data); 
-			    		},
-			    		//error
-			    		function(data) {
-			    			console.log(data); 
-			    		}
-			    );
+				UserResource.logout();
 		   }
 			  
 }]);

@@ -1,6 +1,5 @@
 /* Controllers of apiServicesControllers component */
 //______________________________________________
-
 var anonSystemResourceControllers = angular.module('anon-tabs.system-resource.controllers', ['common.drupal.api-services', 'common.drupal.api-resources']);
 
 
@@ -95,7 +94,7 @@ anonSystemResourceControllers.controller('anonTabSystemResourceCtrl',
 				    		},
 				    		//error
 				    		function(data) {
-				    			console.log('error');
+				    			
 				    			requestEnd = Date.now();
 				    			$scope.systemDelVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 				    		}

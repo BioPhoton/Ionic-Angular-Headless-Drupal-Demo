@@ -41,7 +41,6 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
     	
       var firstVisit = $localstorage.getItem('firstVisit');
-      
       var isRegistered = $localstorage.getItem('isRegistered');
     
    
@@ -57,34 +56,28 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
       }
       else if (!AccessControlService.authorize(toState.data.access)) {
         event.preventDefault();
-        console.log('not authorized'); 
+      
         if (firstVisit && isRegistered) {
-        	console.log('firstVisit && isRegistered'); 
           $state.go('app.login');
           return;
         } else if (firstVisit && !isRegistered) {
-        	console.log('firstVisit && !isRegistered'); 
           $state.go('app.register');
           return;
         } 
         else {
-        	console.log('else'); 
           $state.go('app.tour');
           return;
         };
       }
            
       //custom redirect
-     /* if  (toState.name == 'app.login' || toState.name == 'app.register') {
+      if  (toState.name == 'app.login' || toState.name == 'app.register') {
         if (DrupalAuthenticationService.getConnectionState()) {
-        	console.log('User is already authed. So we skip redirecting to ' + toState.name + 'and go to app.authed-tabs.profile'); 
           event.preventDefault();
           $state.go('app.authed-tabs.profile');
           return;
-        } else {
-        	console.log('user is not authed so he can go to ' + toState.name);
-        }
-      }*/
+        } 
+      }
        
     });
     /**/

@@ -58,7 +58,6 @@ registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicM
 								});
 	
 	$scope.showTermsModal = function() {
-		console.log(); 
 		$scope.termsModal.show();
 	};
 

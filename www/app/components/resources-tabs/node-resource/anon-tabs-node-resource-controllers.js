@@ -22,13 +22,11 @@ anonNodeResourceControllers.controller('anonTabNodeResourceCtrl',
 				   NodeResource.retrieve(nid).then(
 				    		//success
 				    		function(data) {
-				    			console.log('success');
 				    			requestEnd = Date.now();
 				    			$scope.nodeRetrieveRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 				    		},
 				    		//error
 				    		function(data) {
-				    			console.log('error');
 				    			requestEnd = Date.now();
 				    			$scope.nodeRetrieveRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 				    		}
@@ -51,13 +49,13 @@ anonNodeResourceControllers.controller('anonTabNodeResourceCtrl',
 				   NodeResource.index(nodeIndex.page, nodeIndex.fields, nodeIndex.parameters, nodeIndex.pagesize).then(
 				    		//success
 				    		function(data) {
-				    			console.log('success');
+				    		
 				    			 var requestEnd = Date.now();
 				    			$scope.nodeIndexRequests.push( {requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 				    		},
 				    		//error
 				    		function(data) {
-				    			console.log('error');
+				    		
 				    			$scope.nodeIndexRequests.push( {requestStart:requestStart, data:data});
 				    		}
 				    );

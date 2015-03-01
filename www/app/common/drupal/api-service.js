@@ -570,14 +570,12 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 	var setCurrentUser = function(newUser) {
 		
 		if(currentUser != newUser) {
-			console.log('setCurrentUser: '+newUser);
         	currentUser = newUser;
       	    drupalApiNotificationChannel.publishCurrentUserUpdated(currentUser);
         }
 	};
 	
 	var getConnectionState = function() {
-		console.log('getConnectionState: ' + userIsConected); 
 		return userIsConected;
 	};
 	//
@@ -590,7 +588,6 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 	
 	var refreshTokenFromLocalStorage = function () {
 		var token = $localstorage.getItem('token') || '';
-		console.log('refreshTokenFromLocalStorage: ' + token); 
 		
 		if (token) {
 			$http.defaults.withCredentials = true;
@@ -608,7 +605,6 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		var defer = $q.defer();
 		
 		UserResource.token().then(function(token){
-			 console.log('refreshTokenFromServer: ' + token); 
 			 
 			 $localstorage.setItem('token', token);
 			 
@@ -635,7 +631,6 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		if(!refreshTokenFromLocalStorage()) {
 			refreshTokenFromServer().then(
 				function(token) {
-					console.log('connect with new token from server'); 
 					SystemResource.connect().then(
 						//success
 			            function (data) {
@@ -660,14 +655,13 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 			);
 		} 
 		else {
-			console.log('connect with token from localstorage'); 
 			SystemResource.connect().then(
 					//success
 		            function (data) {
 		            	
 		              var user_id = data.user.uid,
 		                  oldConnectionState = userIsConected;
-		              	  console.log(data.user); 
+		       
 		              if (user_id == 0) { 
 		            	  setConnectionState(false);
 		              }

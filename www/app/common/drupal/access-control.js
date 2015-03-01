@@ -48,7 +48,6 @@ accessControl.directive('accessLevel', ['AccessControlService', 'drupalApiNotifi
                 , accessLevel;
 
             drupalApiNotificationChannel.onCurrentUserUpdated($scope, function (user){
-            	console.log('onCurrentUserUpdated accessLevel');
             	$scope.user = user;
                 userRoles = $scope.user.roles;
                 updateCSS();

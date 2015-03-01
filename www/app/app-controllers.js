@@ -14,6 +14,9 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotifica
       }
     });
 	
+	
+	$scope.logout = function () { UserResource.logout(); };
+	 
 	$scope.accessLevels = DrupalAPISettings.accessLevels;
 	
 	
@@ -30,24 +33,14 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotifica
 	//
     
     // on logou request confirmed do logout redirect
-	var onUserLogoutConfirmedHandler = function(data) {  
-		console.log('logout app controller');
-		$state.go('app.login');
-	};
-	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);
-	
-    $scope.logout = function () { UserResource.logout(); };
+	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, function(data) {$state.go('app.login');});
     	
 	//
 	// Auth redirects
 	//
 	
     // on login request confirmed do login redirect
-	var onUserLoginConfirmedHandler = function(data) { 
-		console.log('login app controller');    
-		$state.go('app.authed-tabs.profile'); 
-	};
-	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, onUserLoginConfirmedHandler);
+	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, function(data) { $state.go('app.authed-tabs.profile'); });
     
     //
     // Show hide network connection bar
