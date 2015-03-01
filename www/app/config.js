@@ -1,7 +1,6 @@
 angular.module('drupalIonicAngularJSAPIClient.configuration', [])
-        .constant('DrupalAPISettings', {
+        .constant('AppSettings', {
 
-          
            roles :[
                'anonymous user',
                'authenticated user',

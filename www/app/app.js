@@ -85,8 +85,8 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
 
 drupalIonicAngularJSAPIClient
 
-	.config( [ '$stateProvider', '$urlRouterProvider', '$httpProvider', 'DrupalAPISettings', 
-     function ( $stateProvider,   $urlRouterProvider,   $httpProvider,   DrupalAPISettings) {
+	.config( [ '$stateProvider', '$urlRouterProvider', '$httpProvider', 'AppSettings', 
+     function ( $stateProvider,   $urlRouterProvider,   $httpProvider,   AppSettings) {
 	
   $stateProvider
           .state('app', {
@@ -96,7 +96,7 @@ drupalIonicAngularJSAPIClient
             controller: 'AppCtrl',
             cache: false,
             data: {
-              access: DrupalAPISettings.accessLevels.public
+              access: AppSettings.accessLevels.public
             }
           })
 
@@ -130,8 +130,8 @@ drupalIonicAngularJSAPIClient
               }
 	        },
             resolve: {
-              termsNodeObj: function (NodeResource, DrupalAPISettings) {
-                return NodeResource.retrieve(DrupalAPISettings.terms_and_conditions_nid);
+              termsNodeObj: function (NodeResource, AppSettings) {
+                return NodeResource.retrieve(AppSettings.terms_and_conditions_nid);
               }
             }
           })
@@ -216,7 +216,7 @@ drupalIonicAngularJSAPIClient
               }
             },
             data: {
-              access: DrupalAPISettings.accessLevels.user
+              access: AppSettings.accessLevels.user
             }
 
           })
