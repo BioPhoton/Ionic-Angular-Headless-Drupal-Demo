@@ -162,7 +162,7 @@ drupalIonicAngularJSAPIClient
 	    views: {
 		      'session-resource': {
 		    	templateUrl: 'app/components/resources-tabs/session-resource/session-resource.html',
-		  		controller:  'ResourcesSystemResourceCtrl' 
+		  		controller:  'ResourcesSessionResourceCtrl' 
 		      }
 		    }
 	   })

@@ -46,7 +46,7 @@ drupalApiService.constant("drupalApiServiceConfig", {
 		  // other endpoint [path/to/endpoint]
 	  },
 	 //the drupals guest user obj
-	 anonymousUser : { uid: 0, roles: {1: "anonymous user"}},
+	 anonymousUser : {"uid":0,"hostname":"2a02:8388:15c0:ce80:11d3:d8c2:7c96:cf29","roles":{"1":"anonymous user"},"cache":0,"timestamp":1425233400},
 	  
 	//
 	// Constants for drupalApiNotificationChannel
@@ -787,7 +787,7 @@ var drupalAPI = angular.module('common.drupal.api-resources', []);
 		 * 
 		 * Drupal CORS settings: 
 		 * @TODO check settings
-		 * "services/session/token|<mirror>|POST, GET|Content-Type,Authorization,X-CSRF-TOKEN|true
+		 * "services/session/token|<mirror>|GET|Content-Type,Authorization,X-CSRF-TOKEN|true
 		*/
 		var token = function(nid){
 
@@ -796,6 +796,7 @@ var drupalAPI = angular.module('common.drupal.api-resources', []);
 				requestConfig = {
 					method :'GET',
 					url : tokenPath,
+					
 	                withCredentials: true
 				};
 			

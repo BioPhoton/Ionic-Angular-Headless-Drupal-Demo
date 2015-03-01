@@ -5,7 +5,7 @@ var SessionResourceControllers = angular.module('resources.session-resource.cont
 
 
 /* Session Resource Controller */
-SessionResourceControllers.controller('ResourcesSystemResourceCtrl', 
+SessionResourceControllers.controller('ResourcesSessionResourceCtrl', 
 		   ['$scope', 'SessionResource', 'drupalApiNotificationChannel', 
     function($scope,   SessionResource,   drupalApiNotificationChannel ) {
 			  
