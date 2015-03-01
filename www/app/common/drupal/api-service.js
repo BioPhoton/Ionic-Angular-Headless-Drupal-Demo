@@ -556,26 +556,28 @@ drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalA
    	};
 }]);
 
-drupalApiService.service('DrupalAuthenticationService', function($rootScope, $http, $q, drupalApiServiceConfig, drupalApiNotificationChannel, SystemResource, $localstorage, $cookieStore) {
+drupalApiService.service('DrupalAuthenticationService', function($rootScope, $http, $q, drupalApiServiceConfig, drupalApiNotificationChannel, SystemResource, UserResource, $localstorage, $cookieStore) {
 	//needed to use the $on method in the notification channel
 	//http://stackoverflow.com/questions/16477123/how-do-i-use-on-in-a-service-in-angular
 	var scope = $rootScope.$new(); // or $new(true) if you want an isolate scope
 	var userIsConected = false,
-		currentUser	 = undefined;
-	
+		currentUser	 = drupalApiServiceConfig.anonymousUser;
 	
 	var getCurrentUser = function() {
 		return currentUser;
 	}
 	//
 	var setCurrentUser = function(newUser) {
-        if(newUser != newUser) {
+		
+		if(currentUser != newUser) {
+			console.log('setCurrentUser: '+newUser);
         	currentUser = newUser;
-      	  drupalApiNotificationChannel.publishCurrentUserUpdated(currentUser);
+      	    drupalApiNotificationChannel.publishCurrentUserUpdated(currentUser);
         }
 	};
 	
 	var getConnectionState = function() {
+		console.log('getConnectionState: ' + userIsConected); 
 		return userIsConected;
 	};
 	//
@@ -586,55 +588,113 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
         }
 	};
 	
-	
-	
-	var refreshConnection = function () {
-		var defer = $q.defer();
-		
-		SystemResource.connect().then(
-				//success
-	            function (data) {
-	            	
-	              var user_id = data.user.uid,
-	                  oldConnectionState = userIsConected;
-	              
-	              if (user_id == 0) { setConnectionState(false); }
-	              else {  setConnectionState(true); }
-	             
-	              defer.resolve(data);
-	            },
-	            //error
-	            function(data) {
-	            	defer.reject(data);
-	            }
-	    );
-		return defer.promise;
-	};
-	
 	var refreshTokenFromLocalStorage = function () {
 		var token = $localstorage.getItem('token') || '';
 		console.log('refreshTokenFromLocalStorage: ' + token); 
+		
 		if (token) {
-			//@TODO check if really needed
+			$http.defaults.withCredentials = true;
+			
 			$http.defaults.headers.common.Authorization = token;
 			$http.defaults.headers.post['X-CSRF-TOKEN'] = token;
+			$http.defaults.headers.put['X-CSRF-TOKEN'] = token;
+			// @TODO => $http.defaults.headers.delete['X-CSRF-TOKEN'] = token;
+			return token
 		}
+		return false;
 	};
 	
-	var refreshTokenFromServer = function (token) {
-		console.log('refreshTokenFromServer: ' + token); 
-		 $localstorage.setItem('token', token);
-		 $http.defaults.headers.common.Authorization = token;
-		 $http.defaults.headers.post['X-CSRF-TOKEN'] = token;
+	var refreshTokenFromServer = function () {
+		var defer = $q.defer();
+		
+		UserResource.token().then(function(token){
+			 console.log('refreshTokenFromServer: ' + token); 
+			 
+			 $localstorage.setItem('token', token);
+			 
+			 $http.defaults.withCredentials = true;
+			 
+			 $http.defaults.headers.common.Authorization = token;
+			 $http.defaults.headers.post['X-CSRF-TOKEN'] = token;
+			 $http.defaults.headers.put['X-CSRF-TOKEN'] = token;
+		     // @TODO => $http.defaults.headers.delete['X-CSRF-TOKEN'] = token;
+			 
+			 defer.resolve(token);
+		},
+		function() {
+			defer.reject(data);
+		});
+
+		return defer.promise;
 	};
 	
-	var storeAuthData = function (data, password) {
+	var refreshConnection = function () {
+		var defer = $q.defer();
+
+		//@TODO queue refreshTokenFromServer ans connect request if  TokenFromLocalStorage is false
+		if(!refreshTokenFromLocalStorage()) {
+			refreshTokenFromServer().then(
+				function(token) {
+					console.log('connect with new token from server'); 
+					SystemResource.connect().then(
+						//success
+			            function (data) {
+			              var user_id = data.user.uid;
+			              
+			              if (user_id == 0) { 
+			            	  setConnectionState(false); 
+			              }
+			              else {  
+			            	  setConnectionState(true);
+			            	  setCurrentUser(data.user);
+			              }
+			             
+			              defer.resolve(data);
+			            },
+			            //error
+			            function(data) {
+			            	defer.reject(data);
+			            }
+					);
+				}
+			);
+		} 
+		else {
+			console.log('connect with token from localstorage'); 
+			SystemResource.connect().then(
+					//success
+		            function (data) {
+		            	
+		              var user_id = data.user.uid,
+		                  oldConnectionState = userIsConected;
+		              	  console.log(data.user); 
+		              if (user_id == 0) { 
+		            	  setConnectionState(false);
+		              }
+		              else {  
+		            	  setConnectionState(true);
+		            	  setCurrentUser(data.user);
+		              }
+		               
+		             
+		              defer.resolve(data);
+		            },
+		            //error
+		            function(data) {
+		            	defer.reject(data);
+		            }
+				);	
+		}
+		
+		return defer.promise;
+	};
+		
+	var storeAuthData = function (data) {
 		
 		//store local storage data
 		$localstorage.setItem('uid', data.user.uid);
-		$localstorage.setObject('user', data.user);
-		$localstorage.setItem('username', data.user.name);
-		$localstorage.setItem('password', password);
+		//$localstorage.setObject('user', data.user);
+		//$localstorage.setItem('username', data.user.name);
 		$localstorage.setItem('token', data.token);
 		$localstorage.setItem('sessid', data.sessid);
 		$localstorage.setItem('session_name', data.session_name);
@@ -643,15 +703,14 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		//set ConnectionState to connected
 		setConnectionState(true);
 		//
-		currentUser = data.user;
+		setCurrentUser(data.user);
 	};
 	
-	var deleteAuthData = function (data, password) {
+	var deleteAuthData = function () {
 		//delete local storage data
 		$localstorage.removeItem('uid');
-		$localstorage.removeObject('user');
-		$localstorage.removeItem('username');
-		$localstorage.removeItem('password');
+		//$localstorage.removeObject('user');
+		//$localstorage.removeItem('username');
 		$localstorage.removeItem('token');
 		$localstorage.removeItem('sessid');
 		$localstorage.removeItem('session_name');
@@ -660,32 +719,9 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		//set ConnectionState to unconnected
 		setConnectionState(false);
 		//
-		currentUser = undefined;
+		setCurrentUser(drupalApiServiceConfig.anonymousUser);
 	};
 	
-	//@TODO move this into AcessControlService
-	var authorize = function(accessLevel, role) {
-		 //if no user is given set unauthorized user
-		 currentUser = $localstorage.getObject('user', { uid: 0, roles: {1: "anonymous user"}});
-		 //
-	     if(role === undefined) {
-			role = currentUser.roles[1]; 
-        }
-	    
-	     //
-	     if(accessLevel == '*') { return true;}
-	     
-	     var isGranted = false;
-		 for (var i = 0; i < accessLevel.length; i++) {
-			 for (var prop in currentUser.roles) {
-				if(accessLevel[i] == currentUser.roles[prop]) {
-					 accessLevel, role
-					 isGranted = true;
-				}
-			 }
-	     }
-        return isGranted;
-	};
 	
 	//public methods
 	return {
@@ -695,19 +731,18 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		getCurrentUser 						: getCurrentUser,
 		refreshConnection 					: refreshConnection,
 		storeAuthData 						: storeAuthData,
-		deleteAuthData 						: deleteAuthData,
-		authorize							: authorize
+		deleteAuthData 						: deleteAuthData
 	};
 })
 .run(
 function($rootScope, SystemResource, UserResource, DrupalAuthenticationService, drupalApiNotificationChannel, $http, $localstorage) {
 	
+
 	//on token request confirmed set new token in request headers
-	var onUserTokenConfirmedHandler = function(data) { 
-      $localstorage.setItem('token', data.token);
-      
-	  $http.defaults.headers.common.Authorization = data.token;
-	  $http.defaults.headers.post['X-CSRF-TOKEN'] = data.token;
+	var onUserTokenConfirmedHandler = function(token) { 
+	  $localstorage.setItem('token', token);
+	  $http.defaults.headers.common.Authorization = token;
+	  $http.defaults.headers.post['X-CSRF-TOKEN'] = token;
 	};
 	drupalApiNotificationChannel.onUserTokenConfirmed($rootScope, onUserTokenConfirmedHandler);
 	
@@ -729,10 +764,6 @@ function($rootScope, SystemResource, UserResource, DrupalAuthenticationService, 
 	};
 	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);
 	//
-	//
-	DrupalAuthenticationService.refreshTokenFromLocalStorage();
-	//update loginstate
-	DrupalAuthenticationService.refreshConnection();
 	
 });
 
@@ -1616,9 +1647,9 @@ drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	       method: 'POST',
 	       withCredentials: true
 	     })
-         .success(function (token) {
-           drupalApiNotificationChannel.publishUserTokenConfirmed(token);
-           defer.resolve(token);
+         .success(function (data) {
+           drupalApiNotificationChannel.publishUserTokenConfirmed(data.token);
+           defer.resolve(data.token);
          })
          .error(function (data) {
            drupalApiNotificationChannel.publishUserTokenFailed(data);
@@ -1662,7 +1693,7 @@ drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	 */
 	var register = function(account){
 		
-		 var pathToRegister = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api + drupalApiServiceConfig.defaut_resources.register;
+		 var pathToRegister = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + 'register';
 	 	 	 requestConfig = {
 	 			method: 'POST',
 				url : pathToRegister,
@@ -1672,9 +1703,9 @@ drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $l
 					"Content-Type"	: "application/json",
 				},
 				data : {
-					name : username,
-					pass : password,
-					mail : email
+					name : account.username,
+					pass : account.password,
+					mail : account.email
 				}
 	 	 	  },
 	 	 	  defer = $q.defer();

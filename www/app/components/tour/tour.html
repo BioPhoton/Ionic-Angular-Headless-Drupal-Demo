@@ -1,28 +1,4 @@
 <!-- 
-<ion-view  title="Dynamic Slides">
-<ion-nav-bar class="bar-stable">
-      <ion-nav-buttons side="left">
-    <button class="button button-positive button-clear no-animation"
-            ng-click="previous()" ng-if="data.slideIndex > 0">
-      Previous Slide
-    </button>
-  </ion-nav-buttons>
-  <ion-nav-buttons side="right"> 
-    <button class="button button-positive button-clear no-animation" ng-click="next()" ng-if="data.slideIndex < data.numViewableSlides - 1">
-    Next
-    </button>
-  </ion-nav-buttons>
-  </ion-nav-bar>
-  <ion-slide-box class="has-header" on-slide-changed="slideChanged(index)">
-    <ion-slide ng-repeat="slide in data.slides | filter:{viewable : true}">
-      <div ng-include src="slide.template"></div>
-    </ion-slide>
-
-  </ion-slide-box>
-</ion-view>
- -->
-
-
 <ion-view  title="Tour Slides">
   <ion-nav-bar class="bar-stable">
 	  <ion-nav-buttons side="left">
@@ -38,6 +14,20 @@
 	    </button>
 	  </ion-nav-buttons>
   </ion-nav-bar>
+  
+  <ion-content direction="x" >
+   <ion-slide-box class="has-header" show-pager="true"   on-slide-changed="slideChanged(index)">
+    <ion-slide ng-repeat="slide in data.slides | filter:{viewable : true}">
+      <div ng-include src="slide.template"></div>
+    </ion-slide>
+  </ion-content>
+  
+</ion-view>
+ -->
+
+
+<ion-view  title="Tour Slides">
+
   
   <ion-content direction="x" >
    <ion-slide-box class="has-header" show-pager="true"   on-slide-changed="slideChanged(index)">

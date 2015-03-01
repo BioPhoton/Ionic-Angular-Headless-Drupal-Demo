@@ -5,9 +5,10 @@
 // the 2nd parameter is an array of 'requires'
 var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClient', ['ionic',
   
+  'drupalIonicAngularJSAPIClient.configuration',
   'common.drupal.api-services',
   'common.drupal.api-resources',
-  'drupalIonicAngularJSAPIClient.configuration',
+  'common.accesss-control',
   'common.services.localstorage',
   //this is the good one
 
@@ -18,6 +19,7 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'logout.controllers',
   'register.controllers',
 
+  'resources.session-resource.controllers',
   'anon-tabs.node-resource.controllers',
   'anon-tabs.system-resource.controllers',
   'anon-tabs.user-resource.controllers',
@@ -28,38 +30,44 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 
 ]);
 
-drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', '$state',
-                          function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   drupalApiNotificationChannel,   DrupalAuthenticationService,   $state) {
+drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', 'AccessControlService', '$state',
+                          function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   drupalApiNotificationChannel,   DrupalAuthenticationService,   AccessControlService,   $state) {
 	
-	// if its the user first visit to the app play the apps tour
-	if ( !$localstorage.getItem('firstVisit') ) { 
-		event.preventDefault();
-		$state.go('app.tour'); 	
-	}
+	
+	//init connection state
+	DrupalAuthenticationService.refreshConnection();
 	  
     //restrict access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
     	
       var firstVisit = $localstorage.getItem('firstVisit');
-      var hasLoggedIn = $localstorage.getItem('hasLoggedIn');
-            
+      
+      var isRegistered = $localstorage.getItem('isRegistered');
+    
+   
+      // if its the user first visit to the app play the apps tour
+  	  if ( !firstVisit && toState.name != 'app.tour') { 
+  		event.preventDefault();
+  		$state.go('app.tour'); 	
+  	  }  
+  	  
       if (!('data' in toState) || !('access' in toState.data)) {
         event.preventDefault();
-        console.log('no data set'); 
+        console.log('no access data set for this route'); 
       }
-
-      else if (!DrupalAuthenticationService.authorize(toState.data.access)) {
+      else if (!AccessControlService.authorize(toState.data.access)) {
         event.preventDefault();
         console.log('not authorized'); 
-        if (firstVisit && hasLoggedIn) {
-        	console.log('firstVisit && hasLoggedIn'); 
+        if (firstVisit && isRegistered) {
+        	console.log('firstVisit && isRegistered'); 
           $state.go('app.login');
           return;
-        } else if (firstVisit && !hasLoggedIn) {
-        	console.log('firstVisit && !hasLoggedIn'); 
+        } else if (firstVisit && !isRegistered) {
+        	console.log('firstVisit && !isRegistered'); 
           $state.go('app.register');
           return;
-        } else {
+        } 
+        else {
         	console.log('else'); 
           $state.go('app.tour');
           return;
@@ -67,13 +75,16 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
       }
            
       //custom redirect
-      if  (toState.name == 'app.login' || toState.name == 'app.register') {
-        if ($rootScope.isAuthed) {
+     /* if  (toState.name == 'app.login' || toState.name == 'app.register') {
+        if (DrupalAuthenticationService.getConnectionState()) {
+        	console.log('User is already authed. So we skip redirecting to ' + toState.name + 'and go to app.authed-tabs.profile'); 
           event.preventDefault();
           $state.go('app.authed-tabs.profile');
           return;
+        } else {
+        	console.log('user is not authed so he can go to ' + toState.name);
         }
-      }
+      }*/
        
     });
     /**/
@@ -84,9 +95,6 @@ drupalIonicAngularJSAPIClient
 	.config( [ '$stateProvider', '$urlRouterProvider', '$httpProvider', 'DrupalAPISettings', 
      function ( $stateProvider,   $urlRouterProvider,   $httpProvider,   DrupalAPISettings) {
 	
-  //@TODO move this into authservice
-  $httpProvider.defaults.withCredentials = true;
-	 
   $stateProvider
           .state('app', {
             url: "/app",
@@ -137,35 +145,45 @@ drupalIonicAngularJSAPIClient
            
       //Abstract states for anonymous tabs
 	  //______________________________________________
-	  .state('app.anon-tabs', {
+	  .state('app.resources-tabs', {
 	    url: '/anon-tabs',
 	    abstract: true,
 	    views: {
 		      'menuContent': {
-		    	templateUrl: 'app/components/anonymous-tabs/anonymous-tabs.html',
+		    	templateUrl: 'app/components/resources-tabs/resources-tabs.html',
 		      }
 		    }
 	  })
 	 
+	  //Session Resource
+	  //______________________________________________
+	   .state('app.resources-tabs.session-resource', {
+	    url: '/session-recource',
+	    views: {
+		      'session-resource': {
+		    	templateUrl: 'app/components/resources-tabs/session-resource/session-resource.html',
+		  		controller:  'ResourcesSystemResourceCtrl' 
+		      }
+		    }
+	   })
 	  //Node Resource
 	  //______________________________________________
-	   .state('app.anon-tabs.node-resource', {
+	   .state('app.resources-tabs.node-resource', {
 	    url: '/node-recource',
 	    views: {
 		      'node-resource': {
-		    	templateUrl: 'app/components/anonymous-tabs/node-resource/anon-tabs-node-resource.html',
+		    	templateUrl: 'app/components/resources-tabs/node-resource/anon-tabs-node-resource.html',
 		  		controller:  'anonTabNodeResourceCtrl' 
 		      }
 		    }
 	   })
-	   /**/
 	  //System Resource
 	  //______________________________________________
-	   .state('app.anon-tabs.system-resource', {
+	   .state('app.resources-tabs.system-resource', {
 	    url: '/system-recource',
 	    views: {
 		      'system-resource': {
-		    	templateUrl: 'app/components/anonymous-tabs/system-resource/anon-tabs-system-resource.html',
+		    	templateUrl: 'app/components/resources-tabs/system-resource/anon-tabs-system-resource.html',
 		  		controller:  'anonTabSystemResourceCtrl' 
 		      }
 		    }
@@ -173,22 +191,22 @@ drupalIonicAngularJSAPIClient
 	   
 	   //User Resource
 	   //______________________________________________
-	   .state('app.anon-tabs.user-resource', {
+	   .state('app.resources-tabs.user-resource', {
 	    url: '/user-recource',
 	    views: {
 		      'user-resource': {
-		    	templateUrl: 'app/components/anonymous-tabs/user-resource/anon-tabs-user-resource.html',
+		    	templateUrl: 'app/components/resources-tabs/user-resource/anon-tabs-user-resource.html',
 		  		controller:  'anonTabUserResourceCtrl' 
 		      }
 		    }
 	   })
 	    //Views Resource
 	   //______________________________________________
-	   .state('app.anon-tabs.views-resource', {
+	   .state('app.resources-tabs.views-resource', {
 	    url: '/views-recource',
 	    views: {
 		      'views-resource': {
-		    	templateUrl: 'app/components/anonymous-tabs/views-resource/anon-tabs-views-resource.html',
+		    	templateUrl: 'app/components/resources-tabs/views-resource/anon-tabs-views-resource.html',
 		  		controller:  'anonTabViewsResourceCtrl' 
 		      }
 		    }

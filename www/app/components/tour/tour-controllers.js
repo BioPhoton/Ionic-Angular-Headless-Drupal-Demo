@@ -3,10 +3,8 @@ var tourControllers = angular.module('tour.controllers', [])
 tourControllers.controller('TourCtrl', ['$scope', '$state', '$localstorage', '$ionicSlideBoxDelegate',
   function ($scope, $state, $localstorage, $ionicSlideBoxDelegate) {
     $scope.start = function () {
-      $localstorage.setItem('firstVisit', 1);
-    
+      $localstorage.setItem('firstVisit', true);
       $state.go('app.register');
-      console.log('first visit set to true'); 
     }
  
   $scope.data = {
@@ -15,25 +13,26 @@ tourControllers.controller('TourCtrl', ['$scope', '$state', '$localstorage', '$i
     initialInstruction : true,
     secondInstruction : false,
     slides : [
-    {
-      'template' : 'app/components/tour/slides/firstSlide.html',
-      'viewable' : true
-    },
-    
-    {
-      'template' : 'app/components/tour/slides/secondSlide.html',
-      'viewable' : true
-    },
-
-    {
-      'template' : 'app/components/tour/slides/thirdSlide.html',
-      'viewable' : true
-    },
-    {
-        'template' : 'app/components/tour/slides/fourthSlide.html',
-        'viewable' : false
-     },
-  ]
+	    {
+	      'template' : 'app/components/tour/slides/firstSlide.html',
+	      'viewable' : true
+	    },
+	    
+	    {
+	      'template' : 'app/components/tour/slides/secondSlide.html',
+	      'viewable' : true
+	    },
+	
+	    {
+	      'template' : 'app/components/tour/slides/thirdSlide.html',
+	      'viewable' : true
+	    },
+	    
+	    {
+	        'template' : 'app/components/tour/slides/fourthSlide.html',
+	        'viewable' : false
+	    },
+	  ]
   };
   
   var countSlides = function() {

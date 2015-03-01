@@ -1,9 +1,9 @@
 var registerControllers = angular.module('register.controllers', ['common.drupal.api-resources'])
 
-registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicModal', '$state', 'UserResource', 'termsNodeObj',
-  function ($scope, $rootScope, $ionicModal, $state, UserResource, termsNodeObj) {
+registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicModal', '$state', 'UserResource', '$localstorage', 'termsNodeObj',
+  function ($scope, $rootScope, $ionicModal, $state, UserResource, $localstorage, termsNodeObj) {
 
-	$scope.termsNode = termsNodeObj;
+	//$scope.termsNode = termsNodeObj;
 	
     $scope.registerData = { 
       username: '',
@@ -17,11 +17,12 @@ registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicM
     	  UserResource.register($scope.registerData)
                 .then(
                         function (data) {
+                          $localstorage.setItem('isRegistered', true);
                           //login user
-                        	UserResource.login($scope.registerData.username, $scope.registerData.password)
+                          UserResource.login($scope.registerData.username, $scope.registerData.password)
                                   .then(
                                           function (data) {
-                                            $state.go('app.tabs.coupon');
+                                        	 
                                             //reset form
                                             $scope.registerData = {};
                                             //reste form
@@ -33,16 +34,17 @@ registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicM
                                             form.$invalid = false;
                                           },
                                           function (data) {
+                                        	//@TODO send error to login view
+                                        	$state.go('app.login');
                                             $scope.registerServerErrors = data;
                                           }
                                   );
                         },
                         function (data) {
-                          $rootScope.$broadcast('loading:hide');
                           $scope.registerServerErrors = data.form_errors;
                         }
                 );
-      	}
+      		}
 
     };
     

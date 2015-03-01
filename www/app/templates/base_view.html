@@ -1,16 +1,20 @@
 <ion-side-menus enable-menu-with-back-views="false" ng-class="{'has-bar-network':isOffline}">
   <ion-side-menu-content>
-    <ion-nav-bar class="bar-stable">
-      <ion-nav-back-button class="button-clear icon" id="main-back-button">
-        <i class="icon ion-ios7-arrow-back"></i>
-      </ion-nav-back-button>
-      <ion-nav-buttons side="left">
+  
+    <ion-nav-bar class="bar-stable">     
+      
+      
+      <ion-nav-buttons side="promary">
+
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
       </ion-nav-buttons>
+      
     </ion-nav-bar>
+    
 	<div class="bar bar-network bar-assertive " ng-if="isOffline">
 		No internet connection
 	</div>
+	
     <ion-nav-view class="test" name="menuContent"></ion-nav-view>
 
   </ion-side-menu-content>
@@ -18,20 +22,20 @@
   <ion-side-menu side="left" >
 
     <ion-header-bar class="bar-stable">
-      <h1 class="title">Left Menu</h1>
+      <h1 class="title">Left Menu {{isLoggedIn}}</h1>
     </ion-header-bar>
 
     <ion-content drag-content="true">
-     <!-- 
+    
       <ion-item nav-clear menu-close ui-sref="app.tour">Tour</ion-item>
-      <ion-item nav-clear menu-close ui-sref="app.login">Login</ion-item>
-  	  <ion-item nav-clear menu-close ui-sref="app.register">Register</ion-item>
-  	  <ion-item nav-clear menu-close ui-sref="app.authed-tabs.profile">Profile</ion-item>
-      <ion-item nav-clear menu-close ng-click="logout()">Logout</ion-item>
-       --> 
- 
-      <ng-include src="'app/templates/menus/anonymous-user-menu.html'"></ng-include>
-      <ng-include ng-if="isAuthed" src="'app/templates/menus/authenticated-user-menu.html'"></ng-include>
+      <ion-item data-access-level="{{accessLevels.anon}}" nav-clear menu-close ui-sref="app.login">Login</ion-item>
+  	  <ion-item data-access-level="{{accessLevels.anon}}" nav-clear menu-close ui-sref="app.register">Register</ion-item>
+  	  <ion-item data-access-level="{{accessLevels.user}}" nav-clear menu-close ui-sref="app.authed-tabs.profile">Profile</ion-item>
+      <ion-item data-access-level="{{accessLevels.user}}" nav-clear menu-close ng-click="logout()">Logout</ion-item>
+       
+      <ng-include src="'app/templates/menus/resources-menu.html'"></ng-include>
+      
+      <ng-include ng-if="isLoggedIn" src="'app/templates/menus/authenticated-user-menu.html'"></ng-include>
     </ion-content>
 
   </ion-side-menu>

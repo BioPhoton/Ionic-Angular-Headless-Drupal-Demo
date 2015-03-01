@@ -1,7 +1,7 @@
 var appControllers = angular.module('app.controllers', ['common.drupal.api-services', 'common.drupal.api-resources',])
 
-appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', 'UserResource', '$ionicPlatform', '$localstorage', '$state',
-                             function ($rootScope,   $scope,   drupalApiNotificationChannel,   DrupalAuthenticationService,   UserResource,   $ionicPlatform,   $localstorage,   $state) {
+appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotificationChannel', 'DrupalAPISettings', 'DrupalAuthenticationService', 'UserResource', '$ionicPlatform', '$localstorage', '$state',
+                             function ($rootScope,   $scope,   drupalApiNotificationChannel,   DrupalAPISettings,   DrupalAuthenticationService,   UserResource,   $ionicPlatform,   $localstorage,   $state) {
    
 	$ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -14,18 +14,24 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotifica
       }
     });
 	
-	// @TODO replace this with acl service
-    $scope.isAuthed = DrupalAuthenticationService.getConnectionState();
-
+	$scope.accessLevels = DrupalAPISettings.accessLevels;
+	
+	
+	//user login state
+    $scope.isLoggedIn = DrupalAuthenticationService.getConnectionState();
+    //on connectionstate changed/inited update loginstate
+	var onConnectionStateUpdatedHandler = function(data) {
+		 $scope.isLoggedIn = DrupalAuthenticationService.getConnectionState();
+	};
+	drupalApiNotificationChannel.onConnectionStateUpdated($scope, onConnectionStateUpdatedHandler);
+    
 	//
 	// App redirects
 	//
     
     // on logou request confirmed do logout redirect
 	var onUserLogoutConfirmedHandler = function(data) {  
-		console.log('logout app');
-		$localstorage.removeItem('hasLoggedIn');
-		$scope.isAuthed = false;
+		console.log('logout app controller');
 		$state.go('app.login');
 	};
 	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);
@@ -38,9 +44,7 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotifica
 	
     // on login request confirmed do login redirect
 	var onUserLoginConfirmedHandler = function(data) { 
-		console.log('login app');    
-		$localstorage.setItem('hasLoggedIn', 1);
-		$scope.isAuthed = true;
+		console.log('login app controller');    
 		$state.go('app.authed-tabs.profile'); 
 	};
 	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, onUserLoginConfirmedHandler);
