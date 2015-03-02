@@ -1,0 +1,22 @@
+<div class="selectContainer">
+ 	
+ 	<span class="input-label">{{label}}</span>
+	<div class="item item-input-inset">
+		<label class="item-input-wrapper"> 
+			<i class="icon ion-ios7-search placeholder-icon"></i> 
+			<input id="filtro" type="search" ng-model="ngModel" ng-value="ngValue" ng-keydown="onKeyDown()" />
+		</label>
+		<button class="button button-small button-clear" ng-click="open()">
+			<i class="icon ion-chevron-down"></i>
+		</button>
+	</div>
+	
+	<div class="optionList padding-left padding-right" ng-show="showHide">
+		<ion-scroll>
+		<ul class="list">
+			<li class="item" ng-click="selecionar(item)"
+				ng-repeat="item in provider | filter:ngModel">{{item[labelField]}}</li>
+		</ul>
+		</ion-scroll>
+	</div>
+</div>

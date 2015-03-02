@@ -3,7 +3,7 @@ var registerControllers = angular.module('register.controllers', ['common.drupal
 registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicModal', '$state', 'UserResource', '$localstorage', 'termsNodeObj',
   function ($scope, $rootScope, $ionicModal, $state, UserResource, $localstorage, termsNodeObj) {
 
-	//$scope.termsNode = termsNodeObj;
+	$scope.termsNode = termsNodeObj;
 	
     $scope.registerData = { 
       username: '',

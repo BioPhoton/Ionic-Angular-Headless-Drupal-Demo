@@ -12,35 +12,6 @@ commonDirectives.directive('stopEvent', function () {
   };
 });
 
-commonDirectives.directive('tournamentListDivider', function ($timeout) {
-  var lastDivideKey = "";
-  return {
-    link: function (scope, element, attrs) {
-      var key = attrs.tournamentListDividerValue;
-      var listclass = attrs.tournamentListClassValue;
-
-      var defaultDivideFunction = function (k) {
-        return k.slice(0, 1).toUpperCase();
-      }
-
-      var doDivide = function () {
-        var divideFunction = scope.$apply(attrs.tournamentListDividerFunction) || defaultDivideFunction;
-        var divideKey = divideFunction(key);
-
-
-        if (divideKey != lastDivideKey) {
-          var contentTr = angular.element("<div class='item " + listclass.toLowerCase() + " item-divider'>" + divideKey + "</div>");
-          element[0].parentNode.insertBefore(contentTr[0], element[0]);
-        }
-
-        lastDivideKey = divideKey;
-      }
-
-      $timeout(doDivide, 0)
-    }
-  }
-});
-
 commonDirectives.directive("contenteditable", function() {
 	  return {
 	    restrict: "A",
@@ -60,4 +31,50 @@ commonDirectives.directive("contenteditable", function() {
 	      });
 	    }
 	  };
-	});
+});
+
+//http://jsfiddle.net/cristoferdomingues/KR7KV/10/
+commonDirectives.directive('ionSelect',function(){
+    'use strict';
+    return{
+        restrict: 'EAC',
+        scope: {
+           label:'@',
+            labelField:'@',
+            provider:'=',
+            name : "=",
+            ngModel: '=?',
+            ngValue: '=?',
+        },
+         require: 'ngModel',
+         transclude : false,
+         replace: false,
+         templateUrl: "app/common/directives/templates/ionSelect.html",             
+         link: function (scope, element, attrs,ngModel) {
+            scope.ngValue = scope.ngValue !== undefined ? scope.ngValue :'item';
+            
+            scope.selecionar = function(item){
+                ngModel.$setViewValue(item.id);
+                scope.showHide = false;
+            };
+            
+            scope.open = function(){
+                scope.ngModel = "";  
+                return scope.showHide=!scope.showHide;
+            };
+            
+            scope.onKeyDown = function(){
+                scope.showHide = true;
+                console.log(scope.ngModel); 
+                if(!scope.ngModel){
+                     scope.showHide = false;
+                }
+            }
+            
+            scope.$watch('ngModel',function(newValue){
+                if(newValue)
+                 element.find('input').val(newValue[scope.labelField]);
+            });
+        },
+    };
+});

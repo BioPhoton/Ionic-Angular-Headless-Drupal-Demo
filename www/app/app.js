@@ -11,7 +11,6 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'common.accesss-control',
   'common.services.localstorage',
 
-  'LocalForageModule',
   'app.controllers',
   'tour.controllers',
   'login.controllers',
@@ -19,10 +18,10 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'register.controllers',
 
   'resources.session-resource.controllers',
-  'anon-tabs.node-resource.controllers',
-  'anon-tabs.system-resource.controllers',
-  'anon-tabs.user-resource.controllers',
-  'anon-tabs.views-resource.controllers',
+  'resources.node-resource.controllers',
+  'resources.system-resource.controllers',
+  'resources.user-resource.controllers',
+  'resources.views-resource.controllers',
 
   'authed-tabs.views-resource.controllers',
   'authed-tabs.profile.controllers',
@@ -35,8 +34,8 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
 	
 	//init connection state
 	DrupalAuthenticationService.refreshConnection();
-	  
-    //restrict access redirects
+			
+	//restrict access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
      
       var firstVisit = $localstorage.getItem('firstVisit');
@@ -92,12 +91,11 @@ drupalIonicAngularJSAPIClient
             abstract: true,
             templateUrl: "app/templates/base_view.html",
             controller: 'AppCtrl',
-            cache: false,
             data: {
               access: AppSettings.accessLevels.public
             }
           })
-
+          //
           //stats for anonymouse user
           //=================================================================
           .state('app.tour', {
@@ -133,111 +131,110 @@ drupalIonicAngularJSAPIClient
               }
             }
           })
-           
-      //Abstract states for anonymous tabs
-	  //______________________________________________
-	  .state('app.resources-tabs', {
-	    url: '/anon-tabs',
-	    abstract: true,
-	    views: {
-		      'menuContent': {
-		    	templateUrl: 'app/components/resources-tabs/resources-tabs.html',
-		      }
-		    }
-	  })
-	 
-	  //Session Resource
-	  //______________________________________________
-	   .state('app.resources-tabs.session-resource', {
-	    url: '/session-recource',
-	    views: {
-		      'session-resource': {
-		    	templateUrl: 'app/components/resources-tabs/session-resource/session-resource.html',
-		  		controller:  'ResourcesSessionResourceCtrl' 
-		      }
-		    }
-	   })
-	  //Node Resource
-	  //______________________________________________
-	   .state('app.resources-tabs.node-resource', {
-	    url: '/node-recource',
-	    views: {
-		      'node-resource': {
-		    	templateUrl: 'app/components/resources-tabs/node-resource/anon-tabs-node-resource.html',
-		  		controller:  'anonTabNodeResourceCtrl' 
-		      }
-		    }
-	   })
-	  //System Resource
-	  //______________________________________________
-	   .state('app.resources-tabs.system-resource', {
-	    url: '/system-recource',
-	    views: {
-		      'system-resource': {
-		    	templateUrl: 'app/components/resources-tabs/system-resource/anon-tabs-system-resource.html',
-		  		controller:  'anonTabSystemResourceCtrl' 
-		      }
-		    }
-	   })
-	   
-	   //User Resource
-	   //______________________________________________
-	   .state('app.resources-tabs.user-resource', {
-	    url: '/user-recource',
-	    views: {
-		      'user-resource': {
-		    	templateUrl: 'app/components/resources-tabs/user-resource/anon-tabs-user-resource.html',
-		  		controller:  'anonTabUserResourceCtrl' 
-		      }
-		    }
-	   })
-	    //Views Resource
-	   //______________________________________________
-	   .state('app.resources-tabs.views-resource', {
-	    url: '/views-recource',
-	    views: {
-		      'views-resource': {
-		    	templateUrl: 'app/components/resources-tabs/views-resource/anon-tabs-views-resource.html',
-		  		controller:  'anonTabViewsResourceCtrl' 
-		      }
-		    }
-	   })
-
-          //states for authenticted user
-          //=================================================================
-          .state('app.authed-tabs', {
-            url: "/authed-tabs",
-            abstract: true,
-            views: {
-              'menuContent': {
-                templateUrl: "app/components/authed-tabs/authed-tabs.html",
-              }
-            },
-            data: {
-              access: AppSettings.accessLevels.user
-            }
-
-          })
-          .state('app.authed-tabs.views-resource', {
-            url: "/views-resource",
-            views: {
-              'views-resource-tab': {
-                templateUrl: "app/components/authed-tabs/views-resource/views-resource.html",
-                controller: 'authedTabViewsResourceCtrl'
-              }
-            },
-          
-          })
-          .state('app.authed-tabs.profile', {
-            url: "/profile",
-            cache: false,
-            views: {
-              'profile-tab': {
-                templateUrl: "app/components/authed-tabs/profile/profile.html",
-                controller: 'authedTabProfileCtrl'
-              }
-            }
-          });
+	      //    
+	      //Abstract states for anonymous tabs
+		  //______________________________________________
+		  .state('app.resources-tabs', {
+		    url: '/resources-tabs',
+		    abstract: true,
+		    views: {
+			      'menuContent': {
+			    	templateUrl: 'app/components/resources-tabs/resources-tabs.html',
+			      }
+			    }
+		  })
+		 
+		  //Session Resource
+		  //______________________________________________
+		   .state('app.resources-tabs.session-resource', {
+		    url: '/session-recource',
+		    views: {
+			      'session-resource': {
+			    	templateUrl: 'app/components/resources-tabs/session-resource/session-resource.html',
+			  		controller:  'ResourcesSessionResourceCtrl' 
+			      }
+			    }
+		   })
+		  //
+		  //Node Resource
+		  //______________________________________________
+		   .state('app.resources-tabs.node-resource', {
+		    url: '/node-recource',
+		    views: {
+			      'node-resource': {
+			    	templateUrl: 'app/components/resources-tabs/node-resource/node-resource.html',
+			  		controller:  'ResourcesNodeResourceCtrl' 
+			      }
+			    }
+		   })
+		  //
+		  //System Resource
+		  //______________________________________________
+		   .state('app.resources-tabs.system-resource', {
+		    url: '/system-recource',
+		    views: {
+			      'system-resource': {
+			    	templateUrl: 'app/components/resources-tabs/system-resource/system-resource.html',
+			  		controller:  'ResourcesSystemResourceCtrl' 
+			      }
+			    }
+		   })
+		   //
+		   //User Resource
+		   //______________________________________________
+		   .state('app.resources-tabs.user-resource', {
+		    url: '/user-recource',
+		    views: {
+			      'user-resource': {
+			    	templateUrl: 'app/components/resources-tabs/user-resource/user-resource.html',
+			  		controller:  'ResourcesUserResourceCtrl' 
+			      }
+			    }
+		   })
+		    //Views Resource
+		   //______________________________________________
+		   .state('app.resources-tabs.views-resource', {
+		    url: '/views-recource',
+		    views: {
+			      'views-resource': {
+			    	templateUrl: 'app/components/resources-tabs/views-resource/views-resource.html',
+			  		controller:  'ResourcesViewsResourceCtrl' 
+			      }
+			    }
+		   })
+	
+	      //states for authenticted user
+	      //=================================================================
+	      .state('app.authed-tabs', {
+	        url: "/authed-tabs",
+	        abstract: true,
+	        views: {
+	          'menuContent': {
+	            templateUrl: "app/components/authed-tabs/authed-tabs.html",
+	          }
+	        },
+	        data: {
+	          access: AppSettings.accessLevels.user
+	        }
+	      })
+	      .state('app.authed-tabs.views-resource', {
+	        url: "/views-resource",
+	        views: {
+	          'views-resource-tab': {
+	            templateUrl: "app/components/authed-tabs/views-resource/views-resource.html",
+	            controller: 'authedTabViewsResourceCtrl'
+	          }
+	        },
+	      })
+	      .state('app.authed-tabs.profile', {
+	        url: "/profile",
+	        views: {
+	          'profile-tab': {
+	            templateUrl: "app/components/authed-tabs/profile/profile.html",
+	            controller: 'authedTabProfileCtrl'
+	          }
+	        }
+	      });
   
   $urlRouterProvider.otherwise('/app/authed-tabs/profile');
 }]);

@@ -1,10 +1,10 @@
 /* Controllers of apiServicesControllers component */
 //______________________________________________
-var anonSystemResourceControllers = angular.module('anon-tabs.system-resource.controllers', ['common.drupal.api-services', 'common.drupal.api-resources']);
+var anonSystemResourceControllers = angular.module('resources.system-resource.controllers', []);
 
 
 /* System Resource Controller */
-anonSystemResourceControllers.controller('anonTabSystemResourceCtrl', 
+anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl', 
 		   ['$scope', 'SystemResource', 'UserResource', 'drupalApiNotificationChannel', 
     function($scope,   SystemResource,   UserResource,   drupalApiNotificationChannel ) {
 			  

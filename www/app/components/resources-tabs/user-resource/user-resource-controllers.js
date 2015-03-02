@@ -1,11 +1,11 @@
 /* Controllers of apiServicesControllers component */
 //______________________________________________
 
-var userResourceControllers = angular.module('anon-tabs.user-resource.controllers', ['common.drupal.api-services', 'common.drupal.api-resources' ]);
+var userResourceControllers = angular.module('resources.user-resource.controllers', ['common.drupal.api-services', 'common.drupal.api-resources' ]);
 
 
 /* User Resource Controller */
-userResourceControllers.controller('anonTabUserResourceCtrl', 
+userResourceControllers.controller('ResourcesUserResourceCtrl', 
 		   ['$scope', 'UserResource', 'drupalApiNotificationChannel', 
     function($scope,   UserResource,   drupalApiNotificationChannel) {
 			   

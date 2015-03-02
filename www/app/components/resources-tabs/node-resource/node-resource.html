@@ -1,0 +1,97 @@
+<ion-view title="Node Resource"> 
+
+<ion-content>
+
+<h1>NodeResource</h1>
+<h2>Retrieve</h2>
+<div ng-repeat="request in nodeRetrieveRequests">
+	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
+	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
+	<b>Duration:</b> {{request.requestDuration}}<br />
+	<b>Data:</b> 
+	<pre>
+	{{ request.data | json}}
+	</pre>
+</div>
+
+<label class="item item-input">
+<input type="text" ng-init="nodeRetrieve.nid=1" ng-model="nodeRetrieve.nid" placeholder="nid" >
+</label>
+<button class="button button-small" ng-click="callNodeRecourceRetrieve(nodeRetrieve.nid)">callNodeRecourceRetrieve</button>
+
+<hr />
+<h2>Index</h2>
+<div ng-repeat="request in nodeIndexRequests">
+	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
+	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
+	<b>Duration:</b> {{request.requestDuration}}<br />
+	<b>Data:</b> 
+	<pre>
+	{{ request.data | json}}
+	</pre>
+</div>
+
+<label class="item item-input">
+<input type="text" ng-init="nodeIndex.page=0" ng-model="nodeIndex.page" placeholder="page" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="nodeIndex.pagesize=5" ng-model="nodeIndex.pagesize" placeholder="pagesize" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="nodeIndex.fields='nid, created, type, title'" ng-model="nodeIndex.fields" placeholder="fields" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="nodeIndex.parameters='nid=1, type=page, '" ng-model="nodeIndex.parameters" placeholder="parameters" >
+</label>
+<button class="button button-small" ng-click="callNodeRecourceIndex(nodeIndex)">callNodeRecourceRetrieve</button>
+
+<hr />
+
+<h2>Create</h2>
+<div ng-repeat="request in nodeCreateRequests">
+	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
+	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
+	<b>Duration:</b> {{request.requestDuration}}<br />
+	<b>Data:</b> 
+	<pre>
+	{{ request.data | json}}
+	</pre>
+</div>
+{{nodeCreate}}
+<ion-select label="Node Types" label-field="name"  name="'nodeTypes'" provider="nodeTypes" ng-model="nodeCreate.type"/></ion-select>
+<label class="item item-input">
+<input type="text" ng-init="nodeCreate.title='test titel'" ng-model="nodeCreate.title" placeholder="Node title" >
+</label>
+
+<label class="item item-input">
+<textarea rows="6" placeholder="Node sumary" type="text" ng-init="nodeCreate.body.und[0].summary = 'This is a short summary of the node body.'" ng-model="nodeCreate.body.und[0].summary"></textarea>
+</label>
+
+<label class="item item-input">
+<textarea rows="6" placeholder="Node body" type="text" ng-init="nodeCreate.body.und[0].value = 'This is the full node body.'" ng-model="nodeCreate.body.und[0].value"></textarea>
+</label>
+
+<button class="button button-small" ng-click="callNodeRecourceCreate(nodeCreate)">callNodeRecourceCreate</button>
+
+<hr />
+
+<h2>Delete</h2>
+<div ng-repeat="request in nodeDeleteRequests">
+	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
+	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
+	<b>Duration:</b> {{request.requestDuration}}<br />
+	<b>Data:</b> 
+	<pre>
+	{{ request.data | json}}
+	</pre>
+</div>
+
+<label class="item item-input">
+<input type="text" ng-init="nodeCreate.nid='3'" ng-model="nodeCreate.nid" placeholder="nid" >
+</label>
+
+<button class="button button-small" ng-click="callNodeRecourceDelete(nodeCreate.nid)">callNodeRecourceDelete</button>
+
+<hr />
+
+</ion-content> </ion-view>

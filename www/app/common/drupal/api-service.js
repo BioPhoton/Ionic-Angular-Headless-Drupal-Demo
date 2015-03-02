@@ -570,6 +570,7 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 	var setCurrentUser = function(newUser) {
 		
 		if(currentUser != newUser) {
+			console.log(newUser); 
         	currentUser = newUser;
       	    drupalApiNotificationChannel.publishCurrentUserUpdated(currentUser);
         }
@@ -593,9 +594,10 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 			$http.defaults.withCredentials = true;
 			
 			$http.defaults.headers.common.Authorization = token;
-			$http.defaults.headers.post['X-CSRF-TOKEN'] = token;
-			$http.defaults.headers.put['X-CSRF-TOKEN'] = token;
-			// @TODO => $http.defaults.headers.delete['X-CSRF-TOKEN'] = token;
+			$http.defaults.headers.common['X-CSRF-TOKEN'] = token;
+			//$http.defaults.headers.post['X-CSRF-TOKEN'] = token;
+			//$http.defaults.headers.put['X-CSRF-TOKEN'] = token;
+			
 			return token
 		}
 		return false;
@@ -611,10 +613,9 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 			 $http.defaults.withCredentials = true;
 			 
 			 $http.defaults.headers.common.Authorization = token;
-			 $http.defaults.headers.post['X-CSRF-TOKEN'] = token;
-			 $http.defaults.headers.put['X-CSRF-TOKEN'] = token;
-		     // @TODO => $http.defaults.headers.delete['X-CSRF-TOKEN'] = token;
-			 
+			 $http.defaults.headers.common['X-CSRF-TOKEN'] = token;
+			 //$http.defaults.headers.post['X-CSRF-TOKEN'] = token;
+			 //$http.defaults.headers.put['X-CSRF-TOKEN'] = token; 
 			 defer.resolve(token);
 		},
 		function() {
@@ -648,9 +649,15 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 			            },
 			            //error
 			            function(data) {
+			            	setConnectionState(false); 
 			            	defer.reject(data);
 			            }
 					);
+				},
+				//
+				function(error) {
+					 setConnectionState(false);
+					 defer.reject(error);
 				}
 			);
 		} 
@@ -674,8 +681,9 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		              defer.resolve(data);
 		            },
 		            //error
-		            function(data) {
-		            	defer.reject(data);
+		            function(error) {
+		            	 setConnectionState(false); 
+		            	defer.reject(error);
 		            }
 				);	
 		}
@@ -824,44 +832,120 @@ var drupalAPI = angular.module('common.drupal.api-resources', []);
 **/
 drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, drupalApiNotificationChannel) {
 	
+	// I serialize the given Object into a key-value pair string. This
+    // method expects an object and will default to the toString() method.
+    // --
+    // NOTE: This is an atered version of the jQuery.param() method which
+    // will serialize a data collection for Form posting.
+    // --
+    // https://github.com/jquery/jquery/blob/master/src/serialize.js#L45
+	var serializeData = function( data ) {
+
+        // If this is not an object, defer to native stringification.
+        if ( ! angular.isObject( data ) ) {
+
+            return( ( data == null ) ? "" : data.toString() );
+
+        }
+
+        var buffer = [];
+
+        // Serialize each key in the object.
+        for ( var name in data ) {
+
+            if ( ! data.hasOwnProperty( name ) ) {
+
+                continue;
+
+            }
+
+            var value = data[ name ];
+
+            buffer.push(
+                encodeURIComponent( name ) +
+                "=" +
+                encodeURIComponent( ( value == null ) ? "" : value )
+            );
+
+        }
+
+        // Serialize the buffer and clean it up for transportation.
+        var source = buffer
+            .join( "&" )
+            .replace( /%20/g, "+" )
+        ;
+
+        return( source );
+    };
+
+
+	
 	/*
 	 * getPreparedIndexParams
+	 * http://drupal.aspcode.net/ppst/63547274810018958013876/drupal-services-node-filtering
 	 * */
 	var getPreparedIndexParams = function(page, fields, parameters, pagesize) {
 		
-		var preparedIndexParams = '',
+		var preparedIndexParams = [],
 			ampersand = '&';
 		
 		//Prepare page param
-		page = (page)?page:false;
-		if(page !== false) { page = (parseInt(page) != NaN)?parseInt(page):false; }
-		if(page !== false) { preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?ampersand:'') +  "page="+page; }
-		
+		page = (page || page === 0)?page:false;
+		if(page !== false) {page = (parseInt(page) != NaN)?parseInt(page):false; }
+		if(page !== false && page !== NaN) { 
+			page = "page="+page;
+			preparedIndexParams += (preparedIndexParams != '')?ampersand+page:page; 
+			}
+			
+		//Prepare pagesize param
+		pagesize = (pagesize)?pagesize:false;
+		if(pagesize !== false) { pagesize = (parseInt(pagesize) != NaN)?parseInt(pagesize):false; }
+		if(pagesize !== false) { 
+			pagesize = "pagesize="+pagesize;
+			preparedIndexParams += (preparedIndexParams != '')?ampersand+pagesize:pagesize; 
+			}
 		
 		//Prepare fields param
 		fields = (fields)?fields:false;
 		if(fields !== false) {
 			//parse array
-			//@TODO parse array to get params or set false
+			fields = fields.split(',');
+			var newFields = [];
+			
+			angular.forEach(fields, function(value, key) {
+				console.log(value); 
+				if(value.trim() != '') {
+					this.push(value.trim()+ (fields.length >= key?'':','));
+				}
+			},newFields);
+			fields = newFields;
 		}
 		if(fields !== false) { 
-			preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?ampersand:'') + fields;
+			fields = "fields="+fields;
+			preparedIndexParams += (preparedIndexParams != '')?ampersand+fields:fields; 
 		}
 		
 		//Prepare parameters param
 		parameters = (parameters)?parameters:false;
 		if(parameters !== false) {
-			//parse array
-			//@TODO parse array to get params or set false
+
+			parameters = parameters.split(',');
+			var newParameters = '',
+				param = '';
+			angular.forEach(parameters, function(value, key) {
+				if(value.trim() != '' ) {
+					value = value.split('=');
+					if(value[0].trim() != '' && value[1].trim()) {
+						param = "parameters['"+value[0].trim() + "']="+ value[1];
+						newParameters += (newParameters != '')?ampersand+param:param;
+					}
+				}
+			});
+			parameters = newParameters;
 		}
 		if(parameters !== false) { 
-			preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?ampersand:'') + parameters;
+			preparedIndexParams += (preparedIndexParams != '')?ampersand+parameters:parameters; 
 		}
-		
-		//Prepare pagesize param
-		pagesize = (pagesize)?pagesize:false;
-		if(pagesize !== false) { pagesize = (parseInt(pagesize) != NaN)?parseInt(pagesize):false; }
-		if(pagesize !== false) { preparedIndexParams = preparedIndexParams + ( (preparedIndexParams !== '')?ampersand:'') +  "pagesize="+pagesize; }
 		
 		return preparedIndexParams;
 	};
@@ -1045,7 +1129,7 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	 * 
 	 * @param {Integer} page The zero-based index of the page to get, defaults to 0., required:false, source:param
 	 *@TODO find link to drupal docs of possible values 
-	 * @param {Array} fields The fields to get., defaults to 0., required:false, source:param
+	 * @param {Array} fields The fields to get. Shouls be a comma seperated string., defaults to 0., required:false, source:param
 	 *@TODO find link to drupal docs of possible values 
 	 * @param {Array} parameters Parameters array, required:false, source:param
 	 * @param {Integer} pagesize Number of records to get per page. For unauthorized users 25 is maximum., required:false, source:param
