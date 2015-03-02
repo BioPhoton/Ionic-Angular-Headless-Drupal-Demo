@@ -26,21 +26,21 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotifica
 	var onConnectionStateUpdatedHandler = function(data) {
 		 $scope.isLoggedIn = DrupalAuthenticationService.getConnectionState();
 	};
-	drupalApiNotificationChannel.onConnectionStateUpdated($scope, onConnectionStateUpdatedHandler);
+	//drupalApiNotificationChannel.onConnectionStateUpdated($scope, onConnectionStateUpdatedHandler);
     
 	//
 	// App redirects
 	//
     
     // on logou request confirmed do logout redirect
-	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, function(data) {$state.go('app.login');});
+	//drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, function(data) {$state.go('app.login');});
     	
 	//
 	// Auth redirects
 	//
 	
     // on login request confirmed do login redirect
-	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, function(data) { $state.go('app.authed-tabs.profile'); });
+	//drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, function(data) { $state.go('app.authed-tabs.profile'); });
     
     //
     // Show hide network connection bar

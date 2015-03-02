@@ -38,7 +38,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
 	  
     //restrict access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-    	
+     
       var firstVisit = $localstorage.getItem('firstVisit');
       var isRegistered = $localstorage.getItem('isRegistered');
     
@@ -77,9 +77,8 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
           return;
         } 
       }
-       
     });
-    /**/
+    
 }]);
 
 drupalIonicAngularJSAPIClient

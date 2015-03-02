@@ -37,16 +37,16 @@
     },
     "installed_plugins": {
         "com.ionic.keyboard": {
-            "PACKAGE_NAME": "com.ionicframework.test108507"
+            "PACKAGE_NAME": "com.ionicframework.drupalapiclientdemo501453"
         },
         "org.apache.cordova.console": {
-            "PACKAGE_NAME": "com.ionicframework.test108507"
+            "PACKAGE_NAME": "com.ionicframework.drupalapiclientdemo501453"
         },
         "org.apache.cordova.device": {
-            "PACKAGE_NAME": "com.ionicframework.test108507"
+            "PACKAGE_NAME": "com.ionicframework.drupalapiclientdemo501453"
         },
         "org.apache.cordova.network-information": {
-            "PACKAGE_NAME": "com.ionicframework.test108507"
+            "PACKAGE_NAME": "com.ionicframework.drupalapiclientdemo501453"
         }
     },
     "dependent_plugins": {}
