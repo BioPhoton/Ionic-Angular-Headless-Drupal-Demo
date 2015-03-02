@@ -10,7 +10,6 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'common.drupal.api-resources',
   'common.accesss-control',
   'common.services.localstorage',
-  //this is the good one
 
   'LocalForageModule',
   'app.controllers',

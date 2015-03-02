@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "Drupal-API-Client-Demo",
   "app_id": "",
   "gulpStartupTasks": [
     "sass",

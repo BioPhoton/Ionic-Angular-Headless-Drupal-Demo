@@ -1,7 +1,7 @@
 {
-  "name": "test",
+  "name": "Drupal-API-Client-Demo",
   "version": "1.0.0",
-  "description": "test: An Ionic project",
+  "description": "Drupal-API-Client-Demo: An Ionic project to test the Drupa-API-Client module",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^0.7.1",
