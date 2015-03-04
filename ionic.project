@@ -1,6 +1,6 @@
 {
   "name": "Drupal-API-Client-Demo",
-  "app_id": "",
+  "app_id": "3c9752b7",
   "gulpStartupTasks": [
     "sass",
     "watch"

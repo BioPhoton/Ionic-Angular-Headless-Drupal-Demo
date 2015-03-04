@@ -32,45 +32,42 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
                           function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   drupalApiNotificationChannel,   DrupalAuthenticationService,   AccessControlService,   $state) {
 	
 	
-	//init connection state
-	DrupalAuthenticationService.refreshConnection();
+	//DrupalAuthenticationService.refreshConnection().then();
 			
 	//restrict access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-     
-      var firstVisit = $localstorage.getItem('firstVisit');
-      var isRegistered = $localstorage.getItem('isRegistered');
-    
+      console.log('want go from ' + fromState.name + ' to ' + toState.name); 
+      
+      var firstVisit = $localstorage.getItem('firstVisit', false);
+      var isRegistered = $localstorage.getItem('isRegistered', false);
    
-      // if its the user first visit to the app play the apps tour
+      // if its the users first visit to the app play the apps tour
   	  if ( !firstVisit && toState.name != 'app.tour') { 
+  		console.log('redirect 1: app.tour'); 
   		event.preventDefault();
   		$state.go('app.tour'); 	
+  		return;
   	  }  
   	  
-      if (!('data' in toState) || !('access' in toState.data)) {
-        event.preventDefault();
-        console.log('no access data set for this route'); 
-      }
-      else if (!AccessControlService.authorize(toState.data.access)) {
+      if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
         event.preventDefault();
       
-        if (firstVisit && isRegistered) {
+        if (isRegistered) {
+          console.log('redirect 3: app.login'); 
           $state.go('app.login');
-          return;
-        } else if (firstVisit && !isRegistered) {
-          $state.go('app.register');
           return;
         } 
         else {
-          $state.go('app.tour');
+          console.log('redirect 4: app.register'); 
+          $state.go('app.register');
           return;
-        };
+        } 
       }
            
       //custom redirect
       if  (toState.name == 'app.login' || toState.name == 'app.register') {
         if (DrupalAuthenticationService.getConnectionState()) {
+          console.log('redirect 5: app.authed-tabs.profile'); 
           event.preventDefault();
           $state.go('app.authed-tabs.profile');
           return;
@@ -82,18 +79,29 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
 
 drupalIonicAngularJSAPIClient
 
-	.config( [ '$stateProvider', '$urlRouterProvider', '$httpProvider', 'AppSettings', 
+	.config( [ '$stateProvider', '$urlRouterProvider', '$httpProvider', 'AppSettings',
      function ( $stateProvider,   $urlRouterProvider,   $httpProvider,   AppSettings) {
-	
-  $stateProvider
+
+     $stateProvider
           .state('app', {
             url: "/app",
             abstract: true,
             templateUrl: "app/templates/base_view.html",
             controller: 'AppCtrl',
+            resolve: {
+            	// init connection state
+            	// this fires just on app launge 
+            	// switching child states will not resolve this again
+                connectedUser: function(DrupalAuthenticationService, drupalApiServiceConfig) {
+        			if(DrupalAuthenticationService.getLastConnectTime() < Date.now() - drupalApiServiceConfig.session_expiration_time) {       				
+        				return DrupalAuthenticationService.refreshConnection();
+        			}
+                },
+            },
             data: {
               access: AppSettings.accessLevels.public
             }
+           
           })
           //
           //stats for anonymouse user
@@ -213,6 +221,16 @@ drupalIonicAngularJSAPIClient
 	            templateUrl: "app/components/authed-tabs/authed-tabs.html",
 	          }
 	        },
+	        resolve: {
+		    	// check connection state
+            	// this fires just on entrance into this state
+		    	// switching child states will not resolve this again
+		    	connectedUser: function(DrupalAuthenticationService, drupalApiServiceConfig) {
+        			if(DrupalAuthenticationService.getLastConnectTime() < Date.now() - drupalApiServiceConfig.session_expiration_time) {
+        				return DrupalAuthenticationService.refreshConnection();
+        			}
+                },
+            },
 	        data: {
 	          access: AppSettings.accessLevels.user
 	        }

@@ -11,8 +11,12 @@ drupalApiService.constant("drupalApiServiceConfig", {
 	  // Your sites domain
 	  drupal_instance	: 'http://dev-drupal-headless-ionic.pantheon.io/',
 	 
-	  // Your service endpoints
-	 
+	  // By default, Drupal ships with a session expiration time of 2000000 seconds which is 23 day 3 hr. 33 min. 20 sec
+	  // To customize this install the session expire module => https://www.drupal.org/project/session_expire
+	  // and also set same value here
+	  session_expiration_time : 10000, //2000000,
+	  
+	  // Your service endpoints  
 	  api_endpoints		:  {
 		  // Endpoint api/v1/
 		  // Machine-readable name of the endpoint
@@ -20,7 +24,7 @@ drupalApiService.constant("drupalApiServiceConfig", {
 			  path: 'api/v1/',
 			  // Resources of your endpoint
 			  // Resources: defualt or alias
-			  // NOTE: if you set custom aliases for your recources in [your.domain.org]/admin/structure/services/list/api/resources change value here
+			  // NOTE: if you set custom aliases for your recources in [your.domain.org]/admin/structure/services/list/[machinereadable_name_of_endpoint]/resources change value here
 			  defaut_resources	: { 
 				  session 				: 'services/session/',
 				  //comment 			: 'comment/', 	
@@ -37,7 +41,7 @@ drupalApiService.constant("drupalApiServiceConfig", {
 				  customResource 	: 'customResource',
 			  },
 			  // available formats of your service
-			  // drupal settings under [your.domain.org]/admin/structure/services/list/api/resources/[]
+			  // drupal settings under [your.domain.org]/admin/structure/services/list/[machinereadable_name_of_endpoint]/server
 			  formats : {
 				  json 	: '.json',
 				  xml 	: '.xml'
@@ -561,7 +565,12 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 	//http://stackoverflow.com/questions/16477123/how-do-i-use-on-in-a-service-in-angular
 	var scope = $rootScope.$new(); // or $new(true) if you want an isolate scope
 	var userIsConected = false,
-		currentUser	 = drupalApiServiceConfig.anonymousUser;
+		currentUser	 = drupalApiServiceConfig.anonymousUser,
+		lastConnectTime  = 0;
+	
+	var getLastConnectTime = function() {
+		return lastConnectTime;
+	}
 	
 	var getCurrentUser = function() {
 		return currentUser;
@@ -649,7 +658,7 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 			            },
 			            //error
 			            function(data) {
-			            	setConnectionState(false); 
+			            	setConnectionState(false);
 			            	defer.reject(data);
 			            }
 					);
@@ -676,18 +685,18 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		            	  setConnectionState(true);
 		            	  setCurrentUser(data.user);
 		              }
-		               
-		             
+		          
 		              defer.resolve(data);
 		            },
 		            //error
 		            function(error) {
-		            	 setConnectionState(false); 
+		            	setConnectionState(false); 
 		            	defer.reject(error);
 		            }
 				);	
 		}
 		
+		lastConnectTime = Date.now();
 		return defer.promise;
 	};
 		
@@ -732,6 +741,7 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		getConnectionState 					: getConnectionState,
 		getCurrentUser 						: getCurrentUser,
 		refreshConnection 					: refreshConnection,
+		getLastConnectTime 					: getLastConnectTime,
 		storeAuthData 						: storeAuthData,
 		deleteAuthData 						: deleteAuthData
 	};

@@ -1,5 +1,6 @@
-angular.module('drupalIonicAngularJSAPIClient.configuration', [])
-        .constant('AppSettings', {
+var drupalIonicAngularJSAPIClientConfiguration = angular.module('drupalIonicAngularJSAPIClient.configuration', [])
+        
+drupalIonicAngularJSAPIClientConfiguration.constant('AppSettings', {
 
            roles :[
                'anonymous user',
@@ -14,6 +15,4 @@ angular.module('drupalIonicAngularJSAPIClient.configuration', [])
            },      
           
           terms_and_conditions_nid: 1,
-        });
-
-        
+});
