@@ -561,6 +561,7 @@ drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalA
 }]);
 
 drupalApiService.service('DrupalAuthenticationService', function($rootScope, $http, $q, drupalApiServiceConfig, drupalApiNotificationChannel, SystemResource, UserResource, $localstorage, $cookieStore) {
+	
 	//needed to use the $on method in the notification channel
 	//http://stackoverflow.com/questions/16477123/how-do-i-use-on-in-a-service-in-angular
 	var scope = $rootScope.$new(); // or $new(true) if you want an isolate scope
@@ -579,7 +580,6 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 	var setCurrentUser = function(newUser) {
 		
 		if(currentUser != newUser) {
-			console.log(newUser); 
         	currentUser = newUser;
       	    drupalApiNotificationChannel.publishCurrentUserUpdated(currentUser);
         }
@@ -597,18 +597,16 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 	};
 	
 	var refreshTokenFromLocalStorage = function () {
-		var token = $localstorage.getItem('token') || '';
+		var token = $localstorage.getItem('token', false);
 		
 		if (token) {
-			$http.defaults.withCredentials = true;
-			
 			$http.defaults.headers.common.Authorization = token;
 			$http.defaults.headers.common['X-CSRF-TOKEN'] = token;
-			//$http.defaults.headers.post['X-CSRF-TOKEN'] = token;
-			//$http.defaults.headers.put['X-CSRF-TOKEN'] = token;
+			$http.defaults.withCredentials = true;
 			
 			return token
 		}
+		
 		return false;
 	};
 	
@@ -616,18 +614,16 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		var defer = $q.defer();
 		
 		UserResource.token().then(function(token){
-			 
 			 $localstorage.setItem('token', token);
-			 
-			 $http.defaults.withCredentials = true;
-			 
+			 			 
 			 $http.defaults.headers.common.Authorization = token;
 			 $http.defaults.headers.common['X-CSRF-TOKEN'] = token;
-			 //$http.defaults.headers.post['X-CSRF-TOKEN'] = token;
-			 //$http.defaults.headers.put['X-CSRF-TOKEN'] = token; 
+			 $http.defaults.withCredentials = true;
+
 			 defer.resolve(token);
 		},
 		function() {
+			
 			defer.reject(data);
 		});
 
@@ -636,14 +632,17 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 	
 	var refreshConnection = function () {
 		var defer = $q.defer();
-
+	
 		//@TODO queue refreshTokenFromServer ans connect request if  TokenFromLocalStorage is false
-		if(!refreshTokenFromLocalStorage()) {
+		/*if(!refreshTokenFromLocalStorage()) {*/
+			
 			refreshTokenFromServer().then(
 				function(token) {
 					SystemResource.connect().then(
+							
 						//success
 			            function (data) {
+			            
 			              var user_id = data.user.uid;
 			              
 			              if (user_id == 0) { 
@@ -651,8 +650,10 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 			              }
 			              else {  
 			            	  setConnectionState(true);
-			            	  setCurrentUser(data.user);
 			              }
+			             
+			              storeAuthData(data);
+		            	  setCurrentUser(data.user);
 			             
 			              defer.resolve(data);
 			            },
@@ -669,23 +670,24 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 					 defer.reject(error);
 				}
 			);
-		} 
+		/*} 
 		else {
+			
 			SystemResource.connect().then(
 					//success
 		            function (data) {
-		            	
-		              var user_id = data.user.uid,
-		                  oldConnectionState = userIsConected;
-		       
+		            	lastConnectTime = Date.now();
+		              var user_id = data.user.uid;
+		            
 		              if (user_id == 0) { 
 		            	  setConnectionState(false);
 		              }
 		              else {  
 		            	  setConnectionState(true);
-		            	  setCurrentUser(data.user);
 		              }
-		          
+		              storeAuthData(data);
+	            	  setCurrentUser(data.user);
+	            	  
 		              defer.resolve(data);
 		            },
 		            //error
@@ -694,43 +696,31 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		            	defer.reject(error);
 		            }
 				);	
-		}
+		}*/
 		
-		lastConnectTime = Date.now();
+		
 		return defer.promise;
 	};
 		
-	var storeAuthData = function (data) {
-		
+	var storeAuthData = function (data) { 
+	
 		//store local storage data
 		$localstorage.setItem('uid', data.user.uid);
-		//$localstorage.setObject('user', data.user);
-		//$localstorage.setItem('username', data.user.name);
-		$localstorage.setItem('token', data.token);
 		$localstorage.setItem('sessid', data.sessid);
 		$localstorage.setItem('session_name', data.session_name);
 		//store session cookies
 		$cookieStore.put(data.session_name, data.sessid);
-		//set ConnectionState to connected
-		setConnectionState(true);
-		//
-		setCurrentUser(data.user);
+
 	};
 	
 	var deleteAuthData = function () {
 		//delete local storage data
 		$localstorage.removeItem('uid');
-		//$localstorage.removeObject('user');
-		//$localstorage.removeItem('username');
-		$localstorage.removeItem('token');
 		$localstorage.removeItem('sessid');
 		$localstorage.removeItem('session_name');
 		//delete session cookies
 		$cookieStore.remove($localstorage.getItem('session_name'));
-		//set ConnectionState to unconnected
-		setConnectionState(false);
-		//
-		setCurrentUser(drupalApiServiceConfig.anonymousUser);
+
 	};
 	
 	
@@ -739,7 +729,9 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		refreshTokenFromLocalStorage 		: refreshTokenFromLocalStorage,
 		refreshTokenFromServer 				: refreshTokenFromServer,
 		getConnectionState 					: getConnectionState,
+		setConnectionState					: setConnectionState,
 		getCurrentUser 						: getCurrentUser,
+		setCurrentUser 						: setCurrentUser,
 		refreshConnection 					: refreshConnection,
 		getLastConnectTime 					: getLastConnectTime,
 		storeAuthData 						: storeAuthData,
@@ -747,35 +739,47 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 	};
 })
 .run(
-function($rootScope, SystemResource, UserResource, DrupalAuthenticationService, drupalApiNotificationChannel, $http, $localstorage) {
-	
-
-	//on token request confirmed set new token in request headers
-	var onUserTokenConfirmedHandler = function(token) { 
-	  $localstorage.setItem('token', token);
-	  $http.defaults.headers.common.Authorization = token;
-	  $http.defaults.headers.post['X-CSRF-TOKEN'] = token;
+function($rootScope, SystemResource, UserResource, DrupalAuthenticationService, drupalApiServiceConfig, drupalApiNotificationChannel, $http, $localstorage) {
+		
+	//on token request confirmed store token and set new token in request headers
+	var onUserTokenConfirmedHandler = function(token) {
+		
+		$localstorage.setItem('token', token);
+		
+		$http.defaults.headers.common.Authorization = token;
+		$http.defaults.headers.common['X-CSRF-TOKEN'] = token;
+		$http.defaults.withCredentials = true;
 	};
-	drupalApiNotificationChannel.onUserTokenConfirmed($rootScope, onUserTokenConfirmedHandler);
 	
 	//on login request confirmed store data and set new token in request headers
 	var onUserLoginConfirmedHandler = function(data) {
-		DrupalAuthenticationService.storeAuthData(data);
+	
+		$localstorage.setItem('token', data.token);
 		
 		$http.defaults.headers.common.Authorization = data.token;
-		$http.defaults.headers.post['X-CSRF-TOKEN'] = data.token;
+		$http.defaults.headers.common['X-CSRF-TOKEN'] = data.token;
 		$http.defaults.withCredentials = true;
+		console.log(data); 
+		DrupalAuthenticationService.setConnectionState(true);
+		DrupalAuthenticationService.setCurrentUser(data.user);
+		DrupalAuthenticationService.storeAuthData(data);
 	};
+	
 	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, onUserLoginConfirmedHandler);
 	
 	//on logout request confirmed delete data and remove token from request headers
 	var onUserLogoutConfirmedHandler = function(data) {
+	
 		//@TODO check if this is needed
 		delete $http.defaults.headers.common.Authorization;
+		delete $http.defaults.headers.common['X-CSRF-TOKEN'];
+		$http.defaults.withCredentials = true;
+
+		DrupalAuthenticationService.setConnectionState(false);
+		DrupalAuthenticationService.setCurrentUser(drupalApiServiceConfig.anonymousUser);
 		DrupalAuthenticationService.deleteAuthData();
 	};
 	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);
-	//
 	
 });
 
@@ -842,54 +846,6 @@ var drupalAPI = angular.module('common.drupal.api-resources', []);
 **/
 drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, drupalApiNotificationChannel) {
 	
-	// I serialize the given Object into a key-value pair string. This
-    // method expects an object and will default to the toString() method.
-    // --
-    // NOTE: This is an atered version of the jQuery.param() method which
-    // will serialize a data collection for Form posting.
-    // --
-    // https://github.com/jquery/jquery/blob/master/src/serialize.js#L45
-	var serializeData = function( data ) {
-
-        // If this is not an object, defer to native stringification.
-        if ( ! angular.isObject( data ) ) {
-
-            return( ( data == null ) ? "" : data.toString() );
-
-        }
-
-        var buffer = [];
-
-        // Serialize each key in the object.
-        for ( var name in data ) {
-
-            if ( ! data.hasOwnProperty( name ) ) {
-
-                continue;
-
-            }
-
-            var value = data[ name ];
-
-            buffer.push(
-                encodeURIComponent( name ) +
-                "=" +
-                encodeURIComponent( ( value == null ) ? "" : value )
-            );
-
-        }
-
-        // Serialize the buffer and clean it up for transportation.
-        var source = buffer
-            .join( "&" )
-            .replace( /%20/g, "+" )
-        ;
-
-        return( source );
-    };
-
-
-	
 	/*
 	 * getPreparedIndexParams
 	 * http://drupal.aspcode.net/ppst/63547274810018958013876/drupal-services-node-filtering
@@ -923,7 +879,7 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 			var newFields = [];
 			
 			angular.forEach(fields, function(value, key) {
-				console.log(value); 
+			
 				if(value.trim() != '') {
 					this.push(value.trim()+ (fields.length >= key?'':','));
 				}

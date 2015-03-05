@@ -4,7 +4,7 @@
     <div id="content" ng-show="user">
       <div id="profile-info">
         <img id="profile-image"
-             ng-src="https://www---ionic-e7ch2k53a4qd6.eu.platform.sh/sites/default/files/styles/thumbnail/public/pictures/{{user.picture.filename}}">
+             ng-src="{{pathToCms}}sites/default/files/styles/thumbnail/public/pictures/{{user.picture.filename}}">
         <h3 id="profile-name" contenteditable ng-model="user.name"></h3>
         <span id="profile-description" contenteditable ng-model="user.name"></span>
       </div>

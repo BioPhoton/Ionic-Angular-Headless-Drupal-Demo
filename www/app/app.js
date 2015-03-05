@@ -32,15 +32,14 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
                           function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   drupalApiNotificationChannel,   DrupalAuthenticationService,   AccessControlService,   $state) {
 	
 	
-	//DrupalAuthenticationService.refreshConnection().then();
-			
 	//restrict access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
       console.log('want go from ' + fromState.name + ' to ' + toState.name); 
       
       var firstVisit = $localstorage.getItem('firstVisit', false);
       var isRegistered = $localstorage.getItem('isRegistered', false);
-   
+      //AccessControlService.authorize(toState.data.access);
+      
       // if its the users first visit to the app play the apps tour
   	  if ( !firstVisit && toState.name != 'app.tour') { 
   		console.log('redirect 1: app.tour'); 
@@ -49,7 +48,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
   		return;
   	  }  
   	  
-      if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
+     /* if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
         event.preventDefault();
       
         if (isRegistered) {
@@ -62,10 +61,11 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
           $state.go('app.register');
           return;
         } 
-      }
+      }*/
            
       //custom redirect
       if  (toState.name == 'app.login' || toState.name == 'app.register') {
+    
         if (DrupalAuthenticationService.getConnectionState()) {
           console.log('redirect 5: app.authed-tabs.profile'); 
           event.preventDefault();
@@ -93,9 +93,9 @@ drupalIonicAngularJSAPIClient
             	// this fires just on app launge 
             	// switching child states will not resolve this again
                 connectedUser: function(DrupalAuthenticationService, drupalApiServiceConfig) {
-        			if(DrupalAuthenticationService.getLastConnectTime() < Date.now() - drupalApiServiceConfig.session_expiration_time) {       				
+        			//if(DrupalAuthenticationService.getLastConnectTime() < (Date.now() - drupalApiServiceConfig.session_expiration_time) ) {       				
         				return DrupalAuthenticationService.refreshConnection();
-        			}
+        			//}
                 },
             },
             data: {
@@ -221,16 +221,6 @@ drupalIonicAngularJSAPIClient
 	            templateUrl: "app/components/authed-tabs/authed-tabs.html",
 	          }
 	        },
-	        resolve: {
-		    	// check connection state
-            	// this fires just on entrance into this state
-		    	// switching child states will not resolve this again
-		    	connectedUser: function(DrupalAuthenticationService, drupalApiServiceConfig) {
-        			if(DrupalAuthenticationService.getLastConnectTime() < Date.now() - drupalApiServiceConfig.session_expiration_time) {
-        				return DrupalAuthenticationService.refreshConnection();
-        			}
-                },
-            },
 	        data: {
 	          access: AppSettings.accessLevels.user
 	        }
@@ -254,5 +244,5 @@ drupalIonicAngularJSAPIClient
 	        }
 	      });
   
-  $urlRouterProvider.otherwise('/app/authed-tabs/profile');
+  $urlRouterProvider.otherwise('/app/tour');
 }]);

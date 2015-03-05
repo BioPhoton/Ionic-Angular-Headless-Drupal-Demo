@@ -19,9 +19,11 @@ registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicM
                         function (data) {
                           $localstorage.setItem('isRegistered', true);
                           //login user
+                          
                           UserResource.login($scope.registerData.username, $scope.registerData.password)
                                   .then(
                                           function (data) {
+                                        	
                                             //reset form
                                             $scope.registerData = {};
                                             //reste form
