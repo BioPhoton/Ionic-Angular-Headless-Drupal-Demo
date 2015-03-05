@@ -22,7 +22,6 @@ registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicM
                           UserResource.login($scope.registerData.username, $scope.registerData.password)
                                   .then(
                                           function (data) {
-                                        	 
                                             //reset form
                                             $scope.registerData = {};
                                             //reste form
