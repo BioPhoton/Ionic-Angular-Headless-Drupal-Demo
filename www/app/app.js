@@ -92,10 +92,11 @@ drupalIonicAngularJSAPIClient
             	// init connection state
             	// this fires just on app launge 
             	// switching child states will not resolve this again
-                connectedUser: function(DrupalAuthenticationService, drupalApiServiceConfig) {
-        			//if(DrupalAuthenticationService.getLastConnectTime() < (Date.now() - drupalApiServiceConfig.session_expiration_time) ) {       				
+                connectedUser: function(DrupalAuthenticationService, drupalApiServiceConfig/*, $cordovaNetwork*/) {
+                	//console.log($cordovaNetwork.isOnline()); 
+        			if(DrupalAuthenticationService.getLastConnectTime() < (Date.now() - drupalApiServiceConfig.session_expiration_time) ) {       				
         				return DrupalAuthenticationService.refreshConnection();
-        			//}
+        			}
                 },
             },
             data: {

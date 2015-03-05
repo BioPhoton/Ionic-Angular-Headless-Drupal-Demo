@@ -38,20 +38,16 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotifica
     //
     // Show hide network connection bar
     //
-	  
 	$scope.isOffline = false;
-    //for testing
-	$scope.toggleIsOffline = function() { $scope.isOffline = !$scope.isOffline; }
-	
     // on inet offline
-    $ionicPlatform.on('offline', function () {
-      $scope.isOffline = true;
-    });
-
+	$rootScope.$on('$cordovaNetwork:offline', function(event, networkState){ 
+		$scope.isOffline = true;
+	})
     // on inet online
     // NOTICE this event fires only on "resume online"
-    $ionicPlatform.on('online', function () {
-      $scope.isOffline = false;
-    });
+	$rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+		$scope.isOffline = false;
+	});
+
 
   }]);
