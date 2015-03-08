@@ -1,9 +1,46 @@
 # Drupal-Ionic-AngularJS-API-Client
 This repo is all about making clientside authed rest-calls easy to use.
 
+# Features
+## Show tour on first visit only
+## Redirects for new and registered users
+## Access control
+## Authentication Service
+## Drupal Services3 Resource-Services
+
+#Workflow
+- app lounge
+- token (local storage or server)
+- connect 
+- start routing
+???
+
+#install
+##Dependencies
+ipCookies
 
 
- Any calls that use POST, PUT, or DELETE must now have a header key/value pair with "X-CSRF-Token" being the key, and the token retrieved from /services/session/token as the value to send along with the header key.
+##Drupal config
+
+###account settings
+
+###services
+
+##Browser differences
+
+##Session expiration
+//https://api.drupal.org/api/drupal/includes!common.inc/function/drupal_http_request/7
+- 401 Unauthorized — The user is not logged in
+- 403 Forbidden — The user is logged in but isn’t allowed access
+- 419 Authentication Timeout (non standard) — Session has expired
+- 440 Login Timeout (Microsoft only) — Session has expired
+
+##Debugging
+Wrong username or password => require email confirm checked in drupal
+
+
+##???
+ Any calls that use POST, PUT, or DELETE must now have a header key/value pair with "X-CSRF-Token" being the key, and the token retrieved from /user/token as the value to send along with the header key.
 
 [https://www.drupal.org/node/2012982]https://www.drupal.org/node/2012982
  Description
@@ -30,8 +67,10 @@ Therefore the cookie saved is $cookie[session_name] = session_id
 This cookie is used to validate the session on drupal when doing a authenticated request
 Angularjs *does not* automatically save cookies and use them when doing requests
 Therefore on login we need to save the cookie and use it when doing requests.
-*Chrome does this automatically, it’s for Safari and Firefox and for iPhones
+*Chrome does this automatically, itâ€™s for Safari and Firefox and for iPhones
 
 Tokens
-Drupal requires us to send a header with the token. I’m not 100% sure yet about whether we need a new token each time.
+
+
+
 

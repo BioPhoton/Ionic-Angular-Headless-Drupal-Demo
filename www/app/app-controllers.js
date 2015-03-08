@@ -26,14 +26,14 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotifica
 	//
     
     // on logou request confirmed do logout redirect
-	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, function(data) {  $scope.isLoggedIn = false;  $state.go('app.login'); 	 });
+	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, function(data) { console.log('app-controller on logout');  $scope.isLoggedIn = false;  $state.go('app.login'); 	 });
     	
 	//
 	// Auth redirects
 	//
 	
     // on login request confirmed do login redirect
-	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, function(data) {  $scope.isLoggedIn = true;   $state.go('app.authed-tabs.profile'); });
+	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, function(data) { console.log('app-controller on login');  $scope.isLoggedIn = true;   $state.go('app.authed-tabs.profile'); });
     
     //
     // Show hide network connection bar

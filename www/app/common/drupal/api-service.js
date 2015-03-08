@@ -1,6 +1,6 @@
 /* Drupals api depending services*/
 //______________________________________________
-var drupalApiService = angular.module('common.drupal.api-services', ['ngCookies']);
+var drupalApiService = angular.module('common.drupal.api-services', ['ipCookie']);
 
 /* Constants for drupalApiService */
 drupalApiService.constant("drupalApiServiceConfig", {
@@ -560,14 +560,51 @@ drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalA
    	};
 }]);
 
-drupalApiService.service('DrupalAuthenticationService', function($rootScope, $http, $q, drupalApiServiceConfig, drupalApiNotificationChannel, SystemResource, UserResource, $localstorage, $cookieStore) {
+drupalApiService.service('DrupalAuthenticationService', function($rootScope, $http, $q, drupalApiServiceConfig, drupalApiNotificationChannel, SystemResource, UserResource, $localstorage, ipCookie) {
 	
 	//needed to use the $on method in the notification channel
 	//http://stackoverflow.com/questions/16477123/how-do-i-use-on-in-a-service-in-angular
 	var scope = $rootScope.$new(); // or $new(true) if you want an isolate scope
 	var userIsConected = false,
 		currentUser	 = drupalApiServiceConfig.anonymousUser,
-		lastConnectTime  = 0;
+		lastConnectTime  = 0
+		sessionCookieOptions = { 	domain 			: '.dev-drupal-headless-ionic.pantheon.io',
+									path			: '/',
+									expires			: 30,
+									expirationUnit 	: 'minutes'
+						},
+		jsCookieOptions = { 	domain 	: 'dev-drupal-headless-ionic.pantheon.io',
+								path	: '/',
+								expires	: 30,
+								expirationUnit: 'minutes'
+							};
+	
+	
+	var storeTokenData = function(newToken) {
+		newToken = (newToken)?newToken:false;
+	
+		if(newToken !== false) { 
+			
+			if( newToken != $localstorage.getItem('token', false) ) {
+				$localstorage.setItem('token', newToken);
+			}
+		
+			$http.defaults.headers.common.Authorization = newToken;
+			$http.defaults.headers.common['X-CSRF-TOKEN'] = newToken;
+
+		}
+		else { $localstorage.removeItem('token'); }
+		 
+	};
+
+	var deleteTokenData = function() {
+			$localstorage.removeItem('token');
+
+			$http.defaults.headers.common.Authorization = undefined;
+			$http.defaults.headers.common['X-CSRF-TOKEN'] = undefined;
+			
+	};
+	
 	
 	var getLastConnectTime = function() {
 		return lastConnectTime;
@@ -596,188 +633,178 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
         }
 	};
 	
+	var refreshToken = function () {
+		var defer = $q.defer();
+		
+		//if refreshTokenFromLocalStorage is not possible
+		if(!refreshTokenFromLocalStorage()) {
+		
+			//refresh token from server
+			refreshTokenFromServer().then(
+				
+				//refreshTokenFromServer success
+				function(token) {
+					 defer.resolve(true);
+				},
+				//refreshTokenFromServer error
+				function() {
+					defer.reject(false);
+				}
+			);
+		} 
+		//if refreshTokenFromLocalStorage was possible
+		else { defer.resolve(true); }
+		
+		return defer.promise;
+	}
+	
+	//if token is stored in local storage set token value to http headers
+	//this function is needed when launging app to check if user has token already 
 	var refreshTokenFromLocalStorage = function () {
+		//load token from local storage or flase
 		var token = $localstorage.getItem('token', false);
 		
 		if (token) {
-			$http.defaults.headers.common.Authorization = token;
-			$http.defaults.headers.common['X-CSRF-TOKEN'] = token;
-			$http.defaults.withCredentials = true;
-			
+			storeTokenData(token);
 			return token
 		}
 		
 		return false;
 	};
 	
+	//request a new token from server => api_endpoint/user/token
 	var refreshTokenFromServer = function () {
 		var defer = $q.defer();
 		
-		UserResource.token().then(function(token){
-			 $localstorage.setItem('token', token);
-			 			 
-			 $http.defaults.headers.common.Authorization = token;
-			 $http.defaults.headers.common['X-CSRF-TOKEN'] = token;
-			 $http.defaults.withCredentials = true;
-
-			 defer.resolve(token);
-		},
-		function() {
-			
-			defer.reject(data);
-		});
+		UserResource.token().then(
+			//UserResource.token success
+			function(token){
+				 storeTokenData(token);
+				 defer.resolve(token);
+			},
+			//UserResource.token error
+			function(data) {
+				defer.reject(false);
+			}
+		);
 
 		return defer.promise;
 	};
 	
 	var refreshConnection = function () {
 		var defer = $q.defer();
-	
-		//@TODO queue refreshTokenFromServer ans connect request if  TokenFromLocalStorage is false
-		/*if(!refreshTokenFromLocalStorage()) {*/
-			
-			refreshTokenFromServer().then(
-				function(token) {
+		
+		//check token
+		refreshToken().then(
+				//initToken success
+				function(token) {	
+					
 					SystemResource.connect().then(
-							
-						//success
-			            function (data) {
-			            
-			              var user_id = data.user.uid;
-			              
-			              if (user_id == 0) { 
-			            	  setConnectionState(false); 
-			              }
-			              else {  
-			            	  setConnectionState(true);
-			              }
-			             
-			              storeAuthData(data);
-		            	  setCurrentUser(data.user);
-			             
-			              defer.resolve(data);
-			            },
-			            //error
-			            function(data) {
-			            	setConnectionState(false);
-			            	defer.reject(data);
-			            }
-					);
+							//SystemResource.connect success
+				            function (data) {
+				            	
+				              var user_id = data.user.uid;
+				              
+				              if (user_id == 0) { 
+				            	  setConnectionState(false); 
+				              }
+				              else {  
+				            	  setConnectionState(true);
+				              }
+				             
+				              storeSessionData(data);
+			            	  setCurrentUser(data.user);
+				              
+				              defer.resolve(data);
+				            },
+				            //SystemResource.connect error
+				            function(data) {
+				            	setConnectionState(false);
+				            	defer.reject(data);
+				            }
+						);
 				},
-				//
-				function(error) {
-					 setConnectionState(false);
-					 defer.reject(error);
+				//initToken error
+				function() {
+					
+					defer.reject(data);
 				}
-			);
-		/*} 
-		else {
-			
-			SystemResource.connect().then(
-					//success
-		            function (data) {
-		            	lastConnectTime = Date.now();
-		              var user_id = data.user.uid;
-		            
-		              if (user_id == 0) { 
-		            	  setConnectionState(false);
-		              }
-		              else {  
-		            	  setConnectionState(true);
-		              }
-		              storeAuthData(data);
-	            	  setCurrentUser(data.user);
-	            	  
-		              defer.resolve(data);
-		            },
-		            //error
-		            function(error) {
-		            	setConnectionState(false); 
-		            	defer.reject(error);
-		            }
-				);	
-		}*/
+		);
 		
-		
+		//check cookies
 		return defer.promise;
 	};
-		
-	var storeAuthData = function (data) { 
 	
+	var storeSessionData = function (data) { 
 		//store local storage data
-		$localstorage.setItem('uid', data.user.uid);
 		$localstorage.setItem('sessid', data.sessid);
 		$localstorage.setItem('session_name', data.session_name);
+		
 		//store session cookies
-		$cookieStore.put(data.session_name, data.sessid);
+		//SESSa8c952894fc942b83f7d2f75f2e68c3b	YFyH90YcJOPPb4CVJrs_9TB7yPnv9Ds6iE0Bjb_viEE	.dev-drupal-headless-ionic.pantheon.io	/	2015-03-31T18:43:35.769Z	79	✓		
+		//has_js	1	dev-drupal-headless-ionic.pantheon.io	/	Session	7			
+
+		ipCookie(data.session_name, data.sessid, sessionCookieOptions);
+		$http.defaults.withCredentials = true;
 
 	};
 	
-	var deleteAuthData = function () {
+	var deleteSessionData = function () {
+		//delete session cookies
+		ipCookie.remove($localstorage.getItem('session_name'), sessionCookieOptions.path);
+		$http.defaults.withCredentials = false;
 		//delete local storage data
-		$localstorage.removeItem('uid');
 		$localstorage.removeItem('sessid');
 		$localstorage.removeItem('session_name');
-		//delete session cookies
-		$cookieStore.remove($localstorage.getItem('session_name'));
-
 	};
 	
 	
 	//public methods
 	return {
-		refreshTokenFromLocalStorage 		: refreshTokenFromLocalStorage,
-		refreshTokenFromServer 				: refreshTokenFromServer,
+		storeTokenData 						: 	storeTokenData,
+		deleteTokenData						: 	deleteTokenData,
+		refreshToken						: refreshToken,
+		
+		storeSessionData 					: storeSessionData,
+		deleteSessionData 					: deleteSessionData,
+		
 		getConnectionState 					: getConnectionState,
 		setConnectionState					: setConnectionState,
+		
 		getCurrentUser 						: getCurrentUser,
 		setCurrentUser 						: setCurrentUser,
+		
 		refreshConnection 					: refreshConnection,
 		getLastConnectTime 					: getLastConnectTime,
-		storeAuthData 						: storeAuthData,
-		deleteAuthData 						: deleteAuthData
+		
 	};
 })
 .run(
 function($rootScope, SystemResource, UserResource, DrupalAuthenticationService, drupalApiServiceConfig, drupalApiNotificationChannel, $http, $localstorage) {
 		
-	//on token request confirmed store token and set new token in request headers
-	var onUserTokenConfirmedHandler = function(token) {
-		
-		$localstorage.setItem('token', token);
-		
-		$http.defaults.headers.common.Authorization = token;
-		$http.defaults.headers.common['X-CSRF-TOKEN'] = token;
-		$http.defaults.withCredentials = true;
-	};
+	$http.defaults.withCredentials = true; //cookies
 	
 	//on login request confirmed store data and set new token in request headers
-	var onUserLoginConfirmedHandler = function(data) {
-	
-		$localstorage.setItem('token', data.token);
-		
-		$http.defaults.headers.common.Authorization = data.token;
-		$http.defaults.headers.common['X-CSRF-TOKEN'] = data.token;
-		$http.defaults.withCredentials = true;
-		console.log(data); 
+	var onUserLoginConfirmedHandler = function(data) { 
+		console.log('DrupalAuthenticationService run on login');
+		DrupalAuthenticationService.storeTokenData(data.token);
+		DrupalAuthenticationService.storeSessionData(data);
 		DrupalAuthenticationService.setConnectionState(true);
 		DrupalAuthenticationService.setCurrentUser(data.user);
-		DrupalAuthenticationService.storeAuthData(data);
 	};
 	
 	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, onUserLoginConfirmedHandler);
 	
 	//on logout request confirmed delete data and remove token from request headers
 	var onUserLogoutConfirmedHandler = function(data) {
-	
+		console.log('DrupalAuthenticationService run on logout');
 		//@TODO check if this is needed
-		delete $http.defaults.headers.common.Authorization;
-		delete $http.defaults.headers.common['X-CSRF-TOKEN'];
-		$http.defaults.withCredentials = true;
-
+		DrupalAuthenticationService.deleteTokenData();
+		DrupalAuthenticationService.deleteSessionData();
 		DrupalAuthenticationService.setConnectionState(false);
 		DrupalAuthenticationService.setCurrentUser(drupalApiServiceConfig.anonymousUser);
-		DrupalAuthenticationService.deleteAuthData();
+		
+		DrupalAuthenticationService.refreshConnection();
 	};
 	drupalApiNotificationChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);
 	
@@ -1094,9 +1121,7 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	 * Headers: Content-Type:application/json
 	 * 
 	 * @param {Integer} page The zero-based index of the page to get, defaults to 0., required:false, source:param
-	 *@TODO find link to drupal docs of possible values 
 	 * @param {Array} fields The fields to get. Shouls be a comma seperated string., defaults to 0., required:false, source:param
-	 *@TODO find link to drupal docs of possible values 
 	 * @param {Array} parameters Parameters array, required:false, source:param
 	 * @param {Integer} pagesize Number of records to get per page. For unauthorized users 25 is maximum., required:false, source:param
 	 * 

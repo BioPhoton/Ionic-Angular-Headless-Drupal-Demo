@@ -6,8 +6,9 @@
   },
   "dependencies": {
     "ngCordova": "~0.1.12-alpha",
-    "angular-cookies": "1.3.6",
-    "angular-messages": "~1.3.13"
+    "angular-cookie": "=4.0.6"
+    "angular-messages": "~1.3.13",
+
   },
   "resolutions": {
     "angular": "1.3.6"

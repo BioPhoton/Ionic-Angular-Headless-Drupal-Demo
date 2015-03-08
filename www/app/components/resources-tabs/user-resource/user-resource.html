@@ -3,6 +3,19 @@
 <ion-content>
 <h1>UserResource</h1>
 
+<h2>Token</h2>
+<div ng-repeat="request in userTokenRequests">
+	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
+	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
+	<b>Duration:</b> {{request.requestDuration}}<br />
+	<b>Data:</b> 
+	<pre>
+	{{ request.data | json}}
+	</pre>
+</div>
+<button class="button button-small" ng-click="callUserRecourceToken()">call UserRecource token</button>
+<hr />
+
 <h2>Register User</h2>
 <b>registerData:</b>
 <pre>

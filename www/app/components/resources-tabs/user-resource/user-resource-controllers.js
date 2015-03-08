@@ -3,13 +3,36 @@
 
 var userResourceControllers = angular.module('resources.user-resource.controllers', ['common.drupal.api-services', 'common.drupal.api-resources' ]);
 
-
 /* User Resource Controller */
 userResourceControllers.controller('ResourcesUserResourceCtrl', 
-		   ['$scope', 'UserResource', 'drupalApiNotificationChannel', 
-    function($scope,   UserResource,   drupalApiNotificationChannel) {
-			   
+		   ['$scope', 'UserResource', 'DrupalAuthenticationService', 'drupalApiNotificationChannel', 
+    function($scope,   UserResource,   DrupalAuthenticationService,   drupalApiNotificationChannel) {
+			  
+			 //
 			 //UserResource
+			 //
+			   
+			 //token
+			   $scope.userTokenRequests = [];
+			   $scope.callUserRecourceToken = function() {
+			   	   		var requestEnd = requestStart = Date.now();
+			   			UserResource.token()
+			   		    .then(
+			   		    		//success
+			   		    		function(token) {
+			   		    			//DrupalAuthenticationService.setToken(token);
+			   		    			requestEnd = Date.now();
+			   		    			$scope.userTokenRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:token});
+			   		    		},
+			   		    		//error
+			   		    		function(data) {
+			   		    			requestEnd = Date.now();
+			   		    			$scope.userTokenRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+			   		    		}
+			   		    );
+			   };
+			   
+			 //login
 			 $scope.lastTimeRequestToUserResourceLogin = null;
 			 $scope.lastResultRequestToUserResourceLogin = null;
 			   
@@ -28,8 +51,9 @@ userResourceControllers.controller('ResourcesUserResourceCtrl',
 					    			$scope.lastResultRequestToUserResourceLogin = data;
 					    		}
 					    );
-			 }
-			   
+		    }
+			 
+		   //logout
 		   $scope.lastTimeRequestToUserResourceLogout = null;
 		   $scope.lastResultRequestToUserResourceLogout = null;
 		   
