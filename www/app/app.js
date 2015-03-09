@@ -22,7 +22,7 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'resources.user-resource.controllers',
   'resources.views-resource.controllers',
 
-  'authed-tabs.views-resource.controllers',
+  'authed-tabs.node-demo.controllers',
   'authed-tabs.profile.controllers',
 
 ]);
@@ -42,7 +42,7 @@ drupalIonicAngularJSAPIClient
             	// this fires just on app launge 
             	// switching child states will not resolve this again
                 connectedUser: function(DrupalAuthenticationService, drupalApiServiceConfig/*, $cordovaNetwork*/) {
-                	//console.log($cordovaNetwork.isOnline()); 
+                	
         			if(DrupalAuthenticationService.getLastConnectTime() < (Date.now() - drupalApiServiceConfig.session_expiration_time) ) {       				
         				return DrupalAuthenticationService.refreshConnection();
         			}
@@ -85,7 +85,7 @@ drupalIonicAngularJSAPIClient
 	        },
             resolve: {
               termsNodeObj: function (NodeResource, AppSettings) {
-                return NodeResource.retrieve(AppSettings.terms_and_conditions_nid);
+            	  return NodeResource.retrieve(AppSettings.terms_and_conditions_nid);
               }
             }
           })
@@ -164,15 +164,7 @@ drupalIonicAngularJSAPIClient
 	          access: AppSettings.accessLevels.user
 	        }
 	      })
-	      .state('app.authed-tabs.views-resource', {
-	        url: "/views-resource",
-	        views: {
-	          'views-resource-tab': {
-	            templateUrl: "app/components/authed-tabs/views-resource/views-resource.html",
-	            controller: 'authedTabViewsResourceCtrl'
-	          }
-	        },
-	      })
+	      
 	      .state('app.authed-tabs.profile', {
 	        url : "/profile",
 	        cache : false,
@@ -188,7 +180,54 @@ drupalIonicAngularJSAPIClient
 	                return DrupalAuthenticationService.getCurrentUser();
 	              }
 	            }
-	      });
+	      })
+	      
+	      .state('app.authed-tabs.node-list', {
+	        url: "/nodes",
+	        views: {
+	          'node-list-tab': {
+	            templateUrl: "app/components/authed-tabs/node-demo/node-demo.html",
+	            controller: 'NodeListCtrl'
+	          }
+	        },
+	      })
+	      .state('app.authed-tabs.node-detail', {
+	        url: "/node/:nid/detail",
+	        views: {
+		          'node-list-tab': {
+		        	    templateUrl: "app/components/authed-tabs/node-demo/node-detail.html",
+		    	        controller: 'NodeDetailCtrl'
+		          }
+		    },
+		    resolve : {
+		    	nodeObj :function (NodeResource, $stateParams) {
+	                return NodeResource.retrieve($stateParams.nid);
+	            }	
+		    }
+	    
+	      })
+	      
+	      /*
+	      .state('app.authed-tabs.node-edit', {
+	        url: "/node/:id/edit",
+	        views: {
+	          'node-demo-tab': {
+	            templateUrl: "app/components/authed-tabs/node-demo/node-demo.html",
+	            controller: 'NodeEditCtrl'
+	          }
+	        },
+	      })
+	       .state('app.authed-tabs.node-edit', {
+	        url: "/node/new",
+	        views: {
+	          'node-demo-tab': {
+	            templateUrl: "app/components/authed-tabs/node-demo/node-demo.html",
+	            controller: 'NodeLCreateCtrl'
+	          }
+	        },
+	      })*/
+	      
+	      ;
   
   $urlRouterProvider.otherwise('/app/tour');
   

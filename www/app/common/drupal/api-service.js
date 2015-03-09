@@ -1,7 +1,7 @@
 /* Drupals api depending services*/
 //______________________________________________
 var drupalApiService = angular.module('common.drupal.api-services', ['ipCookie']);
-
+//@TODO mace servise configurable
 drupalApiService.provider('drupalApiServiceConfiguration', function () {
     // default values
     var defaults = {
@@ -9,10 +9,10 @@ drupalApiService.provider('drupalApiServiceConfiguration', function () {
     	drupal_instance	: 'http://dev-drupal-headless-ionic.pantheon.io/',
     };
     return {
-      set: function (constants) { // 1
+      set: function (constants) {
         angular.extend(defaults, constants);
       },
-      $get: function () { // 2
+      $get: function () { 
         return defaults;
       }
     };
