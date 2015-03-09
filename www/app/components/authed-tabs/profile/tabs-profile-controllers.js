@@ -1,20 +1,18 @@
 var tabsProfileControllers = angular.module('authed-tabs.profile.controllers', ['common.drupal.api-services', 'common.drupal.api-resources']);
 
-tabsProfileControllers.controller('authedTabProfileCtrl', ['$scope','drupalApiNotificationChannel', 'DrupalAuthenticationService', 'drupalApiServiceConfig',
-                                                  function ($scope,  drupalApiNotificationChannel,   DrupalAuthenticationService, drupalApiServiceConfig) {
+tabsProfileControllers.controller('authedTabProfileCtrl', ['$scope','drupalApiNotificationChannel', 'DrupalAuthenticationService', 'drupalApiServiceConfig', 'userObj',
+                                                  function ($scope,  drupalApiNotificationChannel,   DrupalAuthenticationService, drupalApiServiceConfig, userObj) {
 
-	$scope.pathToCms = drupalApiServiceConfig.drupal_instance;
-	$scope.user = DrupalAuthenticationService.getCurrentUser(); 
+	$scope.pathToCms 	= drupalApiServiceConfig.drupal_instance;
+	$scope.user 		= userObj; 
+	
+	/*
+	this is noly active if page is present
 	// on login request confirmed set userdata
 	var onCurrentUserUpdatedHandler = function(data) { 
+		console.log('onCurrentUserUpdatedHandler'); 
 		$scope.user = DrupalAuthenticationService.getCurrentUser(); 
 	};
 	drupalApiNotificationChannel.onCurrentUserUpdated($scope, onCurrentUserUpdatedHandler);
-	
-	$scope.$watch("user.name", function(newValue, oldValue) {
-	    if (newValue != oldValue) {
-	    	//do this debounced
-	    	console.log('save changes in db');
-	    }
-	  });
-  }]);
+	*/
+}]);

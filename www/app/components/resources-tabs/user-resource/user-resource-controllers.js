@@ -11,6 +11,55 @@ userResourceControllers.controller('ResourcesUserResourceCtrl',
 			 //
 			 //UserResource
 			 //
+
+			   //Retrieve
+			   $scope.userRetrieveRequests = [];
+			   
+			   $scope.callUserRecourceRetrieve = function(uid) {
+				   
+				   var requestEnd = requestStart = Date.now();
+				   UserResource.retrieve(uid).then(
+				    		//success
+				    		function(data) {
+				    			requestEnd = Date.now();
+				    			$scope.userRetrieveRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+				    		},
+				    		//error
+				    		function(data) {
+				    			requestEnd = Date.now();
+				    			$scope.userRetrieveRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+				    		}
+				    );
+			   };
+			   
+			   //Index
+			   
+			   $scope.userIndexRequests = [];
+			   
+			   //get params for index request
+			   $scope.userIndex = {};
+			   $scope.userIndex.page = null;
+			   $scope.userIndex.fields = null;
+			   $scope.userIndex.parameters = null;
+			   $scope.userIndex.pagesize = null;
+			   
+			   $scope.callUserRecourceIndex = function(userIndex) {
+				   var requestStart = Date.now();
+				   UserResource.index(userIndex.page, userIndex.fields, userIndex.parameters, userIndex.pagesize).then(
+				    		//success
+				    		function(data) {
+				    		
+				    			 var requestEnd = Date.now();
+				    			$scope.userIndexRequests.push( {requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+				    		},
+				    		//error
+				    		function(data) {
+				    		
+				    			$scope.userIndexRequests.push( {requestStart:requestStart, data:data});
+				    		}
+				    );
+			    };
+			    
 			   
 			 //token
 			   $scope.userTokenRequests = [];

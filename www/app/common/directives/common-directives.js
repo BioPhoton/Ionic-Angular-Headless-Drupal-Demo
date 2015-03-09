@@ -12,6 +12,16 @@ commonDirectives.directive('stopEvent', function () {
   };
 });
 
+
+/*
+ $scope.$watch("user.name", function(newValue, oldValue) {
+    if (newValue != oldValue) {
+    	//do this debounced
+    	console.log('save changes in db');
+    }
+  });
+*/
+
 commonDirectives.directive("contenteditable", function() {
 	  return {
 	    restrict: "A",

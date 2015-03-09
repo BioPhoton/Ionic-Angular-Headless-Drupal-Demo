@@ -16,6 +16,10 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 			   //Retrieve
 			   $scope.nodeRetrieveRequests = [];
 			   
+			   //path params for retrieve request
+			   $scope.nodeRetrieve = {};
+			   $scope.nodeRetrieve.nid = 1;
+			   
 			   $scope.callNodeRecourceRetrieve = function(nid) {
 				   
 				   var requestEnd = requestStart = Date.now();

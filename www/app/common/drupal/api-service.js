@@ -2,6 +2,22 @@
 //______________________________________________
 var drupalApiService = angular.module('common.drupal.api-services', ['ipCookie']);
 
+drupalApiService.provider('drupalApiServiceConfiguration', function () {
+    // default values
+    var defaults = {
+    	// Your sites domain
+    	drupal_instance	: 'http://dev-drupal-headless-ionic.pantheon.io/',
+    };
+    return {
+      set: function (constants) { // 1
+        angular.extend(defaults, constants);
+      },
+      $get: function () { // 2
+        return defaults;
+      }
+    };
+});
+
 /* Constants for drupalApiService */
 drupalApiService.constant("drupalApiServiceConfig", {
    //					   
@@ -26,15 +42,14 @@ drupalApiService.constant("drupalApiServiceConfig", {
 			  // Resources: defualt or alias
 			  // NOTE: if you set custom aliases for your recources in [your.domain.org]/admin/structure/services/list/[machinereadable_name_of_endpoint]/resources change value here
 			  defaut_resources	: { 
-				  session 				: 'services/session/',
-				  //comment 			: 'comment/', 	
-				  //file				: 'file/', 	
+				  //comment 			: 'comment', 	
+				  //file				: 'file', 	
 				  node	 				: 'node',
-				  system				: 'system/',
-				  //taxonomy_term	 	: 'taxonomy_term/',	
-				  //taxonomy_vocabulary : 'taxonomy_vocabulary/', 	
-				  user 					: 'user/',	
-				  views 				: 'views/', 					
+				  system				: 'system',
+				  //taxonomy_term	 	: 'taxonomy_term',	
+				  //taxonomy_vocabulary : 'taxonomy_vocabulary', 	
+				  user 					: 'user',	
+				  views 				: 'views', 					
 			  },
 			  //resources enabled through a custom drupal module
 			  custom_resources	: { 
@@ -79,6 +94,28 @@ drupalApiService.constant("drupalApiServiceConfig", {
 	// Retrieve action
 	node_retrieveConfirmed	: 'event:drupal-node-retrieveConfirmed',
 	node_retrieveFailed  	: 'event:drupal-node-retrieveFailed',
+	// Create action
+	node_createConfirmed	: 'event:drupal-node-createConfirmed',
+	node_createFailed  		: 'event:drupal-node-createFailed',
+	// Update action
+	node_updateConfirmed	: 'event:drupal-node-updateConfirmed',
+	node_updateFailed  		: 'event:drupal-node-updateFailed',
+	// Delete action
+	node_deleteConfirmed	: 'event:drupal-node-deleteConfirmed',
+	node_deleteFailed  		: 'event:drupal-node-deleteFailed',
+	// Index action
+	node_indexConfirmed		: 'event:drupal-node-indexConfirmed',
+	node_indexFailed  		: 'event:drupal-node-indexFailed',
+	// Files action
+	node_filesConfirmed		: 'event:drupal-node-filesConfirmed',
+	node_filesFailed  		: 'event:drupal-node-filesFailed',
+	// Comments action
+	node_commentsConfirmed	: 'event:drupal-node-commentsConfirmed',
+	node_commentsFailed  	: 'event:drupal-node-commentsFailed',
+	// Attach file action
+	node_attachFileConfirmed	: 'event:drupal-node-attachFileConfirmed',
+	node_attachFileFailed  		: 'event:drupal-node-attachFileFailed',
+	
 	
 	// System resource
 	//
@@ -140,34 +177,6 @@ drupalApiService.constant("drupalApiServiceConfig", {
 drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalApiServiceConfig', 
                                                  function ($rootScope,   drupalApiServiceConfig) {
    	
-	//
-	// Session resource
-	//
-	
-	// Token Action
-	
-	// Publish session token confirmed event
-    var publishSessionTokenConfirmed = function () {
-        $rootScope.$broadcast(drupalApiServiceConfig.session_tokenConfirmed, {token: token});
-    };
-    // Subscribe to session token confirmed event
-    var onSessionTokenConfirmed = function($scope, handler) {
-    	$scope.$on(drupalApiServiceConfig.session_tokenConfirmed, function(event, args) {
-	    handler(args.token);
-	   });	
-    };
-    
-	// Publish session token failed event
-    var publishSessionTokenFailed = function (error) {
-        $rootScope.$broadcast(drupalApiServiceConfig.session_tokenFailed, {error: error});
-    };
-    // Subscribe to session token failed event
-    var onSessionTokenFailed = function($scope, handler) {
-    	$scope.$on(drupalApiServiceConfig.session_tokenFailed, function(event, args) {
-	    handler(args.error);
-	   });	
-    };
-    
     //
     // Comment resource
 	//
@@ -202,6 +211,174 @@ drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     // Subscribe to node retrieve failed event
     var onNodeRetrieveFailed = function($scope, handler) {
     	$scope.$on(drupalApiServiceConfig.node_retrieveFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+   
+    // Create action
+	
+	// Publish node create confirmed event
+    var publishNodeCreateConfirmed = function (node) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_createConfirmed, {node: node});
+    };
+    // Subscribe to node create confirmed event
+    var onNodeCreateConfirmed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_createConfirmed, function(event, args) {
+	    handler(args.node);
+	   });	
+    };
+  
+	// Publish create create failed event
+    var publishNodeCreateFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_createFailed, {error: error});
+    };
+    // Subscribe to node create failed event
+    var onNodeCreateFailed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_createFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    // Update action
+    
+	// Publish node update confirmed event
+    var publishNodeUpdateConfirmed = function (node) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_updateConfirmed, {node: node});
+    };
+    // Subscribe to node update confirmed event
+    var onNodeUpdateConfirmed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_updateConfirmed, function(event, args) {
+	    handler(args.node);
+	   });	
+    };
+    
+	// Publish node update failed event
+    var publishNodeUpdateFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_updateFailed, {error: error});
+    };
+    // Subscribe to node update failed event
+    var onNodeUpdateFailed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_updateFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    // Delete action
+    
+	// Publish node delete confirmed event
+    var publishNodeDeleteConfirmed = function (node) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_deleteConfirmed, {node: node});
+    };
+    // Subscribe to node delete confirmed event
+    var onNodeDeleteConfirmed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_deleteConfirmed, function(event, args) {
+	    handler(args.node);
+	   });	
+    };
+    
+	// Publish node delete failed event
+    var publishNodeDeleteFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_deleteFailed, {error: error});
+    };
+    // Subscribe to node delete failed event
+    var onNodeDeleteFailed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_deleteFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    // Index action
+    
+	// Publish node index confirmed event
+    var publishNodeIndexConfirmed = function (node) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_indexConfirmed, {node: node});
+    };
+    // Subscribe to node index confirmed event
+    var onNodeIndexConfirmed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_indexConfirmed, function(event, args) {
+	    handler(args.node);
+	   });	
+    };
+    
+	// Publish node index failed event
+    var publishNodeIndexFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_indexFailed, {error: error});
+    };
+    // Subscribe to node index failed event
+    var onNodeIndexFailed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_indexFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+  
+    // Files action
+    
+	// Publish node files confirmed event
+    var publishNodeFilesConfirmed = function (node) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_filesConfirmed, {node: node});
+    };
+    // Subscribe to node files confirmed event
+    var onNodeFilesConfirmed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_filesConfirmed, function(event, args) {
+	    handler(args.node);
+	   });	
+    };
+    
+	// Publish node files failed event
+    var publishNodeFilesFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_filesFailed, {error: error});
+    };
+    // Subscribe to node files failed event
+    var onNodeFilesFailed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_filesFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+
+    // Comments action
+    
+	// Publish node comments confirmed event
+    var publishNodeCommentsConfirmed = function (node) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_commentsConfirmed, {node: node});
+    };
+    // Subscribe to node comments confirmed event
+    var onNodeCommentsConfirmed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_commentsConfirmed, function(event, args) {
+	    handler(args.node);
+	   });	
+    };
+    
+	// Publish node comments failed event
+    var publishNodeCommentsFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_commentsFailed, {error: error});
+    };
+    // Subscribe to node comments failed event
+    var onNodeCommentsFailed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_commentsFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    // Attach file action
+ 
+	// Publish node attachFile confirmed event
+    var publishNodeAttachFileConfirmed = function (node) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_attachFileConfirmed, {node: node});
+    };
+    // Subscribe to node attachFile confirmed event
+    var onNodeAttachFileConfirmed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_attachFileConfirmed, function(event, args) {
+	    handler(args.node);
+	   });	
+    };
+    
+	// Publish node attachFile failed event
+    var publishNodeAttachFileFailed = function (error) {
+        $rootScope.$broadcast(drupalApiServiceConfig.node_attachFileFailed, {error: error});
+    };
+    // Subscribe to node attachFile failed event
+    var onNodeAttachFileFailed = function($scope, handler) {
+    	$scope.$on(drupalApiServiceConfig.node_attachFileFailed, function(event, args) {
 	    handler(args.error);
 	   });	
     };
@@ -461,6 +638,7 @@ drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     
     // Publish currentUser updated event
     var publishCurrentUserUpdated = function (user) {
+    	console.log('publishCurrentUserUpdated'); 
         $rootScope.$broadcast(drupalApiServiceConfig.authService_currentUserUpdated, {user: user});
     };
     // Subscribe to currentUserUpdated event
@@ -471,15 +649,7 @@ drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     };
     
    // Return the publicly accessible methods
-   return {
-	   
-	   // Session events
-	   // Token events
-	   publishSessionTokenConfirmed 		: publishSessionTokenConfirmed,
-	   onSessionTokenConfirmed				: onSessionTokenConfirmed,
-	   publishSessionTokenFailed			: publishSessionTokenFailed,
-	   onSessionTokenFailed					: onSessionTokenFailed,
-	   
+   return {	   
 	   // Comment events
 	   //@TODO
 	   
@@ -492,13 +662,48 @@ drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalA
 	   onNodeRetrieveConfirmed			: onNodeRetrieveConfirmed,
 	   publishNodeRetrieveFailed		: publishNodeRetrieveFailed,
 	   onNodeRetrieveFailed 			: onNodeRetrieveFailed,
-	   
+	  // Create action
+	   publishNodeCreateConfirmed		: publishNodeCreateConfirmed,
+	   onNodeCreateConfirmed			: onNodeCreateConfirmed,
+	   publishNodeCreateFailed			: publishNodeCreateFailed,
+	   onNodeCreateFailed 				: onNodeCreateFailed,
+	   // Update action
+	   publishNodeUpdateConfirmed		: publishNodeUpdateConfirmed,
+	   onNodeUpdateConfirmed			: onNodeUpdateConfirmed,
+	   publishNodeUpdateFailed			: publishNodeUpdateFailed,
+	   onNodeUpdateFailed 				: onNodeUpdateFailed,
+	   // Delete action
+	   publishNodeDeleteConfirmed		: publishNodeDeleteConfirmed,
+	   onNodeDeleteConfirmed			: onNodeDeleteConfirmed,
+	   publishNodeDeleteFailed			: publishNodeDeleteFailed,
+	   onNodeDeleteFailed 				: onNodeDeleteFailed,
+	   // Index action
+	   publishNodeIndexConfirmed		: publishNodeIndexConfirmed,
+	   onNodeIndexConfirmed				: onNodeIndexConfirmed,
+	   publishNodeIndexFailed			: publishNodeIndexFailed,
+	   onNodeIndexFailed 				: onNodeIndexFailed,
+	   // Files action
+	   publishNodeFilesConfirmed		: publishNodeFilesConfirmed,
+	   onNodeFilesConfirmed				: onNodeFilesConfirmed,
+	   publishNodeFilesFailed			: publishNodeFilesFailed,
+	   onNodeFilesFailed 				: onNodeFilesFailed,
+	   // Comments action
+	   publishNodeCommentsConfirmed		: publishNodeCommentsConfirmed,
+	   onNodeCommentsConfirmed			: onNodeCommentsConfirmed,
+	   publishNodeCommentsFailed		: publishNodeCommentsFailed,
+	   onNodeCommentsFailed 			: onNodeCommentsFailed,
+	   // Attachfile action
+	   publishNodeAttachFileConfirmed	: publishNodeAttachFileConfirmed,
+	   onNodeAttachFileConfirmed		: onNodeAttachFileConfirmed,
+	   publishNodeAttachFileFailed		: publishNodeAttachFileFailed,
+	   onNodeAttachFileFailed 			: onNodeAttachFileFailed,
+	     
 	   // System events
 	   // Connect events
-	   publishSystemConnectConfirmed 	: publishSystemConnectConfirmed,
-	   onSystemConnectConfirmed			: onSystemConnectConfirmed,
-	   publishSystemConnectFailed 		: publishSystemConnectFailed,
-	   onSystemConnectFailed 			: onSystemConnectFailed,
+	   publishSystemConnectConfirmed 		: publishSystemConnectConfirmed,
+	   onSystemConnectConfirmed				: onSystemConnectConfirmed,
+	   publishSystemConnectFailed 			: publishSystemConnectFailed,
+	   onSystemConnectFailed 				: onSystemConnectFailed,
 	   // Get varaible events
 	   publishSystemGetVariableConfirmed 	: publishSystemGetVariableConfirmed,
 	   onSystemGetVariableConfirmed			: onSystemGetVariableConfirmed,
@@ -568,17 +773,16 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 	var userIsConected = false,
 		currentUser	 = drupalApiServiceConfig.anonymousUser,
 		lastConnectTime  = 0
-		sessionCookieOptions = { 	domain 			: '.dev-drupal-headless-ionic.pantheon.io',
+		sessionCookieOptions = { 	domain 			: 'dev-drupal-headless-ionic.pantheon.io',
 									path			: '/',
 									expires			: 30,
 									expirationUnit 	: 'minutes'
-						},
+							   },
 		jsCookieOptions = { 	domain 	: 'dev-drupal-headless-ionic.pantheon.io',
 								path	: '/',
 								expires	: 30,
 								expirationUnit: 'minutes'
-							};
-	
+						  };
 	
 	var storeTokenData = function(newToken) {
 		newToken = (newToken)?newToken:false;
@@ -602,7 +806,6 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 
 			$http.defaults.headers.common.Authorization = undefined;
 			$http.defaults.headers.common['X-CSRF-TOKEN'] = undefined;
-			
 	};
 	
 	
@@ -615,10 +818,10 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 	}
 	//
 	var setCurrentUser = function(newUser) {
-		
 		if(currentUser != newUser) {
+			console.log(currentUser, newUser); 
         	currentUser = newUser;
-      	    drupalApiNotificationChannel.publishCurrentUserUpdated(currentUser);
+      	    drupalApiNotificationChannel.publishCurrentUserUpdated(newUser);
         }
 	};
 	
@@ -637,14 +840,15 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		var defer = $q.defer();
 		
 		//if refreshTokenFromLocalStorage is not possible
-		if(!refreshTokenFromLocalStorage()) {
+		var localStorageToken = refreshTokenFromLocalStorage();
+		if(!localStorageToken) {
 		
 			//refresh token from server
 			refreshTokenFromServer().then(
 				
 				//refreshTokenFromServer success
 				function(token) {
-					 defer.resolve(true);
+					 defer.resolve(token);
 				},
 				//refreshTokenFromServer error
 				function() {
@@ -653,7 +857,7 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 			);
 		} 
 		//if refreshTokenFromLocalStorage was possible
-		else { defer.resolve(true); }
+		else { defer.resolve(localStorageToken); }
 		
 		return defer.promise;
 	}
@@ -726,7 +930,6 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 				},
 				//initToken error
 				function() {
-					
 					defer.reject(data);
 				}
 		);
@@ -745,6 +948,7 @@ drupalApiService.service('DrupalAuthenticationService', function($rootScope, $ht
 		//has_js	1	dev-drupal-headless-ionic.pantheon.io	/	Session	7			
 
 		ipCookie(data.session_name, data.sessid, sessionCookieOptions);
+		
 		$http.defaults.withCredentials = true;
 
 	};
@@ -792,7 +996,6 @@ function($rootScope, SystemResource, UserResource, DrupalAuthenticationService, 
 		DrupalAuthenticationService.setConnectionState(true);
 		DrupalAuthenticationService.setCurrentUser(data.user);
 	};
-	
 	drupalApiNotificationChannel.onUserLoginConfirmed($rootScope, onUserLoginConfirmedHandler);
 	
 	//on logout request confirmed delete data and remove token from request headers
@@ -817,50 +1020,6 @@ function($rootScope, SystemResource, UserResource, DrupalAuthenticationService, 
  * 
  */
 var drupalAPI = angular.module('common.drupal.api-resources', []);
-
-/**
- * Session
- * @TODO check if needed
- */
- drupalAPI.service('SessionResource', function($http, $q, drupalApiServiceConfig, drupalApiNotificationChannel) {
-		
-		/*
-		 * 
-		 * Token
-		 * 
-		 * Drupal CORS settings: 
-		 * @TODO check settings
-		 * "services/session/token|<mirror>|GET|Content-Type,Authorization,X-CSRF-TOKEN|true
-		*/
-		var token = function(nid){
-
-			var tokenPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.session + 'token',
-				defer = $q.defer(),
-				requestConfig = {
-					method :'GET',
-					url : tokenPath,
-					
-	                withCredentials: true
-				};
-			
-			$http(requestConfig)
-			.success(function(data, status, headers, config){
-				defer.resolve(data);
-			})
-			.error(function(data, status, headers, config){
-				defer.reject(data);
-			});
-	
-			return defer.promise;
-
-		};
-
-		//public methods	
-		return {
-			token : token,
-		};
-});
-
 
 /**
  * NodeResource
@@ -976,10 +1135,12 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		if(!nid) { defer.reject(['Param nid is required.']); }
 		else {
 			$http(requestConfig)
-			.success(function(data, status, headers, config){
-				defer.resolve(data);
+			.success(function(node, status, headers, config){
+				drupalApiNotificationChannel.publishNodeCreateConfirmed(node);
+				defer.resolve(node);
 			})
 			.error(function(data, status, headers, config){
+				drupalApiNotificationChannel.publishNodeCreateFailed(node);
 				defer.reject(data);
 			});
 		}
@@ -1311,7 +1472,7 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
  * your_api_endpoint/system/*|<mirror>|POST|Content-Type,Authorization|true
  * 
 **/
-drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, UserResource) {
+drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, drupalApiNotificationChannel) {
 	
 	/*
 	 * connect
@@ -1328,22 +1489,24 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 	*/
 	var connect = function(token){
 		
-		var connectPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + 'connect',
+		var connectPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + '/' + 'connect',
 		defer = $q.defer(),
 		requestConfig = {
 				method :'POST',
 				url : connectPath,
 				headers : {
-					//"Accept" 		: "application/json",
+					"Accept" 		: "application/json",
 					"Content-Type"	: "application/json",
 				}
 		};
 		
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishSystemConnectConfirmed(data);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishSystemConnectFailed(data);
 			defer.reject(data);
 		});
 		
@@ -1368,13 +1531,13 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 	 */
 	var get_variable = function(name, _default){
 		
-		var getVariablePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + 'get_variable',
+		var getVariablePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + '/' + 'get_variable',
 		defer = $q.defer(),
 		requestConfig = {
 				method 	:'POST',
 				url 	: getVariablePath,
 				headers : {
-					//"Accept" 		: "application/json",
+					"Accept" 		: "application/json",
 					"Content-Type"	: "application/json",
 				},
 				data 	: {
@@ -1388,10 +1551,12 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 		}
 		
 		$http(requestConfig)
-		.success(function(data, status, headers, config){
+		.success(function(value, status, headers, config){
+			drupalApiNotificationChannel.publishSystemGetVariableConfirmed(value);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishSystemGetVariableFailed(data);
 			defer.reject(data);
 		});
 		
@@ -1414,7 +1579,7 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 	 *  useage: SystemResource.set_variable().success(yourSuccessCallback).error(yourErrorCallback);
 	 */
 	var set_variable = function(name, value){
-		var setVariablePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + 'set_variable',
+		var setVariablePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + '/' + 'set_variable',
 		defer = $q.defer(),
 		requestConfig = {
 				method 	:'POST',
@@ -1434,9 +1599,11 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 		
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishSystemSetVariableConfirmed({name: name, value: value});
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishSystemSetVariableFailed({name: name, value: value});
 			defer.reject(data);
 		});
 		
@@ -1458,7 +1625,7 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 	 *  useage: SystemResource.del_variable().then(yourSuccessCallback,yourErrorCallback);
 	 */
 	var del_variable = function(name){
-		var delVariablePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + 'del_variable',
+		var delVariablePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + '/' + 'del_variable',
 		defer = $q.defer(),
 		requestConfig = {
 				method 	:'POST',
@@ -1476,9 +1643,11 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 		
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishSystemDelVariableConfirmed(name);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishSystemDelVariableFailed(name);
 			defer.reject(data);
 		});
 		
@@ -1487,10 +1656,10 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 
 	//public methods	
 	return {
-		connect : connect,
-		get_variable : get_variable,
-		set_variable : set_variable,
-		del_variable : del_variable
+		connect 		: connect,
+		get_variable 	: get_variable,
+		set_variable 	: set_variable,
+		del_variable 	: del_variable
 	};
 
 });
@@ -1520,7 +1689,24 @@ drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	 * useage: UserResource.retrieve(username, password).then(yourSuccessCallback,yourErrorCallback);
 	 */
 	var retrieve = function( uid ) {
-		return;
+		var retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + (uid?'/'+uid:''),
+		defer = $q.defer(),
+		requestConfig = {
+			method :'GET',
+			url : retrievePath
+		};
+	
+	if(!uid) { defer.reject(['Param uid is required.']); }
+	else {
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			defer.reject(data);
+		});
+	}
+	return defer.promise;
 	};
 	
 	/*
@@ -1622,7 +1808,7 @@ drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	 */	
 	 var login = function( username, password ) {
 					
-		var pathToLogin = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + 'login';
+		var pathToLogin = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + '/' + 'login';
 			requestConfig = {
 					method :'POST',
 					url : pathToLogin,
@@ -1640,11 +1826,6 @@ drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $l
 			
 		$http(requestConfig)
 		.success(function (data, status, headers, config) {
-			 //persist token in header
-			 $http.defaults.headers.common.Authorization = data.token;
-             $http.defaults.headers.post['X-CSRF-TOKEN'] = data.token;
-             $http.defaults.withCredentials = true;
-                         
 			 drupalApiNotificationChannel.publishUserLoginConfirmed(data);
              defer.resolve(data);
          })
@@ -1669,7 +1850,7 @@ drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	 * useage: UserResource.logout(username, password).then(yourSuccessCallback,yourErrorCallback);
 	 */
 	var logout = function() {
-		 var pathToLogout = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + 'logout';
+		 var pathToLogout = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + '/' + 'logout';
 		 	 requestConfig = {
 		 			method: 'POST',
 					url : pathToLogout,
@@ -1710,7 +1891,7 @@ drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	 */
 	var token = function() {
 		 var defer = $q.defer(),
-         pathToToken = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + 'token';
+         pathToToken = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + '/' + 'token';
 
 	     $http({
 	       url: pathToToken,
@@ -1763,7 +1944,7 @@ drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $l
 	 */
 	var register = function(account){
 		
-		 var pathToRegister = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + 'register';
+		 var pathToRegister = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.user + '/' + 'register';
 	 	 	 requestConfig = {
 	 			method: 'POST',
 				url : pathToRegister,
@@ -1853,11 +2034,11 @@ drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $l
 		
 	//public methods	
 	return {
-		//retrieve : retrieve,
+		retrieve : retrieve,
 		//create : create,
 		//update : update,
 		//_delete : _delete,
-		//index : index,
+		index : index,
 		login : login,
 		logout : logout,
 		token : token,
@@ -1879,8 +2060,8 @@ drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $l
  * your_api_endpoint/views/*|<mirror>|POST|Content-Type
  * 
 **/
-drupalAPI.service('ViewsResource', function($http, $q, drupalApiServiceConfig, UserResource) {
-	
+drupalAPI.service('ViewsResource', function($http, $q, drupalApiServiceConfig, drupalApiNotificationChannel) {
+
 	/*
 	 * Retrieve
 	 * 
@@ -1904,7 +2085,7 @@ drupalAPI.service('ViewsResource', function($http, $q, drupalApiServiceConfig, U
 	*/
 	var retrieve = function(view_name, display_id, args, offset, limit, format_output, filters){
 		
-		var retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.views + view_name;
+		var retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.views + '/' + view_name;
 		var defer = $q.defer();
 		
 		$http({
@@ -1916,9 +2097,13 @@ drupalAPI.service('ViewsResource', function($http, $q, drupalApiServiceConfig, U
 			}
 		})
 		.success(function(data, status, headers, config){
+			console.log(data, status, headers, config); 
+			drupalApiNotificationChannel.publishViewsRetrieveConfirmed(data);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
+			console.log(data, status, headers, config); 
+			drupalApiNotificationChannel.publishViewsRetrieveFailed(data);
 			defer.reject(data);
 		});
 		

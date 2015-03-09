@@ -15,11 +15,11 @@
 </div>
 
 <label class="item item-input">
-<input type="text" ng-init="nodeRetrieve.nid=1" ng-model="nodeRetrieve.nid" placeholder="nid" >
+<input type="text" ng-model="nodeRetrieve.nid" placeholder="nid" >
 </label>
 <button class="button button-small" ng-click="callNodeRecourceRetrieve(nodeRetrieve.nid)">callNodeRecourceRetrieve</button>
-
 <hr />
+
 <h2>Index</h2>
 <div ng-repeat="request in nodeIndexRequests">
 	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />

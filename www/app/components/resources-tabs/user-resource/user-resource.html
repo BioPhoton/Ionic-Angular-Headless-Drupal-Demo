@@ -16,6 +16,52 @@
 <button class="button button-small" ng-click="callUserRecourceToken()">call UserRecource token</button>
 <hr />
 
+
+<h2>Retrieve</h2>
+<div ng-repeat="request in userRetrieveRequests">
+	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
+	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
+	<b>Duration:</b> {{request.requestDuration}}<br />
+	<b>Data:</b> 
+	<pre>
+	{{ request.data | json}}
+	</pre>
+</div>
+
+<label class="item item-input">
+<input type="text" ng-init="userRetrieve.uid=1" ng-model="userRetrieve.uid" placeholder="uid" >
+</label>
+<button class="button button-small" ng-click="callUserRecourceRetrieve(userRetrieve.uid)">callUserRecourceRetrieve</button>
+<hr />
+
+<h2>Index</h2>
+<div ng-repeat="request in userIndexRequests">
+	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
+	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
+	<b>Duration:</b> {{request.requestDuration}}<br />
+	<b>Data:</b> 
+	<pre>
+	{{ request.data | json}}
+	</pre>
+</div>
+
+<label class="item item-input">
+<input type="text" ng-init="userIndex.page=0" ng-model="userIndex.page" placeholder="page" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="userIndex.pagesize=5" ng-model="userIndex.pagesize" placeholder="pagesize" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="userIndex.fields='uid, created, type, title'" ng-model="userIndex.fields" placeholder="fields" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="userIndex.parameters='uid=1, type=page, '" ng-model="userIndex.parameters" placeholder="parameters" >
+</label>
+<button class="button button-small" ng-click="callUserRecourceIndex(userIndex)">callUserRecourceRetrieve</button>
+
+<hr />
+
+
 <h2>Register User</h2>
 <b>registerData:</b>
 <pre>

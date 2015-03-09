@@ -8,29 +8,37 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 		   ['$scope', 'SystemResource', 'UserResource', 'drupalApiNotificationChannel', 
     function($scope,   SystemResource,   UserResource,   drupalApiNotificationChannel ) {
 			  
+			   
+			   
 			   //
 			   //SystemResource
 			   //
 			   
+			   var requestEnd = requestStart = undefined;
+			   
 			   //connect
 			   $scope.systemConnectRequests = [];
-			   
+
 			   $scope.callSystemRecourceConncet = function() {
-				   		var requestEnd = requestStart = Date.now();
+				   		requestStart = Date.now();
 						SystemResource.connect()
 					    .then(
-					    		//success
-					    		function(data) {
-					    			requestEnd = Date.now();
-					    			$scope.systemConnectRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
-					    		},
-					    		//error
-					    		function(data) {
-					    			requestEnd = Date.now();
-					    			$scope.systemConnectRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
-					    		}
+					    		//conncet success
+					    		function(data) { console.log('system conncet success'); },
+					    		//conncet error
+					    		function(data) { console.log('system conncet error'); }
 					    );
 			   };
+			   //
+			   drupalApiNotificationChannel.onSystemConnectConfirmed($scope, function(data) { 
+				   requestEnd = Date.now();
+	    		   $scope.systemConnectRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+			   });
+			 
+			   drupalApiNotificationChannel.onSystemConnectFailed($scope, function(data) { 
+				   requestEnd = Date.now();
+	    		   $scope.systemConnectRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+			   });
 			   
 			   //get_variable
 			   $scope.systemGetVariableRequests = [];
@@ -40,21 +48,25 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 			   $scope.callSystemRecourceGetVariable = function() {
 				   		var requestEnd = requestStart = Date.now();
 						SystemResource.get_variable($scope.getVariableData.name)
-					    .then(
-					    		//success
-					    		function(data) {
-					    			requestEnd = Date.now();
-					    			$scope.systemGetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
-					    		},
-					    		//error
-					    		function(data) {
-					    			requestEnd = Date.now();
-					    			$scope.systemGetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
-					    		}
-					    );
+						 .then(
+						    	//get_variable success
+						    	function(data) { console.log('system get_variable success'); },
+						    	//get_variable error
+						    	function(data) { console.log('system get_variable error'); }
+						    );
 			   };
+			   //
+			   drupalApiNotificationChannel.onSystemGetVariableConfirmed($scope, function(data) { 
+				   requestEnd = Date.now();
+	    		   $scope.systemGetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+			   });
+			 
+			   drupalApiNotificationChannel.onSystemGetVariableFailed($scope, function(data) { 
+				   requestEnd = Date.now();
+	    		   $scope.systemGetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+			   });
 			   
-			   //set variable
+			   //set_variable
 			   $scope.systemSetVariableRequests = [];
 			   $scope.setVariableData = {
 					   name 	: '',
@@ -64,18 +76,22 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 				   		var requestEnd = requestStart = Date.now();
 						SystemResource.set_variable($scope.setVariableData.name, $scope.setVariableData.value)
 					    .then(
-					    		//success
-					    		function(data) {
-					    			requestEnd = Date.now();
-					    			$scope.systemSetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
-					    		},
-					    		//error
-					    		function(data) {
-					    			requestEnd = Date.now();
-					    			$scope.systemSetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
-					    		}
+					    		//set_variable success
+						    	function(data) { console.log('system set_variable success'); },
+						    	//set_variable error
+						    	function(data) { console.log('system set_variable error'); }
 					    );
 			   };
+			   //
+			   drupalApiNotificationChannel.onSystemSetVariableConfirmed($scope, function(data) { 
+				   requestEnd = Date.now();
+	    		   $scope.systemSetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+			   });
+			 
+			   drupalApiNotificationChannel.onSystemSetVariableFailed($scope, function(data) { 
+				   requestEnd = Date.now();
+	    		   $scope.systemSetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+			   });
 			   
 			   //del variable
 			   $scope.systemDelVariableRequests = [];
@@ -87,19 +103,22 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 				   	var requestEnd = requestStart = Date.now();
 					SystemResource.del_variable($scope.delVariableData.name)
 				    .then(
-				    		//success
-				    		function(data) {
-				    			requestEnd = Date.now();
-				    			$scope.systemDelVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
-				    		},
-				    		//error
-				    		function(data) {
-				    			
-				    			requestEnd = Date.now();
-				    			$scope.systemDelVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
-				    		}
+				    		//set_variable success
+					    	function(data) { console.log('system del_variable success'); },
+					    	//set_variable error
+					    	function(data) { console.log('system del_variable error'); }
 				    );
 			   };
+			   //
+			   drupalApiNotificationChannel.onSystemDelVariableConfirmed($scope, function(data) { 
+				   requestEnd = Date.now();
+	    		   $scope.systemDelVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+			   });
+			 
+			   drupalApiNotificationChannel.onSystemDelVariableFailed($scope, function(data) { 
+				   requestEnd = Date.now();
+	    		   $scope.systemDelVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+			   });
 			 
 }]);
 

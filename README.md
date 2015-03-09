@@ -39,6 +39,7 @@ ipCookies
 Wrong username or password => require email confirm checked in drupal
 
 
+
 ##???
  Any calls that use POST, PUT, or DELETE must now have a header key/value pair with "X-CSRF-Token" being the key, and the token retrieved from /user/token as the value to send along with the header key.
 

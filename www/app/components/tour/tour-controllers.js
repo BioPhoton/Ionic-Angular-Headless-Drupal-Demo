@@ -44,10 +44,6 @@ tourControllers.controller('TourCtrl', ['$scope', '$state', '$localstorage', '$i
   
   countSlides();
   
-  // Called to navigate to the main app
-  $scope.startApp = function() {
-    $state.go('main');
-  };
   $scope.next = function() {
     $ionicSlideBoxDelegate.next();
   };

@@ -2,7 +2,22 @@
  
 <ion-content>
 <h1>ViewsResource</h1>
+<h2>Retrieve</h2>
+<div ng-repeat="request in viewsRetrieveRequests">
+	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
+	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
+	<b>Duration:</b> {{request.requestDuration}}<br />
+	<b>Data:</b> 
+	<pre>
+	{{ request.data | json}}
+	</pre>
+</div>
 
+<label class="item item-input">
+<input type="text" ng-model="viewsRetrieve.viewname" placeholder="viewname" >
+</label>
+<button class="button button-small" ng-click="callViewsRecourceRetrieve(viewsRetrieve.viewname)">callViewsRecourceRetrieve</button>
+<hr />
 	
 </ion-content> 
 </ion-view>

@@ -17,7 +17,6 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'logout.controllers',
   'register.controllers',
 
-  'resources.session-resource.controllers',
   'resources.node-resource.controllers',
   'resources.system-resource.controllers',
   'resources.user-resource.controllers',
@@ -28,61 +27,11 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 
 ]);
 
-drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', 'AccessControlService', '$state',
-                          function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   drupalApiNotificationChannel,   DrupalAuthenticationService,   AccessControlService,   $state) {
-	
-	
-	//restrict access redirects
-    $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-      console.log('want go from ' + fromState.name + ' to ' + toState.name); 
-      
-      var firstVisit = $localstorage.getItem('firstVisit', false);
-      var isRegistered = $localstorage.getItem('isRegistered', false);
-      //AccessControlService.authorize(toState.data.access);
-      
-      // if its the users first visit to the app play the apps tour
-  	  if ( !firstVisit && toState.name != 'app.tour') { 
-  		console.log('redirect 1: app.tour'); 
-  		event.preventDefault();
-  		$state.go('app.tour'); 	
-  		return;
-  	  }  
-  	  
-     /* if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
-        event.preventDefault();
-      
-        if (isRegistered) {
-          console.log('redirect 3: app.login'); 
-          $state.go('app.login');
-          return;
-        } 
-        else {
-          console.log('redirect 4: app.register'); 
-          $state.go('app.register');
-          return;
-        } 
-      }*/
-           
-      //custom redirect
-      if  (toState.name == 'app.login' || toState.name == 'app.register') {
-    
-        if (DrupalAuthenticationService.getConnectionState()) {
-          console.log('redirect 5: app.authed-tabs.profile'); 
-          event.preventDefault();
-          $state.go('app.authed-tabs.profile');
-          return;
-        } 
-      }
-    });
-    
-}]);
-
 drupalIonicAngularJSAPIClient
-
 	.config( [ '$stateProvider', '$urlRouterProvider', '$httpProvider', 'AppSettings',
-     function ( $stateProvider,   $urlRouterProvider,   $httpProvider,   AppSettings) {
+     function ( $stateProvider,   $urlRouterProvider,   $httpProvider,   AppSettings ) {
 
-     $stateProvider
+		$stateProvider
           .state('app', {
             url: "/app",
             abstract: true,
@@ -153,17 +102,6 @@ drupalIonicAngularJSAPIClient
 			    }
 		  })
 		 
-		  //Session Resource
-		  //______________________________________________
-		   .state('app.resources-tabs.session-resource', {
-		    url: '/session-recource',
-		    views: {
-			      'session-resource': {
-			    	templateUrl: 'app/components/resources-tabs/session-resource/session-resource.html',
-			  		controller:  'ResourcesSessionResourceCtrl' 
-			      }
-			    }
-		   })
 		  //
 		  //Node Resource
 		  //______________________________________________
@@ -236,14 +174,73 @@ drupalIonicAngularJSAPIClient
 	        },
 	      })
 	      .state('app.authed-tabs.profile', {
-	        url: "/profile",
-	        views: {
-	          'profile-tab': {
-	            templateUrl: "app/components/authed-tabs/profile/profile.html",
-	            controller: 'authedTabProfileCtrl'
+	        url : "/profile",
+	        cache : false,
+	        
+	        views : {
+	          'profile-tab' : {
+	            templateUrl : "app/components/authed-tabs/profile/profile.html",
+	            controller  : 'authedTabProfileCtrl'
 	          }
-	        }
+	        },
+	        resolve: {
+	              userObj: function (DrupalAuthenticationService) {
+	                return DrupalAuthenticationService.getCurrentUser();
+	              }
+	            }
 	      });
   
   $urlRouterProvider.otherwise('/app/tour');
+  
+  
+}]);
+
+
+drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', 'AccessControlService', '$state',
+                          function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   drupalApiNotificationChannel,   DrupalAuthenticationService,   AccessControlService,   $state) {
+	
+	
+	//restrict access redirects
+    $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
+      console.log('want go from ' + fromState.name + ' to ' + toState.name); 
+      
+      var firstVisit = $localstorage.getItem('firstVisit', false);
+      var isRegistered = $localstorage.getItem('isRegistered', false);
+      //AccessControlService.authorize(toState.data.access);
+      
+      // if its the users first visit to the app play the apps tour
+  	  if ( !firstVisit && toState.name != 'app.tour') { 
+  		console.log('redirect 1: app.tour'); 
+  		event.preventDefault();
+  		$state.go('app.tour'); 	
+  		return;
+  	  }  
+  	  
+     /* if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
+        event.preventDefault();
+      
+        if (isRegistered) {
+          console.log('redirect 3: app.login'); 
+          $state.go('app.login');
+          return;
+        } 
+        else {
+          console.log('redirect 4: app.register'); 
+          $state.go('app.register');
+          return;
+        } 
+      }*/
+           
+      //custom redirect
+      if  (toState.name == 'app.login' || toState.name == 'app.register') {
+    
+        if (DrupalAuthenticationService.getConnectionState()) {
+          console.log('redirect 5: app.authed-tabs.profile'); 
+          event.preventDefault();
+          $state.go('app.authed-tabs.profile');
+          return;
+        } 
+      }
+    });
+    
 }]);

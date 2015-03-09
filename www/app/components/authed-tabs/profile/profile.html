@@ -6,7 +6,10 @@
         <img id="profile-image"
              ng-src="{{pathToCms}}sites/default/files/styles/thumbnail/public/pictures/{{user.picture.filename}}">
         <h3 id="profile-name" contenteditable ng-model="user.name"></h3>
-        <span id="profile-description" contenteditable ng-model="user.name"></span>
+        <span id="profile-description" ng-model="user.name"></span>
+        <p>
+        {{pathToCms}}sites/default/files/styles/thumbnail/public/pictures/{{user.picture.filename}}
+        </p>
       </div>
     
     </div>
