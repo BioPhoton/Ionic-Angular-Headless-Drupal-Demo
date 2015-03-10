@@ -8,19 +8,24 @@
 
     <!-- Modal content area -->
     <ion-content>
-
+https://www.drupal.org/node/1354202
+https://library.fiu.edu/sites/all/modules/services/tests/functional/ServicesResourceNodeTests.test
       <form>
         <div class="list">
-          <label class="item item-input">
-            <input type="text" placeholder="What is the title of your new content" ng-model="node.title">
-          </label>
-           <label class="item item-input">
-            <input type="text" placeholder="What is the description of your new node" ng-model="node.description">
-          </label>
-        </div>
+       <label class="item item-input">
+		<input type="text" ng-init="newPage.title='test titel'" ng-model="newPage.title" placeholder="Node title" >
+		</label>
+		
+		<label class="item item-input">
+		<textarea rows="6" placeholder="Node sumary" type="text" ng-init="newPage.body.und[0].summary = 'This is a short summary of the node body.'" ng-model="newPage.body.und[0].summary"></textarea>
+		</label>
+		
+		<label class="item item-input">
+		<textarea rows="6" placeholder="Node body" type="text" ng-init="newPage.body.und[0].value = 'This is the full node body.'" ng-model="newPage.body.und[0].value"></textarea>
+		</label>
 		
         <div class="padding">
-          <button type="submit" ng-click="createContent()" class="button button-block button-positive">Create Content</button>
+          <button type="submit" ng-click="createPage(newPage)" class="button button-block button-positive">Create Page</button>
         </div>
       </form>
 

@@ -190,9 +190,17 @@ drupalIonicAngularJSAPIClient
 	            controller: 'NodeListCtrl'
 	          }
 	        },
+	        resolve : {
+	        	pageFirst : function () {return 0;},
+	        	pageSize :function () {return 5;},
+	        	
+	        	newNodes : function (NodeResource,pageFirst,pageSize) {
+	        		return NodeResource.index( pageFirst,null,null,pageSize);
+	        	}
+	        }
 	      })
 	      .state('app.authed-tabs.node-detail', {
-	        url: "/node/:nid/detail",
+	        url: "/:nid/detail",
 	        views: {
 		          'node-list-tab': {
 		        	    templateUrl: "app/components/authed-tabs/node-demo/node-detail.html",
@@ -207,25 +215,21 @@ drupalIonicAngularJSAPIClient
 	    
 	      })
 	      
-	      /*
 	      .state('app.authed-tabs.node-edit', {
-	        url: "/node/:id/edit",
+	        url: "/:nid/edit",
 	        views: {
-	          'node-demo-tab': {
-	            templateUrl: "app/components/authed-tabs/node-demo/node-demo.html",
+	          'node-list-tab': {
+	            templateUrl: "app/components/authed-tabs/node-demo/node-edit.html",
 	            controller: 'NodeEditCtrl'
 	          }
 	        },
+	        resolve : {
+		    	nodeObj :function (NodeResource, $stateParams) {
+	                return NodeResource.retrieve($stateParams.nid);
+	            }	
+		    }
 	      })
-	       .state('app.authed-tabs.node-edit', {
-	        url: "/node/new",
-	        views: {
-	          'node-demo-tab': {
-	            templateUrl: "app/components/authed-tabs/node-demo/node-demo.html",
-	            controller: 'NodeLCreateCtrl'
-	          }
-	        },
-	      })*/
+	      
 	      
 	      ;
   

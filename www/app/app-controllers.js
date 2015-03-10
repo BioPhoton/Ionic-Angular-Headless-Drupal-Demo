@@ -1,7 +1,7 @@
 var appControllers = angular.module('app.controllers', ['common.drupal.api-services', 'common.drupal.api-resources',])
 
-appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotificationChannel', 'AppSettings', 'DrupalAuthenticationService', 'UserResource', '$ionicPlatform', '$localstorage', '$state',
-                             function ($rootScope,   $scope,   drupalApiNotificationChannel,   AppSettings,   DrupalAuthenticationService,   UserResource,   $ionicPlatform,   $localstorage,   $state ) {
+appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotificationChannel', 'AppSettings', 'drupalApiServiceConfig', 'DrupalAuthenticationService', 'UserResource', '$ionicPlatform', '$localstorage', '$state',
+                             function ($rootScope,   $scope,   drupalApiNotificationChannel,   AppSettings,   drupalApiServiceConfig,   DrupalAuthenticationService,   UserResource,   $ionicPlatform,   $localstorage,   $state ) {
 	
 	$ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -13,6 +13,8 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'drupalApiNotifica
         StatusBar.styleDefault();
       }
     });
+	
+	$scope.pathToCms 	= drupalApiServiceConfig.drupal_instance;
 	
 	$scope.logout = function () { UserResource.logout(); };
 	 

@@ -1,4 +1,4 @@
-/* Drupals api depending services*/
+
 //______________________________________________
 var drupalApiService = angular.module('common.drupal.api-services', ['ipCookie']);
 //@TODO mace servise configurable
@@ -1136,11 +1136,11 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		else {
 			$http(requestConfig)
 			.success(function(node, status, headers, config){
-				drupalApiNotificationChannel.publishNodeCreateConfirmed(node);
+				drupalApiNotificationChannel.publishNodeRetrieveConfirmed(node);
 				defer.resolve(node);
 			})
 			.error(function(data, status, headers, config){
-				drupalApiNotificationChannel.publishNodeCreateFailed(node);
+				drupalApiNotificationChannel.publishNodeRetrieveFailed(node);
 				defer.reject(data);
 			});
 		}
@@ -1180,9 +1180,11 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeCreateConfirmed(node);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeCreateFailed(node);
 			defer.reject(data);
 		});
 		
@@ -1205,7 +1207,7 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	 * useage: UserResource.update(nid, node).then(yourSuccessCallback,yourErrorCallback);
 	 */
 	var update = function( nid, node ) {
-		var createPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node,
+		var createPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + '/' + nid,
 		defer = $q.defer(),
 		requestConfig = {
 			method :'PUT',
@@ -1224,9 +1226,11 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeUpdateConfirmed(node);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeUpdateFailed(node);
 			defer.reject(data);
 		});
 	
@@ -1261,9 +1265,11 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeDeleteConfirmed(node);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeDeleteFailed(node);
 			defer.reject(data);
 		});
 	
@@ -1302,9 +1308,11 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeIndexConfirmed(data);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeIndexFailed(data);
 			defer.reject(data);
 		});
 		

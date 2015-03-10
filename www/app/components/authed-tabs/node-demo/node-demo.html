@@ -14,34 +14,25 @@
     pulling-icon="ion-android-arrow-down" 
     refreshing-icon="ion-load-d"
     on-refresh="doRefresh()"></ion-refresher>
-   
-  
-    pageCurrent: {{nodeIndex.pageFirst}} 
-    pageLast: {{nodeIndex.pageLast}}
-	pageMax: {{nodeIndex.pageMax}}
-			   {{listOptions.showDelete}}
-	<!-- 
-	<ion-list show-delete="list.showDelete">
-		<ion-item class="item-avatar" ng-repeat="node in nodes" href="#/authed-tabs/node/{{node.nid}}/view">
-			<img src=" " />
-			{{node.nid}}
-			<h2>{{node.title}}</h2>
-			<p>{{node.type}} - {{node.created | date}}</p>
-			<p></p>
-			<ion-delete-button class="ion-minus-circled" ng-click="onItemDelete(item)"></ion-delete-button>
-		</ion-item>
-	</ion-list>
-	-->
 
-	<ion-list show-delete="listOptions.showDelete" can-swipe="true" type="card">
-          
-	  	<ion-item ng-repeat="node in nodes" on-swipe-right="openNode(node.nid)" ng-click="openNode(node.nid)" class="item-thumbnail-left item-icon-right">
-		
-		    <img ng-src="{{node.title}}">
+<style>
+.item {
+  left: 0;
+  right: 0;
+}
+</style>
+
+	<ion-list show-delete="listOptions.showDelete" can-swipe="true">
+	
+
+  
+	  	<ion-item collection-item-width="'100%'" collection-item-height="'75px'" collection-repeat="node in nodes" class="item-icon-right" >
+		<!-- on-swipe-right="openNode(node.nid)" -->
+		 
 		    <h2>{{node.title}}</h2>
-		    <p>{{node.type}} {{node}}- {{node.created | date}}</p>
-		    <i class="icon ion-ios-arrow-right"></i>
-		    <ion-option-button class="button-positive" ui-sref="edit">
+		    <p>{{node.type}} - {{node.created | date}}</p>
+		    <i class="icon ion-ios-arrow-right" ng-click="openNode(node.nid)" ></i>
+		    <ion-option-button class="button-positive" ng-click="editNode(node.nid)">
 		      Edit
 		    </ion-option-button>
 		

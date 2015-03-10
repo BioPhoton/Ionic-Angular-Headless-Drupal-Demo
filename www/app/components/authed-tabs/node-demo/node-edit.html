@@ -1,0 +1,37 @@
+<ion-view title="{{dirtyPage.title}}">
+   <ion-nav-bar>
+  <ion-nav-back-button class="button-clear">
+    <i class="ion-arrow-left-c"></i> Back
+  </ion-nav-back-button>
+</ion-nav-bar>
+<ion-content>
+        
+<form name="editPageForm" novalidate="" ng-submit="updatePage(editPageForm)"> 
+    <ion-list>
+        <label class="item item-input" ng-class="{ 'has-error' : editPageForm.title.$invalid && editPageForm.title.$dirty}">
+		<input type="text" name="title" ng-model="dirtyPage.title" placeholder="Node title" >
+		</label>
+		<div class="form-errors" ng-show="editPageForm.$submitted">
+          <div ng-show="error.title" class="form-error" ng-repeat="(key, error) in editServerErrors" >
+          {{error.title}}
+          </div>
+        </div>
+		
+		<label class="item item-input">
+		<textarea rows="6" placeholder="Node sumary" type="text" ng-model="dirtyPage.body.und[0].summary"></textarea>
+		</label>
+		
+		<label class="item item-input">
+		<textarea rows="6" placeholder="Node body" type="text" ng-model="dirtyPage.body.und[0].value"></textarea>
+		</label>
+		
+		   <div class="padding">
+          <button type="submit" class="button button-block button-positive">Save changes</button>
+          <button type="submit" ui-sref="app.authed-tabs.node-list" class="button button-block button-energized">Cancle</button>
+        </div>
+	</ion-list>
+</form>
+   
+</ion-content>
+
+</ion-view>

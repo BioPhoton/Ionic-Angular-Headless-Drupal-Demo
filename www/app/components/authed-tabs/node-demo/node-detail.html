@@ -5,7 +5,33 @@
   </ion-nav-back-button>
 </ion-nav-bar>
   <ion-content>
-{{node}}
+<div class="list card">
+  <div class="item item-avatar">
+    <img src="mcfly.jpg">
+    <h2>{{node.title}}</h2>
+    <p>{{node.created | date }}</p>
+  </div>
+
+  <div class="item item-body">
+    <img class="full-image" ng-src="{{pathToImg}}">
+    <p>
+     {{node.body.und[0].value}}
+    </p>
+    <p>
+      <a href="#" class="subdued">{{node.comment}} Comment{{node.comment > 1?'s':''}}</a>
+    </p>
+  </div>
+
+  <div class="item tabs tabs-secondary tabs-icon-left">
+    <a class="tab-item" href="#">
+      <i class="icon ion-chatbox"></i>
+      Comment
+    </a>
+  </div>
+
+</div>
+
+
 
 </ion-content>
 
