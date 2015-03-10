@@ -5,28 +5,50 @@
 <h1>SystemResource</h1>
 
 <h2>Connect</h2>
-<div ng-repeat="request in systemConnectRequests">
-	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
-	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
-	<b>Duration:</b> {{request.requestDuration}}<br />
-	<b>Data:</b> 
-	<pre>
-	{{ request.data | json}}
-	</pre>
-</div>
+<ion-list>
+  <div ng-repeat="(key,request) in systemConnectRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Connect Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
 <button class="button button-small" ng-click="callSystemRecourceConncet()">call SystemRecource.conncet</button>
 <hr />
 
 <h2>Get Variable</h2>
-<div ng-repeat="request in systemGetVariableRequests">
-	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
-	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
-	<b>Duration:</b> {{request.requestDuration}}<br />
-	<b>Data:</b> 
-	<pre>
-	{{ request.data | json}}
-	</pre>
-</div>
+<ion-list>
+  <div ng-repeat="(key,request) in systemGetVariableRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Get Variable Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
 <form name="getVariableForm" novalidate="">
   <ion-list>
     <label class="item item-input">
@@ -38,15 +60,26 @@
 <hr />
 
 <h2>Set Variable</h2>
-<div ng-repeat="request in systemSetVariableRequests">
-	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
-	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
-	<b>Duration:</b> {{request.requestDuration}}<br />
-	<b>Data:</b> 
-	<pre>
-	{{ request.data | json}}
-	</pre>
-</div>
+<ion-list>
+  <div ng-repeat="(key,request) in systemSetVariableRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Set Variable Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
 <form name="setVariableForm" novalidate="">
   <ion-list>
         <label class="item item-input">
@@ -58,19 +91,29 @@
   </ion-list>
   <button class="button button-small" ng-click="callSystemRecourceSetVariable()">call SystemRecource.set_variable</button>
 </form>
-
 <hr />
 
 <h2>Del Variable</h2>
-<div ng-repeat="request in systemDelVariableRequests">
-	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
-	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
-	<b>Duration:</b> {{request.requestDuration}}<br />
-	<b>Data:</b> 
-	<pre>
-	{{ request.data | json}}
-	</pre>
-</div>
+<ion-list>
+  <div ng-repeat="(key,request) in systemDelVariableRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Del Variable Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
 <form name="delVariableForm" novalidate="">
   <ion-list>
     <label class="item item-input">
@@ -79,7 +122,6 @@
   </ion-list>
  <button class="button button-small" ng-click="callSystemRecourceDelVariable()">call SystemRecource.del_variable</button>
 </form>
-
 <hr />
 
 </ion-content> 

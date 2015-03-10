@@ -177,7 +177,7 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 				NodeResource.create(newPage).then(
 						   //success
 						   function(data) {
-							   console.log(data); 
+
 							   $scope.createPageModal.hide();
 							  //$state.go('app.authed-tabs.node-detail', {nid:data.nid} );
 						   },

@@ -426,11 +426,12 @@ drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     
     // Publish system get variable failed event
     var publishSystemGetVariableFailed = function (error) {
-        $rootScope.$broadcast(drupalApiServiceConfig.system_GetVariableFailed, {error: error});
+    	console.log('publishSystemGetVariableFailed'); 
+        $rootScope.$broadcast(drupalApiServiceConfig.system_getVariableFailed, {error: error});
     };
     // Subscribe to system get variable failed event
     var onSystemGetVariableFailed = function($scope, handler) {
-    	$scope.$on(drupalApiServiceConfig.system_GetVariableFailed, function(event, args) {
+    	$scope.$on(drupalApiServiceConfig.system_getVariableFailed, function(event, args) {
 	    handler(args.error);
 	   });	
     };
@@ -450,11 +451,11 @@ drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     
     // Publish system set variable failed event
     var publishSystemSetVariableFailed = function (error) {
-        $rootScope.$broadcast(drupalApiServiceConfig.system_SetVariableFailed, {error: error});
+        $rootScope.$broadcast(drupalApiServiceConfig.system_setVariableFailed, {error: error});
     };
     // Subscribe to system set variable failed event
     var onSystemSetVariableFailed = function($scope, handler) {
-    	$scope.$on(drupalApiServiceConfig.system_SetVariableFailed, function(event, args) {
+    	$scope.$on(drupalApiServiceConfig.system_setVariableFailed, function(event, args) {
 	    handler(args.error);
 	   });	
     };
@@ -474,11 +475,11 @@ drupalApiService.service('drupalApiNotificationChannel', ['$rootScope', 'drupalA
     
     // Publish system del variable failed event
     var publishSystemDelVariableFailed = function (error) {
-        $rootScope.$broadcast(drupalApiServiceConfig.system_DelVariableFailed, {error: error});
+        $rootScope.$broadcast(drupalApiServiceConfig.system_delVariableFailed, {error: error});
     };
     // Subscribe to system set variable failed event
     var onSystemDelVariableFailed = function($scope, handler) {
-    	$scope.$on(drupalApiServiceConfig.system_DelVariableFailed, function(event, args) {
+    	$scope.$on(drupalApiServiceConfig.system_delVariableFailed, function(event, args) {
 	    handler(args.error);
 	   });	
     };
@@ -1101,7 +1102,6 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		
 		return preparedIndexParams;
 	};
-
 	
 	/*
 	 * 
@@ -1130,20 +1130,28 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 			requestConfig = {
 				method :'GET',
 				url : retrievePath
-			};
+			},
+			errors = [];
 		
-		if(!nid) { defer.reject(['Param nid is required.']); }
-		else {
-			$http(requestConfig)
-			.success(function(node, status, headers, config){
-				drupalApiNotificationChannel.publishNodeRetrieveConfirmed(node);
-				defer.resolve(node);
-			})
-			.error(function(data, status, headers, config){
-				drupalApiNotificationChannel.publishNodeRetrieveFailed(node);
-				defer.reject(data);
-			});
+		if(!nid) { errors.push('Param nid is required.'); }
+		
+		if(errors.length != 0) {
+			drupalApiNotificationChannel.publishNodeRetrieveFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
 		}
+		
+		
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+				drupalApiNotificationChannel.publishNodeRetrieveConfirmed(data);
+				defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+				drupalApiNotificationChannel.publishNodeRetrieveFailed(data);
+				defer.reject(data);
+		});
+	
 		return defer.promise;
 
 	};
@@ -1171,20 +1179,27 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 			data : {
 				node : node
 			}
-		};
-	
+		},
+		errors = [];
+		
 		//if not given
-		if(!node) { defer.reject(['Param node is required.']); return defer.promise; }
+		if(!node) { errors.push('Param node is required.'); }
 		//if is not an array
-		if( node instanceof Array ) { defer.reject(['Param node has to be an array.']); return defer.promise; }
+		if( node instanceof Array ) { errors.push('Param node has to be an array.'); }
+		
+		if(errors.length != 0) {
+			drupalApiNotificationChannel.publishNodeCreateFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		}
 		
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
-			drupalApiNotificationChannel.publishNodeCreateConfirmed(node);
+			drupalApiNotificationChannel.publishNodeCreateConfirmed(data);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
-			drupalApiNotificationChannel.publishNodeCreateFailed(node);
+			drupalApiNotificationChannel.publishNodeCreateFailed(data);
 			defer.reject(data);
 		});
 		
@@ -1215,22 +1230,29 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 			data : {
 				node : node
 			}
-		};
-	
+		},
+		errors = [];
+		
 		//if not given
-		if(!nid) { defer.reject(['Param nid is required.']); return defer.promise;}
+		if(!nid) { errors.push('Param nid is required.'); }
 		//if not given
-		if(!node) { defer.reject(['Param node is required.']); return defer.promise;}
+		if(!node) { errors.push('Param node is required.'); }
 		//if is not an array
-		if( node instanceof Array ) { defer.reject(['Param node has to be an array.']); return defer.promise;}
+		if( node instanceof Array ) { errors.push('Param node has to be an array.');}
+		
+		if(errors.length != 0) {
+			drupalApiNotificationChannel.publishNodeUpdateFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		};
 
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
-			drupalApiNotificationChannel.publishNodeUpdateConfirmed(node);
+			drupalApiNotificationChannel.publishNodeUpdateConfirmed(data);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
-			drupalApiNotificationChannel.publishNodeUpdateFailed(node);
+			drupalApiNotificationChannel.publishNodeUpdateFailed(data);
 			defer.reject(data);
 		});
 	
@@ -1258,18 +1280,25 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 		requestConfig = {
 			method :'DELETE',
 			url : createPath
-		};
+		},
+		errors = [];
 	
 		//if not given
-		if(!nid) { defer.reject(['Param nid is required.']); return defer.promise;}
+		if(!nid) { errors.push('Param nid is required.');}
 
+		if(errors.length != 0) {
+			drupalApiNotificationChannel.publishNodeDeleteFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		};
+		
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
-			drupalApiNotificationChannel.publishNodeDeleteConfirmed(node);
+			drupalApiNotificationChannel.publishNodeDeleteConfirmed(data);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
-			drupalApiNotificationChannel.publishNodeDeleteFailed(node);
+			drupalApiNotificationChannel.publishNodeDeleteFailed(data);
 			defer.reject(data);
 		});
 	
@@ -1289,7 +1318,10 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	 * 
 	 * @param {Integer} page The zero-based index of the page to get, defaults to 0., required:false, source:param
 	 * @param {Array} fields The fields to get. Shouls be a comma seperated string., defaults to 0., required:false, source:param
+	 *     valide fields: vid, uid, title, status, comment, promote, sticky,nid, type, language, created, changed, tnid, translate,
+	 *     invalide fields: revision_timestamp, revision_uid, body, rdf_mapping, cid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count, name, picture, data, path
 	 * @param {Array} parameters Parameters array, required:false, source:param
+	 *     invalide and valide param names are same as in fields
 	 * @param {Integer} pagesize Number of records to get per page. For unauthorized users 25 is maximum., required:false, source:param
 	 * 
 	 * @return 	{Promise}
@@ -1304,7 +1336,14 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 			requestConfig = {
 				method :'GET',
 				url : retrievePath,
-			};
+			},
+			errors = [];
+		
+		if(errors.length != 0) {
+			drupalApiNotificationChannel.publishNodeIndexFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		};
 		
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
@@ -1320,60 +1359,13 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	};
 	
 	/*
-	 * Attach files
-	 * Drupal CORS settings api_endpoint/node/attach_file/*|<mirror>|GET|Content-Type
-	 * 
-	 * Upload and attach file(s) to a node. POST multipart/form-data to node/123/attach_file
-	 * 
-	 * Method: POST 
-	 * Url: http://drupal_instance/api_endpoint/node/attach_file/{NID}
-	 * Headers: Content-Type:application/json
-	 * 
-	 * @param {Integer} nid The nid of the node to attach a file to, required:true, source:path
-	 * @param {Sting} field_name The file field name, required:true, source:post body
-	 * @param {Integer} attach Attach the file(s) to the node. If FALSE, this clears ALL files attached, and attaches the files, required:false, source:post body
-	 * @param {Array} field_values The extra field values, required:false, source:post body
-	 * 
-	 * @return 	{Promise}
-	 * 
-	 * useage: NodeResource.index(nid, field_name, attach, field_values).success(yourSuccessCallback(data)).error(yourErrorCallback(error));
-	 */
-	var attach_file = function(nid, field_name, attach, field_values) {
-		
-		var attachFilePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + '/attach_file/'+nid,
-			defer = $q.defer(),
-			requestConfig = {
-				method :'POST',
-				url : attachFilePath,
-				data : {
-					field_name   : field_name,
-					attach 		 : attach,
-					field_values : field_values,
-				}
-			};
-		
-		//if not given
-		if(!nid) { defer.reject(['Param nid is required.']); return defer.promise;}
-	
-		$http(requestConfig)
-		.success(function(data, status, headers, config){
-			defer.resolve(data);
-		})
-		.error(function(data, status, headers, config){
-			defer.reject(data);
-		});
-		
-		return defer.promise;
-	};
-	
-	/*
 	 * Files
 	 * Drupal CORS settings api_endpoint/node/files/*|<mirror>|GET|Content-Type
 	 * 
 	 * This method returns files associated with a node.
 	 * 
-	 * Method: POST 
-	 * Url: http://drupal_instance/api_endpoint/node/files/{NID}/{FILE_CONTENTS}/{IMAGE_STYLES}
+	 * Method: GET 
+	 * Url: http://drupal_instance/api_endpoint/node/{NID}/files/{FILE_CONTENTS}/{IMAGE_STYLES}
 	 * Headers: Content-Type:application/json
 	 * 
 	 * @param {Integer} nid The nid of the node whose files we are getting, required:true, source:path
@@ -1385,27 +1377,31 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	 * useage: NodeResource.files(nid, file_contents, image_styles).success(yourSuccessCallback(data)).error(yourErrorCallback(error));
 	 */
 	var files = function(nid, file_contents, image_styles) {
-		
-		var attachFilePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + '/files/'+nid,
+		console.log(nid, file_contents, image_styles); 
+		var attachFilePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node +'/'+ nid + '/files'+((file_contents)?('/'+file_contents):'')+((image_styles)?('/'+image_styles):''),
 			defer = $q.defer(),
 			requestConfig = {
-				method :'POST',
+				method :'GET',
 				url : attachFilePath,
-				data : {
-					field_name   : field_name,
-					attach 		 : attach,
-					field_values : field_values,
-				}
-			};
+			},
+			errors = [];
 		
 		//if not given
-		if(!nid) { defer.reject(['Param nid is required.']); return defer.promise;}
+		if(!nid) { errors.push('Param nid is required.'); }
+		
+		if(errors.length != 0) {
+			drupalApiNotificationChannel.publishNodeFilesFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		};
 	
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeFilesConfirmed(data);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeFilesFailed(data);
 			defer.reject(data);
 		});
 		
@@ -1418,8 +1414,8 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	 * 
 	 * This method returns the number of new comments on a given node.
 	 * 
-	 * Method: POST 
-	 * Url: http://drupal_instance/api_endpoint/node/comments/{NID}
+	 * Method: POST 707
+	 * Url: http://drupal_instance/api_endpoint/node/{NID}/comments/
 	 * Headers: Content-Type:application/json
 	 * 
 	 * @param {Integer} nid The node id to load comments for., required:true, source:path
@@ -1428,30 +1424,95 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	 * 
 	 * @return 	{Promise}
 	 * 
-	 * useage: NodeResource.files(nid, count, offset).success(yourSuccessCallback(data)).error(yourErrorCallback(error));
+	 * useage: NodeResource.comments(nid, count, offset).success(yourSuccessCallback(data)).error(yourErrorCallback(error));
 	 */
 	var comments = function(nid, count, offset) {
 		
-		var attachFilePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + '/' + nid,
+		var attachFilePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + '/' + nid +'/comments/' + ((count != undefined ||  offset != undefined)?'?':'')+ ((count != undefined)?('count='+count+','):'') + ((offset != undefined)?('offset=' + offset):''),
 			defer = $q.defer(),
 			requestConfig = {
 				method :'GET',
 				url : attachFilePath,
+			},
+			errors = [];
+		
+		//if not given
+		if(!nid) { errors.push('Param nid is required.'); }
+		
+		if(errors.length != 0) {
+			drupalApiNotificationChannel.publishNodeCommentsFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		};
+	
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeCommentsConfirmed(data);
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeCommentsFailed(data);
+			defer.reject(data);
+		});
+		
+		return defer.promise;
+	};
+	
+	/*
+	 * Attach files
+	 * Drupal CORS settings api_endpoint/node/attach_file*|<mirror>|GET|Content-Type
+	 * 
+	 * Upload and attach file(s) to a node. POST multipart/form-data to node/123/attach_file
+	 * 
+	 * Method: POST 
+	 * Url: http://drupal_instance/api_endpoint/node/{NID}/attach_file/
+	 * Headers: Content-Type:application/json
+	 * 
+	 * @param {Integer} nid The nid of the node to attach a file to, required:true, source:path
+	 * @param {Sting} field_name The file field name, required:true, source:post body
+	 * @param {Integer} attach Attach the file(s) to the node. If FALSE, this clears ALL files attached, and attaches the files, required:false, source:post body
+	 * @param {Array} field_values The extra field values, required:false, source:post body
+	 * 
+	 * @return 	{Promise}
+	 * 
+	 * useage: NodeResource.attach_file(nid, field_name, attach, field_values).success(yourSuccessCallback(data)).error(yourErrorCallback(error));
+	 */
+	var attach_file = function(nid, field_name, attach, field_values) {
+		
+		var attachFilePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.node + '/' + nid + '/attach_file',
+			defer = $q.defer(),
+			requestConfig = {
+				method :'POST',
+				url : attachFilePath,
+				transformRequest: angular.identity,
+				headers : {
+					"Content-Type"	: "multipart/form-data",
+				},
 				data : {
 					field_name   : field_name,
 					attach 		 : attach,
 					field_values : field_values,
 				}
-			};
+			},
+			errors = [];
 		
 		//if not given
-		if(!nid) { defer.reject(['Param nid is required.']); return defer.promise;}
-	
+		if(!nid) { errors.push('Param nid is required.'); }
+		if(!field_name) { errors.push('Param field_name is required.'); }
+		
+		if(errors.length != 0) {
+			drupalApiNotificationChannel.publishNodeAttachFileFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		};
+				
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeAttachFileConfirmed(data);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
+			drupalApiNotificationChannel.publishNodeAttachFileFailed(data);
 			defer.reject(data);
 		});
 		
@@ -1460,14 +1521,17 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	
 	//public methods	
 	return {
+		//CRUD operations
 		retrieve 	: retrieve,
 		create 		: create,
 		update		: update,
 		_delete 	: _delete,
-		attach_file : attach_file,
+		index	 	: index,
+		//Relationships
 		files		: files,
 		comments 	: comments,
-		index	 	: index,
+		//Targeted actions
+		attach_file : attach_file,
 	};
 
 });
@@ -1495,7 +1559,7 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 	 * 
 	 * useage: SystemResource.connect().success(yourSuccessCallback).error(yourErrorCallback);
 	*/
-	var connect = function(token){
+	var connect = function(token) {
 		
 		var connectPath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.system + '/' + 'connect',
 		defer = $q.defer(),
@@ -1551,10 +1615,16 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 				data 	: {
 					name : name
 				}
-		};
+		},
+		errors = [];
 		
 		if(!name) { 
-			defer.reject(['Param name is required.']); 
+			errors.push('Param name is required.');
+		}
+		
+		if(errors.length != 0) {
+			drupalApiNotificationChannel.publishSystemGetVariableFailed(errors);
+			defer.reject(errors); 
 			return defer.promise;
 		}
 		
@@ -1600,10 +1670,18 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 					name 	: name,
 					value 	: value
 				}
-		};
+		},
+		errors = [];
 
-		if(!value) { defer.reject(['Param value is required.']); return defer.promise;}
-		if(!name) { defer.reject(['Param name is required.']); return defer.promise;}
+		if(!value) { errors.push('Param value is required.');}
+		if(!name) { errors.push('Param name is required.'); }
+		
+		if(errors.length != 0) {
+			drupalApiNotificationChannel.publishSystemSetVariableFailed({data: errors});
+			defer.reject(errors); 
+			return defer.promise;
+		}
+		
 		
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
@@ -1645,9 +1723,18 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 				data 	: {
 					name : name
 				}
-		};
+		},
+		errors = [];
 		
-		if(!name) { defer.reject(['Param name is required.']); }
+		if(!name) { 
+			errors.push('Param name is required.');
+		}
+		
+		if(errors.length != 0) {
+			drupalApiNotificationChannel.publishSystemDelVariableFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		}
 		
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
@@ -1655,7 +1742,7 @@ drupalAPI.service('SystemResource', function($http, $q, drupalApiServiceConfig, 
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
-			drupalApiNotificationChannel.publishSystemDelVariableFailed(name);
+			drupalApiNotificationChannel.publishSystemDelVariableFailed(data);
 			defer.reject(data);
 		});
 		

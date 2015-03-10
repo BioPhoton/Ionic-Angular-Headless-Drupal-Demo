@@ -3,33 +3,160 @@
 <ion-content>
 
 <h1>NodeResource</h1>
+
 <h2>Retrieve</h2>
-<div ng-repeat="request in nodeRetrieveRequests">
-	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
-	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
-	<b>Duration:</b> {{request.requestDuration}}<br />
-	<b>Data:</b> 
-	<pre>
-	{{ request.data | json}}
-	</pre>
-</div>
+<ion-list>
+  <div ng-repeat="(key,request) in nodeRetrieveRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Retrieve Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
 
 <label class="item item-input">
 <input type="text" ng-model="nodeRetrieve.nid" placeholder="nid" >
 </label>
-<button class="button button-small" ng-click="callNodeRecourceRetrieve(nodeRetrieve.nid)">callNodeRecourceRetrieve</button>
+<button class="button button-small" ng-click="callNodeRecourceRetrieve(nodeRetrieve.nid)">call NodeRecource.retrieve</button>
 <hr />
 
+<h2>Create</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in nodeCreateRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Create Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+<ion-select label="Node Types" label-field="name"  name="'nodeTypes'" provider="nodeTypes" ng-model="nodeCreate.type"/></ion-select>
+<label class="item item-input">
+<input type="text" ng-init="nodeCreate.title='test titel'" ng-model="nodeCreate.title" placeholder="Node title" >
+</label>
+
+<label class="item item-input">
+<textarea rows="6" placeholder="Node sumary" type="text" ng-init="nodeCreate.body.und[0].summary = 'This is a short summary of the node body.'" ng-model="nodeCreate.body.und[0].summary"></textarea>
+</label>
+<label class="item item-input">
+<textarea rows="6" placeholder="Node body" type="text" ng-init="nodeCreate.body.und[0].value = 'This is the full node body.'" ng-model="nodeCreate.body.und[0].value"></textarea>
+</label>
+<button class="button button-small" ng-click="callNodeRecourceCreate(nodeCreate)">call NodeRecource.create</button>
+<hr />
+<h2>Update</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in nodeUpdateRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Update Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+<label class="item item-input">
+<input type="text" ng-init="nodeUpdate.nid='1234'" ng-model="nodeUpdate.nid" placeholder="Nid" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="nodeUpdate.title='test titel'" ng-model="nodeUpdate.title" placeholder="Node title" >
+</label>
+
+<label class="item item-input">
+<textarea rows="6" placeholder="Node sumary" type="text" ng-init="nodeUpdate.body.und[0].summary = 'This is a short summary of the node body.'" ng-model="nodeUpdate.body.und[0].summary"></textarea>
+</label>
+
+<label class="item item-input">
+<textarea rows="6" placeholder="Node body" type="text" ng-init="nodeUpdate.body.und[0].value = 'This is the full node body.'" ng-model="nodeUpdate.body.und[0].value"></textarea>
+</label>
+
+<button class="button button-small" ng-click="callNodeRecourceUpdate(nodeUpdate)">call NodeRecource.update</button>
+
+<hr />
+
+<h2>Delete</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in nodeDeleteRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Delete Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-init="nodeDelete.nid='3'" ng-model="nodeDelete.nid" placeholder="nid" >
+</label>
+<button class="button button-small" ng-click="callNodeRecourceDelete(nodeDelete.nid)">call NodeRecource.delete</button>
+
+<hr />
+
+
 <h2>Index</h2>
-<div ng-repeat="request in nodeIndexRequests">
-	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
-	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
-	<b>Duration:</b> {{request.requestDuration}}<br />
-	<b>Data:</b> 
-	<pre>
-	{{ request.data | json}}
-	</pre>
-</div>
+<ion-list>
+  <div ng-repeat="(key,request) in nodeIndexRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Index Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
 
 <label class="item item-input">
 <input type="text" ng-init="nodeIndex.page=0" ng-model="nodeIndex.page" placeholder="page" >
@@ -43,55 +170,126 @@
 <label class="item item-input">
 <input type="text" ng-init="nodeIndex.parameters='nid=1, type=page, '" ng-model="nodeIndex.parameters" placeholder="parameters" >
 </label>
-<button class="button button-small" ng-click="callNodeRecourceIndex(nodeIndex)">callNodeRecourceRetrieve</button>
+<button class="button button-small" ng-click="callNodeRecourceIndex(nodeIndex)">call NodeRecource.index</button>
+<hr />
+
+<h2>Files</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in nodeFilesRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Files Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="nodeFiles.nid" placeholder="nid" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="nodeFiles.file_contents" placeholder="file_contents" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="nodeFiles.image_styles" placeholder="image_styles" >
+</label>
+<button class="button button-small" ng-click="callNodeResourceFiles(nodeFiles)">call NodeRecource.files</button>
 
 <hr />
 
-<h2>Create</h2>
-<div ng-repeat="request in nodeCreateRequests">
-	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
-	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
-	<b>Duration:</b> {{request.requestDuration}}<br />
-	<b>Data:</b> 
-	<pre>
-	{{ request.data | json}}
-	</pre>
+<h2>Comments</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in nodeCommentsRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Comments Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="nodeComments.nid" placeholder="nid" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="nodeComments.count" placeholder="count" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="nodeComments.offset" placeholder="offset" >
+</label>
+<button class="button button-small" ng-click="callNodeResourceComments(nodeComments)">call NodeRecource.comments</button>
+
+<hr />
+
+<h2>AttachFile <span class="assertive">!</span></h2>
+<ion-list>
+  <div ng-repeat="(key,request) in nodeAttachFileRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      AttachFile Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="nodeAttachFile.nid" placeholder="nid" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="nodeAttachFile.field_name" placeholder="field_name" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="nodeAttachFile.attach" placeholder="attach" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="nodeAttachFile.field_values" placeholder="field_values" >
+</label>
+
+<div ng-show="!isWebview">
+Test for upload from browser:<br/>
+<input name="myFile" type="file" />
 </div>
-{{nodeCreate}}
-<ion-select label="Node Types" label-field="name"  name="'nodeTypes'" provider="nodeTypes" ng-model="nodeCreate.type"/></ion-select>
-<label class="item item-input">
-<input type="text" ng-init="nodeCreate.title='test titel'" ng-model="nodeCreate.title" placeholder="Node title" >
-</label>
-
-<label class="item item-input">
-<textarea rows="6" placeholder="Node sumary" type="text" ng-init="nodeCreate.body.und[0].summary = 'This is a short summary of the node body.'" ng-model="nodeCreate.body.und[0].summary"></textarea>
-</label>
-
-<label class="item item-input">
-<textarea rows="6" placeholder="Node body" type="text" ng-init="nodeCreate.body.und[0].value = 'This is the full node body.'" ng-model="nodeCreate.body.und[0].value"></textarea>
-</label>
-
-<button class="button button-small" ng-click="callNodeRecourceCreate(nodeCreate)">callNodeRecourceCreate</button>
-
-<hr />
-
-<h2>Delete</h2>
-<div ng-repeat="request in nodeDeleteRequests">
-	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
-	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
-	<b>Duration:</b> {{request.requestDuration}}<br />
-	<b>Data:</b> 
-	<pre>
-	{{ request.data | json}}
-	</pre>
+<div ng-show="isWebview">
+Test for upload from phone:<br/>
+<button class="button button-block button-positive icon-left ion-ios7-camera" ng-click="takePicture()">Camera</button>
 </div>
 
-<label class="item item-input">
-<input type="text" ng-init="nodeCreate.nid='3'" ng-model="nodeCreate.nid" placeholder="nid" >
-</label>
-
-<button class="button button-small" ng-click="callNodeRecourceDelete(nodeCreate.nid)">callNodeRecourceDelete</button>
+<button class="button button-small" ng-click="callNodeResourceAttachFile(nodeAttachFile)">call NodeRecource.attach_file</button>
 
 <hr />
+
 
 </ion-content> </ion-view>

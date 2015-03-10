@@ -8,12 +8,22 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 		   ['$scope', 'SystemResource', 'UserResource', 'drupalApiNotificationChannel', 
     function($scope,   SystemResource,   UserResource,   drupalApiNotificationChannel ) {
 			  
+			   $scope.toggleRequest = function(request) {
+				     if ($scope.isRequestShown(request)) {
+				       $scope.shownRequest = null;
+				     } else {
+				       $scope.shownRequest = request;
+				     }
+				   };
+				   $scope.isRequestShown = function(request) {
+				     return $scope.shownRequest === request;
+				   };
 			   
 			   
 			   //
 			   //SystemResource
 			   //
-			   
+
 			   var requestEnd = requestStart = undefined;
 			   
 			   //connect
@@ -46,7 +56,7 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 					   name : ''
 			   };
 			   $scope.callSystemRecourceGetVariable = function() {
-				   		var requestEnd = requestStart = Date.now();
+				   		requestStart = Date.now();
 						SystemResource.get_variable($scope.getVariableData.name)
 						 .then(
 						    	//get_variable success
@@ -73,7 +83,7 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 					   value 	: '',
 			   };
 			   $scope.callSystemRecourceSetVariable = function() {
-				   		var requestEnd = requestStart = Date.now();
+				   		requestStart = Date.now();
 						SystemResource.set_variable($scope.setVariableData.name, $scope.setVariableData.value)
 					    .then(
 					    		//set_variable success
@@ -100,7 +110,7 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 			   };
 			   $scope.callSystemRecourceDelVariable = function() {
 				   
-				   	var requestEnd = requestStart = Date.now();
+				   	requestStart = Date.now();
 					SystemResource.del_variable($scope.delVariableData.name)
 				    .then(
 				    		//set_variable success
