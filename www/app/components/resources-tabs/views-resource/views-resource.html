@@ -3,19 +3,54 @@
 <ion-content>
 <h1>ViewsResource</h1>
 <h2>Retrieve</h2>
-<div ng-repeat="request in viewsRetrieveRequests">
-	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
-	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
-	<b>Duration:</b> {{request.requestDuration}}<br />
-	<b>Data:</b> 
-	<pre>
-	{{ request.data | json}}
-	</pre>
-</div>
+<ion-list>
+  <div ng-repeat="(key,request) in viewsRetrieveRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      AttachFile Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+<label class="item item-input">
+	<input type="text" ng-model="viewsRetrieve.view_name" placeholder="view_name" >
+</label>
 
 <label class="item item-input">
-<input type="text" ng-model="viewsRetrieve.viewname" placeholder="viewname" >
+	<input type="text" ng-model="viewsRetrieve.display_id" placeholder="display_id" >
 </label>
+
+<label class="item item-input">
+	<input type="text" ng-model="viewsRetrieve.args" placeholder="args" >
+</label>
+
+<label class="item item-input">
+	<input type="text" ng-model="viewsRetrieve.offset" placeholder="offset" >
+</label>
+
+<label class="item item-input">
+	<input type="text" ng-model="viewsRetrieve.limit" placeholder="limit" >
+</label>
+
+<label class="item item-input">
+	<input type="text" ng-model="viewsRetrieve.offset" placeholder="offset" >
+</label>
+
+<label class="item item-input">
+	<input type="text" ng-model="viewsRetrieve.limit" placeholder="limit" >
+</label>
+
 <button class="button button-small" ng-click="callViewsRecourceRetrieve(viewsRetrieve.viewname)">callViewsRecourceRetrieve</button>
 <hr />
 	

@@ -1414,7 +1414,7 @@ drupalAPI.service('NodeResource', function($http, $q, drupalApiServiceConfig, dr
 	 * 
 	 * This method returns the number of new comments on a given node.
 	 * 
-	 * Method: POST 707
+	 * Method: POST
 	 * Url: http://drupal_instance/api_endpoint/node/{NID}/comments/
 	 * Headers: Content-Type:application/json
 	 * 
@@ -2180,24 +2180,35 @@ drupalAPI.service('ViewsResource', function($http, $q, drupalApiServiceConfig, d
 	*/
 	var retrieve = function(view_name, display_id, args, offset, limit, format_output, filters){
 		
-		var retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.views + '/' + view_name;
-		var defer = $q.defer();
+		var retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.views + '/' + view_name,
+			requestConfig = {
+	 			method: 'GET',
+				url : retrievePath,
+				headers: {
+					//@TODO use the format of drupalApiServiceConfig
+					"Accept" 		: "application/json",
+					"Content-Type"	: "application/json",
+				}
+	 	 	  },
+	 	 	  defer = $q.defer(),
+			errors = [];
+ 			
+ 			//if not given
+ 			if(!view_name) { errors.push('Param view_name is required.'); }
+ 			
+ 			if(errors.length != 0) {
+ 				drupalApiNotificationChannel.publishViewsRetrieveFailed(errors);
+ 				defer.reject(errors); 
+ 				return defer.promise;
+ 			}
 		
-		$http({
-			method :'POST',
-			url : retrievePath,
-			headers : {
-				"Accept" 		: "application/json",
-				"Content-Type"	: "application/json",
-			}
-		})
+		
+		$http(requestConfig)
 		.success(function(data, status, headers, config){
-			console.log(data, status, headers, config); 
 			drupalApiNotificationChannel.publishViewsRetrieveConfirmed(data);
 			defer.resolve(data);
 		})
 		.error(function(data, status, headers, config){
-			console.log(data, status, headers, config); 
 			drupalApiNotificationChannel.publishViewsRetrieveFailed(data);
 			defer.reject(data);
 		});

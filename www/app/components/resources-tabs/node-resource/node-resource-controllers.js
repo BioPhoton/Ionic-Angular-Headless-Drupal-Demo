@@ -19,10 +19,12 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 				   $scope.isRequestShown = function(request) {
 				     return $scope.shownRequest === request;
 				   };
-			   
-			 $scope.isWebview = ionic.Platform.isWebView();
-			   
+			   			   
 				   var requestEnd = requestStart = undefined;
+				   //for attache file tests to detect browser or phone
+				   $scope.isWebview = ionic.Platform.isWebView();
+				   
+				   
 			   //
 			   //Node Resource 
 			   //

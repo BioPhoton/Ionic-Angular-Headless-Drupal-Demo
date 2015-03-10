@@ -9,6 +9,18 @@ ViewsResourceControllers.controller('ResourcesViewsResourceCtrl',
 		   ['$scope', 'ViewsResource', 'drupalApiNotificationChannel', 
     function($scope,   ViewsResource,   drupalApiNotificationChannel) {
 			   
+			   $scope.toggleRequest = function(request) {
+				     if ($scope.isRequestShown(request)) {
+				       $scope.shownRequest = null;
+				     } else {
+				       $scope.shownRequest = request;
+				     }
+			   };
+			
+			   $scope.isRequestShown = function(request) {
+			     return $scope.shownRequest === request;
+			   };
+			   
 			   //
 			   //ViewsResource
 			   //
@@ -20,11 +32,11 @@ ViewsResourceControllers.controller('ResourcesViewsResourceCtrl',
 			   
 			   //path params for retrieve request
 			   $scope.viewsRetrieve = {};
-			   $scope.viewsRetrieve.viewname = 'testview';
+			   $scope.viewsRetrieve.view_name = 'testview';
 			   
-			   $scope.callViewsRecourceRetrieve = function(viewname) {
+			   $scope.callViewsRecourceRetrieve = function(viewsRetrieve) {
 				   requestStart = Date.now();
-				   ViewsResource.retrieve(viewname).then(
+				   ViewsResource.retrieve(viewsRetrieve.view_name).then(
 						//conncet success
 				    	function(data) { console.log('views retrieve success'); },
 				    	//conncet error
