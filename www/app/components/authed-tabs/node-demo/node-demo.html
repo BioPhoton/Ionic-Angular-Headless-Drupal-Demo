@@ -12,7 +12,7 @@
     <ion-refresher 
     pulling-text="Pull to refresh..."
     pulling-icon="ion-android-arrow-down" 
-    refreshing-icon="ion-load-d"
+    refreshing-icon="ion-load-a ion-spin"
     on-refresh="doRefresh()"></ion-refresher>
 
 <style>
@@ -26,7 +26,7 @@
 	
 
   
-	  	<ion-item collection-item-width="'100%'" collection-item-height="'75px'" collection-repeat="node in nodes" class="item-icon-right item-energized" >
+	  	<ion-item collection-item-width="'100%'" collection-item-height="'75px'" collection-repeat="node in nodes" class="item-icon-right" >
 		<!-- on-swipe-right="openNode(node.nid)" -->
 		 
 		    <h2>{{node.title}} {{loadingDetail}}</h2>

@@ -18,6 +18,8 @@ This repo is all about making clientside authed rest-calls easy to use.
 #install
 ##Dependencies
 ipCookies
+##Plugins
+$ cordova plugin add org.apache.cordova.network-information
 
 
 ##Drupal config
