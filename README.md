@@ -39,9 +39,7 @@ $ cordova plugin add org.apache.cordova.network-information
 
 ##Debugging
 Wrong username or password => require email confirm checked in drupal
-
-
-
+Projectname => Ensure this value has at most 32 characters
 ##???
  Any calls that use POST, PUT, or DELETE must now have a header key/value pair with "X-CSRF-Token" being the key, and the token retrieved from /user/token as the value to send along with the header key.
 
