@@ -1,6 +1,6 @@
 {
-  "name": "Drupal-Ionic-AngularJS-API-Client",
-  "app_id": "",
+  "name": "Ionic-Drupal-Client-Demo",
+  "app_id": "e52a49c6",
   "gulpStartupTasks": [
     "sass",
     "watch"

@@ -16,7 +16,11 @@ This repo is all about making clientside authed rest-calls easy to use.
 ???
 
 #install
+npm install cordova gulp ionic
 ##Dependencies
+$ bower install ngCordova -save
+$ bower install angular-cookie -save
+$ bower install angular-messages -save
 ipCookies
 ##Plugins
 $ cordova plugin add org.apache.cordova.network-information

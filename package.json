@@ -1,7 +1,7 @@
 {
-  "name": "drupal-ionic-angularjs-api-client",
+  "name": "ionic-drupal-client-demo",
   "version": "1.0.0",
-  "description": "Drupal-Ionic-AngularJS-API-Client: An Ionic project",
+  "description": "Ionic-Drupal-Client-Demo: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^0.7.1",
