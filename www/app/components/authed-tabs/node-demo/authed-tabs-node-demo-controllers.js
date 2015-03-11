@@ -122,21 +122,27 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 				   
 			   };
 				    
-			   //
-			   //Retrieve
-			   // 
-			   $scope.openNode = function(nid) {	   
-				  console.log(nid);
-				  $state.go('app.authed-tabs.node-detail', {nid:nid});
-			   }
-			   
-			   //
-			   //Edit
-			   //
-			   $scope.editNode = function(nid) {	
-				   console.log(nid); 
-					  $state.go('app.authed-tabs.node-edit', {nid:nid});
-			  }
+		   //
+		   //Retrieve
+		   // 
+		   $scope.loadingDetail = false;
+		   $scope.openNode = function(nid) {	   
+			  $scope.loadingDetail = nid;
+			  $state.go('app.authed-tabs.node-detail', {nid:nid});
+		   }
+		   
+		   drupalApiNotificationChannel.onNodeRetrieveConfirmed($scope, function(data) { $scope.loadingDetail = false;});
+		   drupalApiNotificationChannel.onNodeRetrieveFailed($scope, function(node) { $scope.loadingDetail = false;});
+		   
+		   
+		   
+		   //
+		   //Edit
+		   //
+		   $scope.editNode = function(nid) {	
+			   console.log(nid); 
+				  $state.go('app.authed-tabs.node-edit', {nid:nid});
+		  }
 		   //
 		   //Delete
 		   //
@@ -199,8 +205,13 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 
 authedTabsNodeDemoControllers.controller('NodeDetailCtrl', function($scope, $stateParams, nodeObj) {
 	 $scope.node = nodeObj;
-	 var imgName = 'imagefield_yL3SPI.jpg';//$scope.node.field_image[ $scope.node.language][0].uri.split('/').pop();
-	 $scope.pathToImg = $scope.pathToCms + 'sites/default/files/styles/large/public/field/image/' + imgName;
+	 $scope.pathToImg = false;
+	 
+	 if($scope.node.field_image) {
+		 var imgName = $scope.node.field_image[$scope.node.language][0].uri.split('/').pop();
+		 $scope.pathToImg = $scope.pathToCms + 'sites/default/files/styles/large/public/field/image/' + imgName; 
+	 }
+	
 });
 
 
