@@ -2151,8 +2151,10 @@ drupalAPI.service('UserResource', function($http, $q, drupalApiServiceConfig, $l
  * 
  * This service mirrors the Drupal views resource of the services 3.x module.
  * To use this you have to set following line in your Drupal CORS module settings
- * @TODO check
+ * 
  * your_api_endpoint/views/*|<mirror>|POST|Content-Type
+ * 
+ * Docs: https://www.drupal.org/project/services_views
  * 
 **/
 drupalAPI.service('ViewsResource', function($http, $q, drupalApiServiceConfig, drupalApiNotificationChannel) {
@@ -2174,13 +2176,23 @@ drupalAPI.service('ViewsResource', function($http, $q, drupalApiServiceConfig, d
 	 * @param {Boolean} format_output Whether to return the raw data results or style the results., required:false, source:param
 	 * @param {Array} filters A list of filters to pass to the view. These are defined by the exposed filters on your view. Example call: /views/your_view?filters[nid]=12345, required:false, source:param
 	 * 
+	 * 
 	 * @return 	{Promise}
 	 * 
 	 * useage: ViewsResource.retrieve().success(yourSuccessCallback).error(yourErrorCallback);
+	 * 
+	 * custom view settings
+	 * exposed filters: create them in the view under "Filter criteria". Expose them for users. Under the more tab in "Configure filter criterion" in the field "Filter identifier" you can change the field name. Use it like => comment_count=4
+	 * order by : create them in the view under "Sort criteria".  Expose it for users and use it like => sort_by=created&sort_order=ASC
+	 * 
+	 * 
 	*/
 	var retrieve = function(view_name, display_id, args, offset, limit, format_output, filters){
 		
-		var retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.views + '/' + view_name,
+		var retrievePath = drupalApiServiceConfig.drupal_instance + drupalApiServiceConfig.api_endpoints.api_v1.path + drupalApiServiceConfig.api_endpoints.api_v1.defaut_resources.views + '/' + view_name; 
+		retrievePath +=  ((display_id || args || offset || limit || format_output || filters)?'?':'');
+		retrievePath += ( (display_id)?('display_id='+display_id+'&'):'') + ((args)?('args='+args+'&'):'') + ((offset)?('offset='+offset+'&'):'') + ((limit)?('limit='+limit+'&'):'') + ((format_output)?('format_output='+format_output+'&'):'') + ((filters)?(filters):'');
+		
 			requestConfig = {
 	 			method: 'GET',
 				url : retrievePath,
@@ -2188,13 +2200,13 @@ drupalAPI.service('ViewsResource', function($http, $q, drupalApiServiceConfig, d
 					//@TODO use the format of drupalApiServiceConfig
 					"Accept" 		: "application/json",
 					"Content-Type"	: "application/json",
-				}
+				},
 	 	 	  },
 	 	 	  defer = $q.defer(),
 			errors = [];
  			
  			//if not given
- 			if(!view_name) { errors.push('Param view_name is required.'); }
+ 			//if(!view_name) { errors.push('Param view_name is required.'); }
  			
  			if(errors.length != 0) {
  				drupalApiNotificationChannel.publishViewsRetrieveFailed(errors);

@@ -9,11 +9,7 @@
 
   <ion-content>
    
-    <ion-refresher 
-    pulling-text="Pull to refresh..."
-    pulling-icon="ion-android-arrow-down" 
-    refreshing-icon="ion-load-a ion-spin"
-    on-refresh="doRefresh()"></ion-refresher>
+    <ion-refresher on-refresh="doRefresh()"></ion-refresher>
 
 <style>
 .item {
@@ -26,13 +22,13 @@
 	
 
   
-	  	<ion-item collection-item-width="'100%'" collection-item-height="'75px'" collection-repeat="node in nodes" class="item-icon-right" >
+	  	<ion-item collection-item-width="'100%'" collection-item-height="'75px'" collection-repeat="node in nodes" class="item-icon-right item-spinner-right" >
 		<!-- on-swipe-right="openNode(node.nid)" -->
 		 
 		    <h2>{{node.title}} {{loadingDetail}}</h2>
 		    <p>{{node.type}} - {{node.created | date}}</p>
-		     
-		    <i class="icon " ng-class="loadingDetail != node.nid?'ion-ios-arrow-right':'ion-load-d icon-spin'" ng-click="openNode(node.nid)" ></i>
+		    <ion-spinner ng-show="loadingDetail == node.nid"></ion-spinner>
+		    <i ng-show="loadingDetail != node.nid" class="icon " ng-class="loadingDetail != node.nid?'ion-ios-arrow-right':'ion-load-d icon-spin'" ng-click="openNode(node.nid)" ></i>  
 		    <ion-option-button class="button-positive" ng-click="editNode(node.nid)">
 		      Edit
 		    </ion-option-button>

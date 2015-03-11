@@ -21,6 +21,76 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+
+
+
+
+.item-spinner-left .spinner, .item-spinner-right .spinner {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  font-size: 32px;
+  }
+  
+  .item-spinner-left .spinner:before, .item-spinner-right .spinner:before {
+    display: block;
+    width: 32px;
+    text-align: center;
+  }
+
+.item-spinner-left {
+  padding-left: 54px; }
+  .item-spinner-left .spinner {
+    left: 11px; }
+
+.item-complex.item-spinner-left {
+  padding-left: 0; }
+  .item-complex.item-spinner-left .item-content {
+    padding-left: 54px; }
+
+.item-spinner-right {
+  padding-right: 54px; }
+  .item-spinner-right .spinner {
+    right: 11px; }
+
+.item-complex.item-spinner-right {
+  padding-right: 0; }
+  .item-complex.item-spinner-right .item-content {
+    padding-right: 54px; }
+
+.item-spinner-left.item-spinner-right .spinner:first-child {
+  right: auto; }
+
+.item-spinner-left.item-spinner-right .spinner:last-child, .item-spinner-left .item-delete .spinner {
+  left: auto; }
+
+.item-spinner-left .spinner-accessory, .item-spinner-right .spinner-accessory {
+  color: #ccc;
+  font-size: 16px; }
+
+.item-spinner-left .spinner-accessory {
+  left: 3px; }
+
+.item-spinner-right .spinner-accessory {
+  right: 3px; }
+
+
+
+
+
+
+
 /*start forms
 ===========================================================================*/
 form.ng-submitted label.item.has-error {

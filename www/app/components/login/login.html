@@ -1,7 +1,7 @@
 <ion-view title="Login">
   <ion-content>
     <form name="loginForm" novalidate="" ng-submit="login(loginForm)">
-
+		
       <ion-list>
         <label class="item item-input" ng-class="{ 'has-error' : loginForm.username.$invalid && loginForm.$dirty}">
           <input ng-init="loginData.username = 'basic-user'" type="text" placeholder="Username" name="username" ng-model="loginData.username" autocorrect="off" autocapitalize="off" spellcheck="false">

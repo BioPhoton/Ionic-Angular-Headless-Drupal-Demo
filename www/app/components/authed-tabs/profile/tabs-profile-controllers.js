@@ -6,13 +6,12 @@ tabsProfileControllers.controller('authedTabProfileCtrl', ['$scope','drupalApiNo
 	$scope.pathToCms 	= drupalApiServiceConfig.drupal_instance;
 	$scope.user 		= userObj; 
 	
-	/*
-	this is noly active if page is present
+	//this is noly active if page is present
 	// on login request confirmed set userdata
 	var onCurrentUserUpdatedHandler = function(data) { 
 		console.log('onCurrentUserUpdatedHandler'); 
 		$scope.user = DrupalAuthenticationService.getCurrentUser(); 
 	};
 	drupalApiNotificationChannel.onCurrentUserUpdated($scope, onCurrentUserUpdatedHandler);
-	*/
+	
 }]);

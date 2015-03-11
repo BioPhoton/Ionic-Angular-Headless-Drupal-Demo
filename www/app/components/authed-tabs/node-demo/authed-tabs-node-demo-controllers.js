@@ -1,6 +1,5 @@
 var authedTabsNodeDemoControllers = angular.module('authed-tabs.node-demo.controllers',  ['common.drupal.api-services', 'common.drupal.api-resources']);
 
-
 /* Node Demo Controller */
 authedTabsNodeDemoControllers.controller('NodeListCtrl', 
 		   ['$scope', '$state', '$timeout', '$ionicModal', 'NodeResource', 'drupalApiNotificationChannel', 'pageSize', 'pageFirst', 'newNodes', 

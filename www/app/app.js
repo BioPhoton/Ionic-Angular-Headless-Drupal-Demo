@@ -28,9 +28,9 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 ]);
 
 drupalIonicAngularJSAPIClient
-	.config( [ '$stateProvider', '$urlRouterProvider', '$httpProvider', 'AppSettings',
-     function ( $stateProvider,   $urlRouterProvider,   $httpProvider,   AppSettings ) {
-
+	.config( [  '$stateProvider', '$urlRouterProvider', '$httpProvider', 'AppSettings',
+     function (  $stateProvider,   $urlRouterProvider,   $httpProvider,   AppSettings ) {
+		
 		$stateProvider
           .state('app', {
             url: "/app",
@@ -168,14 +168,13 @@ drupalIonicAngularJSAPIClient
 	      .state('app.authed-tabs.profile', {
 	        url : "/profile",
 	        cache : false,
-	        
 	        views : {
 	          'profile-tab' : {
 	            templateUrl : "app/components/authed-tabs/profile/profile.html",
 	            controller  : 'authedTabProfileCtrl'
 	          }
 	        },
-	        resolve: {
+	         resolve: {
 	              userObj: function (DrupalAuthenticationService) {
 	                return DrupalAuthenticationService.getCurrentUser();
 	              }
@@ -241,6 +240,7 @@ drupalIonicAngularJSAPIClient
 
 drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', 'AccessControlService', '$state',
                           function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   drupalApiNotificationChannel,   DrupalAuthenticationService,   AccessControlService,   $state) {
+	
 	
 	
 	//restrict access redirects
