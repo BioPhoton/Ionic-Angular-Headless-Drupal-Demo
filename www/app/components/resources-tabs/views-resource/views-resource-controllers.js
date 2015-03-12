@@ -34,16 +34,18 @@ ViewsResourceControllers.controller('ResourcesViewsResourceCtrl',
 			   $scope.viewsRetrieve = {};
 			   $scope.viewsRetrieve.view_name = 'testview';
 			   $scope.viewsRetrieve.display_id = 'page_1';
-			   $scope.viewsRetrieve.args = '?????';
+			   $scope.viewsRetrieve.args = '';
 			   $scope.viewsRetrieve.offset = '1';
 			   $scope.viewsRetrieve.limit = '2';
-			   $scope.viewsRetrieve.format_output = '1';
-			   $scope.viewsRetrieve.filters = "?????";
+			   $scope.viewsRetrieve.format_output = '0';
+			   $scope.viewsRetrieve.filters = "";
+			   $scope.viewsRetrieve.exp_filters = 'comment_count=4';
+			   $scope.viewsRetrieve.exp_sort = "sort_by=created&sort_order=ASC";
 
 			   $scope.callViewsRecourceRetrieve = function(viewsRetrieve) {
 				   requestStart = Date.now();
 		
-				   ViewsResource.retrieve(viewsRetrieve.view_name, viewsRetrieve.display_id, viewsRetrieve.args, viewsRetrieve.offset, viewsRetrieve.limit, viewsRetrieve.format_output,  viewsRetrieve.filters ).then(
+				   ViewsResource.retrieve(viewsRetrieve.view_name, viewsRetrieve.display_id, viewsRetrieve.args, viewsRetrieve.offset, viewsRetrieve.limit, viewsRetrieve.format_output,  viewsRetrieve.exp_filters, viewsRetrieve.exp_sort  ).then(
 						//conncet success
 				    	function(data) { console.log('views retrieve success'); },
 				    	//conncet error

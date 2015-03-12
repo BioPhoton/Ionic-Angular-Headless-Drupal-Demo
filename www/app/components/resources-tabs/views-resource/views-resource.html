@@ -10,7 +10,7 @@
               ng-class="{active: isRequestShown(key)}">
         <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
       &nbsp;
-      AttachFile Request {{key}} at {{request.requestStart | date}}
+      Retrieve Request {{key}} at {{request.requestStart | date}}
     </ion-item>
     <ion-item class="item-accordion"
               ng-repeat="(name, value) in request"
@@ -30,6 +30,9 @@
 <label class="item item-input">
 	<input type="text" ng-model="viewsRetrieve.display_id" placeholder="display_id" >
 </label>
+<p>
+Views Administration -> Advanced -> Other -> Machine Name: services_1 
+</p>
 
 <label class="item item-input">
 	<input type="text" ng-model="viewsRetrieve.args" placeholder="args" >
@@ -49,6 +52,17 @@
 
 <label class="item item-input">
 	<input type="text" ng-model="viewsRetrieve.filters" placeholder="filters" >
+</label>
+	<p><b>Exposed filters:</b><br/>
+	<span class="">The filters have to be exposed in the view</span>
+</p>
+
+<label class="item item-input">
+	<input type="text" ng-model="viewsRetrieve.exp_filters" placeholder="exp_filters" >
+</label>
+
+<label class="item item-input">
+	<input type="text" ng-model="viewsRetrieve.exp_sort" placeholder="exp_sort" >
 </label>
 
 <button class="button button-small" ng-click="callViewsRecourceRetrieve(viewsRetrieve)">callViewsRecourceRetrieve</button>
