@@ -1,12 +1,12 @@
 /* Controllers of apiServicesControllers component */
 //______________________________________________
-var anonSystemResourceControllers = angular.module('resources.system-resource.controllers', []);
+var anonSystemResourceControllers = angular.module('resources.system-resource.controllers', ['systemRecourceModules']);
 
 
 /* System Resource Controller */
 anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl', 
-		   ['$scope', 'SystemResource', 'UserResource', 'drupalApiNotificationChannel', 
-    function($scope,   SystemResource,   UserResource,   drupalApiNotificationChannel ) {
+		   ['$scope', 'drupalApiConfig', 'systemResourceChannel', 'SystemResource', 
+    function($scope,   drupalApiConfig,   systemResourceChannel,   SystemResource ) {
 			  
 			   $scope.toggleRequest = function(request) {
 				     if ($scope.isRequestShown(request)) {
@@ -40,12 +40,12 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 					    );
 			   };
 			   //
-			   drupalApiNotificationChannel.onSystemConnectConfirmed($scope, function(data) { 
+			   systemResourceChannel.onSystemConnectConfirmed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.systemConnectRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
 			 
-			   drupalApiNotificationChannel.onSystemConnectFailed($scope, function(data) { 
+			   systemResourceChannel.onSystemConnectFailed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.systemConnectRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
@@ -66,12 +66,12 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 						    );
 			   };
 			   //
-			   drupalApiNotificationChannel.onSystemGetVariableConfirmed($scope, function(data) { 
+			   systemResourceChannel.onSystemGetVariableConfirmed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.systemGetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
 			 
-			   drupalApiNotificationChannel.onSystemGetVariableFailed($scope, function(data) { 
+			   systemResourceChannel.onSystemGetVariableFailed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.systemGetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
@@ -93,12 +93,12 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 					    );
 			   };
 			   //
-			   drupalApiNotificationChannel.onSystemSetVariableConfirmed($scope, function(data) { 
+			   systemResourceChannel.onSystemSetVariableConfirmed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.systemSetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
 			 
-			   drupalApiNotificationChannel.onSystemSetVariableFailed($scope, function(data) { 
+			   systemResourceChannel.onSystemSetVariableFailed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.systemSetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
@@ -120,12 +120,12 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 				    );
 			   };
 			   //
-			   drupalApiNotificationChannel.onSystemDelVariableConfirmed($scope, function(data) { 
+			   systemResourceChannel.onSystemDelVariableConfirmed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.systemDelVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
 			 
-			   drupalApiNotificationChannel.onSystemDelVariableFailed($scope, function(data) { 
+			   systemResourceChannel.onSystemDelVariableFailed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.systemDelVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });

@@ -10,6 +10,10 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'common.drupal.api-resources',
   'common.accesss-control',
   'common.services.localstorage',
+  
+  'systemRecourceModules',
+  
+  
 
   'app.controllers',
   'tour.controllers',
@@ -247,8 +251,8 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
       console.log('want go from ' + fromState.name + ' to ' + toState.name); 
       
-      var firstVisit = $localstorage.getItem('firstVisit', false);
-      var isRegistered = $localstorage.getItem('isRegistered', false);
+      var firstVisit = 1; //$localstorage.getItem('firstVisit', false);
+      var isRegistered = 1; //$localstorage.getItem('isRegistered', false);
       //AccessControlService.authorize(toState.data.access);
       
       // if its the users first visit to the app play the apps tour
