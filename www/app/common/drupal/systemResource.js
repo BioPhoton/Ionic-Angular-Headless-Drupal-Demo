@@ -47,12 +47,14 @@ drupalApiService.service('systemResourceChannel', ['$rootScope', 'systemResource
   // Connect Action
   // Publish system connect confirmed event
   var publishSystemConnectConfirmed = function (user) {
+	  console.log('publishSystemConnectConfirmed'); 
       $rootScope.$broadcast(drupalApiConfig.system_connectConfirmed, {user: user});
   };
   // Subscribe to system connect confirmed event
   var onSystemConnectConfirmed = function($scope, handler) {
   	$scope.$on(drupalApiConfig.system_connectConfirmed, function(event, args) {
-	    handler(args.user);
+  		console.log('in onSystemConnectConfirmed');
+  		handler(args.user);
 	   });	
   };
   
@@ -202,6 +204,7 @@ drupalAPI.service('SystemResource', [ 'drupalApiConfig', 'systemResourceConfig',
 		
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
+			console.log('ASDF'); 
 			systemResourceChannel.publishSystemConnectConfirmed(data);
 			defer.resolve(data);
 		})

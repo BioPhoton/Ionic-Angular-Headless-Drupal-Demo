@@ -42,11 +42,13 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 			   //
 			   systemResourceChannel.onSystemConnectConfirmed($scope, function(data) { 
 				   requestEnd = Date.now();
-	    		   $scope.systemConnectRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+				   console.log('onSystemConnectConfirmed'); 
+	    		   $scope.systemConnectRequests.push({requestStart:requestStart, requestEnd:requestEnd, requestDuration:requestEnd-requestStart, data:data});
 			   });
 			 
 			   systemResourceChannel.onSystemConnectFailed($scope, function(data) { 
 				   requestEnd = Date.now();
+				   console.log('onSystemConnectFailed'); 
 	    		   $scope.systemConnectRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
 			   
@@ -68,6 +70,7 @@ anonSystemResourceControllers.controller('ResourcesSystemResourceCtrl',
 			   //
 			   systemResourceChannel.onSystemGetVariableConfirmed($scope, function(data) { 
 				   requestEnd = Date.now();
+				   console.log('onSystemGetVariableConfirmed'); 
 	    		   $scope.systemGetVariableRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
 			 
