@@ -1,7 +1,7 @@
 /**
  * Drupal Api authentication service
  */
-var ApiAuthModules = angular.module('ApiAuthModules', ['drupal.configurations', 'ipCookie']);
+var ApiAuthModules = angular.module('ApiAuthModules', ['drupal.configurations', 'SystemRecourceModules', 'UserResourceModules', 'ipCookie']);
 
 
 //@TODO config provider
