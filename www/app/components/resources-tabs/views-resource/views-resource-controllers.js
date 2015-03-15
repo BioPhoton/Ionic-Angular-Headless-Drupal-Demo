@@ -33,7 +33,7 @@ ViewsResourceControllers.controller('ResourcesViewsResourceCtrl',
 			   //path params for retrieve request
 			   $scope.viewsRetrieve = {};
 			   $scope.viewsRetrieve.view_name = 'testview';
-			   $scope.viewsRetrieve.display_id = 'page_1';
+			   $scope.viewsRetrieve.display_id = 'page';
 			   $scope.viewsRetrieve.args = '';
 			   $scope.viewsRetrieve.offset = '1';
 			   $scope.viewsRetrieve.limit = '2';
