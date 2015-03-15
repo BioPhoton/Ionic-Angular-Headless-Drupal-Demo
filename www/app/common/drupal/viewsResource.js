@@ -116,7 +116,7 @@ ViewsResourceModules.service('ViewsResource', [ 'drupalApiConfig', 'ViewsResourc
 	var retrieve = function(view_name, display_id, args, offset, limit, format_output, filters, exp_sort){
 		
 		var retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + ViewsResourceConfig.resourcePath + '/' + view_name; 
-		retrievePath +=  ((display_id || args || offset || limit || format_output || filters || exp_filters || exp_sort)?'?':'');
+		retrievePath +=  ((display_id || args || offset || limit || format_output || filters || exp_sort)?'?':'');
 		retrievePath += ( (display_id)?('display_id='+display_id+'&'):'') + ((args)?('args='+args+'&'):'') + ((offset)?('offset='+offset+'&'):'') + ((limit)?('limit='+limit+'&'):'') + ((format_output)?('format_output='+format_output+'&'):'') + ((filters)?(filters+'&'):'');
 		retrievePath +=  ((exp_sort)?(exp_sort):'') 
 		

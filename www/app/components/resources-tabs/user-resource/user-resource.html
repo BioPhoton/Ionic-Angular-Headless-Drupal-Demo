@@ -5,7 +5,6 @@
 
 
 <h2>Retrieve</h2>
-{{userRetrieveRequests}}
 <ion-list>
   <div ng-repeat="(key,request) in userRetrieveRequests">
     <ion-item class="item-stable"
@@ -56,16 +55,16 @@
 </ion-list>
 
 <label class="item item-input">
-<input type="text" ng-init="userIndex.page=0" ng-model="userIndex.page" placeholder="page" >
+<input type="text"  ng-model="userIndex.page" placeholder="page" >
 </label>
 <label class="item item-input">
-<input type="text" ng-init="userIndex.pagesize=5" ng-model="userIndex.pagesize" placeholder="pagesize" >
+<input type="text"  ng-model="userIndex.pagesize" placeholder="pagesize" >
 </label>
 <label class="item item-input">
-<input type="text" ng-init="userIndex.fields='uid, created, type, title'" ng-model="userIndex.fields" placeholder="fields" >
+<input type="text" ng-model="userIndex.fields" placeholder="fields" >
 </label>
 <label class="item item-input">
-<input type="text" ng-init="userIndex.parameters='uid=1, type=page, '" ng-model="userIndex.parameters" placeholder="parameters" >
+<input type="text" ng-model="userIndex.parameters" placeholder="parameters" >
 </label>
 <button class="button button-small" ng-click="callUserRecourceIndex(userIndex)">callUserRecourceRetrieve</button>
 

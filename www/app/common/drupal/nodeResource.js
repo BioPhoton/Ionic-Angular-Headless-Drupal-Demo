@@ -316,7 +316,6 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceCo
 	
 	/*
 	 * getPreparedIndexParams
-	 * http://drupal.aspcode.net/ppst/63547274810018958013876/drupal-services-node-filtering
 	 * */
 	var getPreparedIndexParams = function(page, fields, parameters, pagesize) {
 		
@@ -450,7 +449,7 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceCo
 	 * 
 	 */
 	var create = function( node ) {
-		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + NodeResourceConfig.actions.create,
+		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath,
 		defer = $q.defer(),
 		requestConfig = {
 			method :'POST',

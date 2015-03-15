@@ -19,10 +19,10 @@ UserResourceModules.constant("UserResourceConfig", {
 	//actions of user resource
 	actions : {
 		//retrieve 				: 'retrieve',
-		create 					: 'create',
+		//create 				: 'create',
 		//update 				: 'update',
 		//delete 				: 'delete',
-		//index 				: 'index',
+	    //index 				: 'index',
 		login 					: 'login',
 		logout 					: 'logout',
 		token 					: 'token',
@@ -38,6 +38,22 @@ UserResourceModules.constant("UserResourceConfig", {
 	// Constants for UserResourceChannel
 	//
 	// Actions:
+	// Retrieve action
+	user_retrieveConfirmed  : 'event:drupal-user-retrieveConfirmed',
+	user_retrieveFailed  	: 'event:drupal-user-retrieveFailed',
+	// Create action
+	user_createConfirmed	: 'event:drupal-user-createConfirmed',
+	user_createFailed  		: 'event:drupal-user-createFailed',
+	// Update action
+	user_updateConfirmed	: 'event:drupal-user-updateConfirmed',
+	user_updateFailed  		: 'event:drupal-user-updateFailed',
+	// Delete action
+	user_deleteConfirmed	: 'event:drupal-user-deleteConfirmed',
+	user_deleteFailed  		: 'event:drupal-user-deleteFailed',
+	// Index action
+	user_indexConfirmed  	: 'event:drupal-user-indexConfirmed',
+	user_indexFailed  		: 'event:drupal-user-indexFailed',
+	
 	// Token action
 	user_tokenConfirmed  	: 'event:drupal-user-tokenConfirmed',
 	user_tokenFailed  		: 'event:drupal-user-tokenFailed',
@@ -60,17 +76,136 @@ UserResourceModules.constant("UserResourceConfig", {
 UserResourceModules.service('UserResourceChannel', ['$rootScope', 'UserResourceConfig',
                                            function ($rootScope,   UserResourceConfig) {	
 	
+	// Retrieve action
+
+	// Publish retrieve token confirmed event
+    var publishUserRetrieveConfirmed = function (user) {
+        $rootScope.$broadcast(UserResourceConfig.user_retrieveConfirmed, {user: user});
+    };
+    // Subscribe to user token confirmed event
+    var onUserRetrieveConfirmed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_retrieveConfirmed, function(event, args) {
+    		handler(args.user);
+	   });	
+    };
+    
+    // Publish user recieve failed event
+    var publishUserRetrieveFailed = function (error) {
+        $rootScope.$broadcast(UserResourceConfig.user_retrieveFailed, {error: error});
+    };
+    // Subscribe to user token failed event
+    var onUserRetrieveFailed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_retrieveFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+// Create action
+	
+	// Publish user create confirmed event
+    var publishUserCreateConfirmed = function (user) {
+        $rootScope.$broadcast(UserResourceConfig.user_createConfirmed, {user: user});
+    };
+    // Subscribe to user create confirmed event
+    var onUserCreateConfirmed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_createConfirmed, function(event, args) {
+	    handler(args.user);
+	   });	
+    };
+  
+	// Publish create create failed event
+    var publishUserCreateFailed = function (error) {
+        $rootScope.$broadcast(UserResourceConfig.user_createFailed, {error: error});
+    };
+    // Subscribe to user create failed event
+    var onUserCreateFailed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_createFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    // Update action
+    
+	// Publish user update confirmed event
+    var publishUserUpdateConfirmed = function (user) {
+        $rootScope.$broadcast(UserResourceConfig.user_updateConfirmed, {user: user});
+    };
+    // Subscribe to user update confirmed event
+    var onUserUpdateConfirmed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_updateConfirmed, function(event, args) {
+	    handler(args.user);
+	   });	
+    };
+    
+	// Publish user update failed event
+    var publishUserUpdateFailed = function (error) {
+        $rootScope.$broadcast(UserResourceConfig.user_updateFailed, {error: error});
+    };
+    // Subscribe to user update failed event
+    var onUserUpdateFailed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_updateFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    // Delete action
+    
+	// Publish user delete confirmed event
+    var publishUserDeleteConfirmed = function (user) {
+        $rootScope.$broadcast(UserResourceConfig.user_deleteConfirmed, {user: user});
+    };
+    // Subscribe to user delete confirmed event
+    var onUserDeleteConfirmed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_deleteConfirmed, function(event, args) {
+	    handler(args.user);
+	   });	
+    };
+    
+	// Publish user delete failed event
+    var publishUserDeleteFailed = function (error) {
+        $rootScope.$broadcast(UserResourceConfig.user_deleteFailed, {error: error});
+    };
+    // Subscribe to user delete failed event
+    var onUserDeleteFailed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_deleteFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    
+    // Index action
+
+	// Publish retrieve index confirmed event
+    var publishUserIndexConfirmed = function (data) {
+        $rootScope.$broadcast(UserResourceConfig.user_indexConfirmed, {data: data});
+    };
+    // Subscribe to user index confirmed event
+    var onUserIndexConfirmed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_indexConfirmed, function(event, args) {
+    		handler(args.data);
+	   });	
+    };
+    // Publish user index failed event
+    var publishUserIndexFailed = function (error) {
+        $rootScope.$broadcast(UserResourceConfig.user_indexFailed, {error: error});
+    };
+    // Subscribe to user token failed event
+    var onUserIndexFailed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_indexFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+	
     // Token action
 
 	// Publish user token confirmed event
     var publishUserTokenConfirmed = function (token) {
-    	console.log(token, UserResourceConfig.user_registerConfirmed); 
-        $rootScope.$broadcast(UserResourceConfig.user_registerConfirmed, {token: token});
+        $rootScope.$broadcast(UserResourceConfig.user_tokenConfirmed, {token: token});
     };
     // Subscribe to user token confirmed event
     var onUserTokenConfirmed = function($scope, handler) {
-    	
-    	$scope.$on(UserResourceConfig.user_registerConfirmed, function(event, args) {
+    	$scope.$on(UserResourceConfig.user_tokenConfirmed, function(event, args) {
     		console.log(args); 
     		handler(args.token);
 	   });	
@@ -78,11 +213,11 @@ UserResourceModules.service('UserResourceChannel', ['$rootScope', 'UserResourceC
     
     // Publish user token failed event
     var publishUserTokenFailed = function (error) {
-        $rootScope.$broadcast(UserResourceConfig.user_registerFailed, {error: error});
+        $rootScope.$broadcast(UserResourceConfig.user_tokenFailed, {error: error});
     };
     // Subscribe to user token failed event
     var onUserTokenFailed = function($scope, handler) {
-    	$scope.$on(UserResourceConfig.user_registerFailed, function(event, args) {
+    	$scope.$on(UserResourceConfig.user_tokenFailed, function(event, args) {
 	    handler(args.error);
 	   });	
     };
@@ -163,6 +298,31 @@ UserResourceModules.service('UserResourceChannel', ['$rootScope', 'UserResourceC
 
  // public methods
  return {	   
+	   // Retrieve events
+	   publishUserRetrieveConfirmed 	: publishUserRetrieveConfirmed,
+	   onUserRetrieveConfirmed			: onUserRetrieveConfirmed,
+	   publishUserRetrieveFailed		: publishUserRetrieveFailed,
+	   onUserRetrieveFailed				: onUserRetrieveFailed,
+	   // Create action
+	   publishUserCreateConfirmed		: publishUserCreateConfirmed,
+	   onUserCreateConfirmed			: onUserCreateConfirmed,
+	   publishUserCreateFailed			: publishUserCreateFailed,
+	   onUserCreateFailed 				: onUserCreateFailed,
+	   // Update action
+	   publishUserUpdateConfirmed		: publishUserUpdateConfirmed,
+	   onUserUpdateConfirmed			: onUserUpdateConfirmed,
+	   publishUserUpdateFailed			: publishUserUpdateFailed,
+	   onUserUpdateFailed 				: onUserUpdateFailed,
+	   // Delete action
+	   publishUserDeleteConfirmed		: publishUserDeleteConfirmed,
+	   onUserDeleteConfirmed			: onUserDeleteConfirmed,
+	   publishUserDeleteFailed			: publishUserDeleteFailed,
+	   onUserDeleteFailed 				: onUserDeleteFailed,
+	   // Index events
+	   publishUserIndexConfirmed 		: publishUserIndexConfirmed,
+	   onUserIndexConfirmed				: onUserIndexConfirmed,
+	   publishUserIndexFailed			: publishUserIndexFailed,
+	   onUserIndexFailed				: onUserIndexFailed,
 	   // Token events
 	   publishUserTokenConfirmed 		: publishUserTokenConfirmed,
 	   onUserTokenConfirmed				: onUserTokenConfirmed,
@@ -200,6 +360,76 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	
 
 	/*
+	 * getPreparedIndexParams
+	 * */
+	var getPreparedIndexParams = function(page, fields, parameters, pagesize) {
+		
+		var preparedIndexParams = [],
+			ampersand = '&';
+		
+		//Prepare page param
+		page = (page || page === 0)?page:false;
+		if(page !== false) {page = (parseInt(page) != NaN)?parseInt(page):false; }
+		if(page !== false && page !== NaN) { 
+			page = "page="+page;
+			preparedIndexParams += (preparedIndexParams != '')?ampersand+page:page; 
+			}
+			
+		//Prepare pagesize param
+		pagesize = (pagesize)?pagesize:false;
+		if(pagesize !== false) { pagesize = (parseInt(pagesize) != NaN)?parseInt(pagesize):false; }
+		if(pagesize !== false) { 
+			pagesize = "pagesize="+pagesize;
+			preparedIndexParams += (preparedIndexParams != '')?ampersand+pagesize:pagesize; 
+			}
+		
+		//Prepare fields param
+		fields = (fields)?fields:false;
+		if(fields !== false) {
+			//parse array
+			fields = fields.split(',');
+			var newFields = [];
+			
+			angular.forEach(fields, function(value, key) {
+			
+				if(value.trim() != '') {
+					this.push(value.trim()+ (fields.length >= key?'':','));
+				}
+			},newFields);
+			fields = newFields;
+		}
+		if(fields !== false) { 
+			fields = "fields="+fields;
+			preparedIndexParams += (preparedIndexParams != '')?ampersand+fields:fields; 
+		}
+		
+		//Prepare parameters param
+		parameters = (parameters)?parameters:false;
+		if(parameters !== false) {
+
+			parameters = parameters.split(',');
+			var newParameters = '',
+				param = '';
+			angular.forEach(parameters, function(value, key) {
+				if(value.trim() != '' ) {
+					value = value.split('=');
+					if(value[0].trim() != '' && value[1].trim()) {
+						param = "parameters['"+value[0].trim() + "']="+ value[1];
+						newParameters += (newParameters != '')?ampersand+param:param;
+					}
+				}
+			});
+			parameters = newParameters;
+		}
+		if(parameters !== false) { 
+			preparedIndexParams += (preparedIndexParams != '')?ampersand+parameters:parameters; 
+		}
+		
+		return preparedIndexParams;
+	};
+	
+	
+	/*
 	 * retrieve
 	 * 
 	 * Retrieve a user
@@ -218,25 +448,35 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 		requestConfig = {
 			method :'GET',
 			url : retrievePath
-		};
+		},
+		errors = [];
+		
+	//if not given
+	if(!uid) { errors.push('Param uid is required.'); }
 	
-	if(!uid) { defer.reject(['Param uid is required.']); }
-	else {
-		$http(requestConfig)
-		.success(function(data, status, headers, config){
-			defer.resolve(data);
-		})
-		.error(function(data, status, headers, config){
-			defer.reject(data);
-		});
-	}
+	if(errors.length != 0) {
+		UserResourceChannel.publishUserRetrieveFailed(errors);
+		defer.reject(errors); 
+		return defer.promise;
+	};
+	
+	$http(requestConfig)
+	.success(function(user, status, headers, config){
+		UserResourceChannel.publishUserRetrieveConfirmed(user);
+		defer.resolve(user);
+	})
+	.error(function(data, status, headers, config){
+		UserResourceChannel.publishUserRetrieveFailed(data);
+		defer.reject(data);
+	});
+
 	return defer.promise;
 	};
 	
 	/*
 	 * create
 	 * 
-	 * Retrieve a user
+	 * Create a user
 	 * Method: POST
 	 * Url: http://drupal_instance/api_endpoint/user
 	 * Headers: Content-Type:application/json
@@ -247,7 +487,39 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * 
 	 */
 	var create = function( account ) {
-		return;
+		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath,
+		defer = $q.defer(),
+		requestConfig = {
+			method :'POST',
+			url : createPath,
+			data : {
+				account : account
+			}
+		},
+		errors = [];
+		
+		//if not given
+		if(!account) { errors.push('Param account is required.'); }
+		//if is not an array
+		if( account instanceof Array ) { errors.push('Param account has to be an array.'); }
+		
+		if(errors.length != 0) {
+			UserResourceChannel.publishUserCreateFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		}
+		
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			UserResourceChannel.publishUserCreateConfirmed(data);
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			UserResourceChannel.publishUserCreateFailed(data);
+			defer.reject(data);
+		});
+		
+		return defer.promise;
 	};
 
 	/*
@@ -295,14 +567,41 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * 
 	 * @param 	{Integer} page The zero-based index of the page to get. defaults to 0., required:false, source:param
 	 * @param 	{String} fields The fields to get., required:false, source:param
+	 * uid,name,mail,theme,signature,signature_format,created,access,login,status,timezone,language,picture,init,data
 	 * @param 	{Array} parameters Parameters, required:false, source:param
 	 * @param 	{Integer} pagesize Number of records to get per page., required:false, source:param
+	 * 
 	 * 
 	 * @return 	{Promise}
 	 * 
 	 */
 	var index = function( page, fields, parameters, pagesize ) {
-		return;
+		var IndexParams = getPreparedIndexParams(page, fields, parameters, pagesize),
+		retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + (IndexParams?'?'+IndexParams:''),
+		defer = $q.defer(),
+		requestConfig = {
+			method :'GET',
+			url : retrievePath,
+		},
+		errors = [];
+	
+	if(errors.length != 0) {
+		UserResourceChannel.publishUserIndexFailed(errors);
+		defer.reject(errors); 
+		return defer.promise;
+	};
+	
+	$http(requestConfig)
+	.success(function(data, status, headers, config){
+		UserResourceChannel.publishUserIndexConfirmed(data);
+		defer.resolve(data);
+	})
+	.error(function(data, status, headers, config){
+		UserResourceChannel.publishUserIndexFailed(data);
+		defer.reject(data);
+	});
+	
+	return defer.promise;
 	};
 			
 	/*
