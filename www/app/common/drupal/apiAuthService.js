@@ -68,6 +68,34 @@ ApiAuthModules.service('ApiAuthChannel', ['$rootScope', 'ApiAuthServiceConfig',
  	};
 }]);
 
+
+ApiAuthModules.run( ['$rootScope', 'UserResourceChannel', 'ApiAuthService', 'ApiAuthServiceConfig', '$http',
+             function($rootScope,   UserResourceChannel,   ApiAuthService,   ApiAuthServiceConfig,   $http) {
+			
+		$http.defaults.withCredentials = true; //cookies
+		
+		//on login request confirmed store data and set new token in request headers
+		var onUserLoginConfirmedHandler = function(data) { 
+			ApiAuthService.storeTokenData(data.token);
+			ApiAuthService.storeSessionData(data);
+			ApiAuthService.setConnectionState(true);
+			ApiAuthService.setCurrentUser(data.user);
+		};
+		UserResourceChannel.onUserLoginConfirmed($rootScope, onUserLoginConfirmedHandler);
+		
+		//on logout request confirmed delete data and remove token from request headers
+		var onUserLogoutConfirmedHandler = function(data) {
+			//@TODO check if this is needed
+			ApiAuthService.deleteTokenData();
+			ApiAuthService.deleteSessionData();
+			ApiAuthService.setConnectionState(false);
+			ApiAuthService.setCurrentUser(ApiAuthServiceConfig.anonymousUser);
+			
+			ApiAuthService.refreshConnection();
+		};
+		UserResourceChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);		
+}]);
+
 /**
  * ApiAuthService
  * 
@@ -285,32 +313,5 @@ ApiAuthModules.service('ApiAuthService', [ '$rootScope', 'drupalApiConfig', 'Api
 			getLastConnectTime 					: getLastConnectTime,
 			
 		};
-}]);
-	
-ApiAuthModules.run( ['$rootScope', 'UserResourceChannel', 'ApiAuthService', '$http',
-             function($rootScope,   UserResourceChannel,   ApiAuthService,   $http) {
-			
-		$http.defaults.withCredentials = true; //cookies
-		
-		//on login request confirmed store data and set new token in request headers
-		var onUserLoginConfirmedHandler = function(data) { 
-			ApiAuthService.storeTokenData(data.token);
-			ApiAuthService.storeSessionData(data);
-			ApiAuthService.setConnectionState(true);
-			ApiAuthService.setCurrentUser(data.user);
-		};
-		UserResourceChannel.onUserLoginConfirmed($rootScope, onUserLoginConfirmedHandler);
-		
-		//on logout request confirmed delete data and remove token from request headers
-		var onUserLogoutConfirmedHandler = function(data) {
-			//@TODO check if this is needed
-			ApiAuthService.deleteTokenData();
-			ApiAuthService.deleteSessionData();
-			ApiAuthService.setConnectionState(false);
-			ApiAuthService.setCurrentUser(ApiAuthServiceConfig.anonymousUser);
-			
-			ApiAuthService.refreshConnection();
-		};
-		UserResourceChannel.onUserLogoutConfirmed($rootScope, onUserLogoutConfirmedHandler);		
 }]);
 
