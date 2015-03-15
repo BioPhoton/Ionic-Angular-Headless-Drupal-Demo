@@ -32,6 +32,102 @@
 <button class="button button-small" ng-click="callUserRecourceRetrieve(userRetrieve.uid)">callUserRecourceRetrieve</button>
 <hr />
 
+<h2>Create</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in userCreateRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Create Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="userCreate.name" placeholder="User name" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="userCreate.mail" placeholder="User email" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="userCreate.pass" placeholder="User password" >
+</label>
+
+<button class="button button-small" ng-click="callUserRecourceCreate(userCreate)">call UserRecource.create</button>
+<hr />
+<h2>Update</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in userUpdateRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Update Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+<label class="item item-input">
+<input type="text" ng-model="userUpdate.uid" placeholder="Uid" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="userUpdate.name" placeholder="User name" >
+</label>
+
+
+<button class="button button-small" ng-click="callUserRecourceUpdate(userUpdate)">call UserRecource.update</button>
+
+<hr />
+
+<h2>Delete</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in userDeleteRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Delete Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="userDelete.uid" placeholder="nid" >
+</label>
+<button class="button button-small" ng-click="callUserRecourceDelete(userDelete.uid)">call UserRecource.delete</button>
+
+<hr />
+
 <h2>Index</h2>
 <ion-list>
   <div ng-repeat="(key,request) in userIndexRequests">

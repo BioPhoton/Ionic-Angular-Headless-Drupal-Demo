@@ -493,7 +493,8 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 			method :'POST',
 			url : createPath,
 			data : {
-				account : account
+				account : account,
+				
 			}
 		},
 		errors = [];
@@ -537,7 +538,41 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * 
 	 */
 	var update = function( uid, data ) {
-		return;
+		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + uid,
+		defer = $q.defer(),
+		requestConfig = {
+			method :'PUT',
+			url : createPath,
+			data : {
+				data : data
+			}
+		},
+		errors = [];
+		
+		//if not given
+		if(!uid) { errors.push('Param uid is required.'); }
+		//if not given
+		if(!data) { errors.push('Param data is required.'); }
+		//if is not an array
+		if( data instanceof Array ) { errors.push('Param data has to be an array.');}
+		
+		if(errors.length != 0) {
+			UserResourceChannel.publishUserUpdateFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		};
+
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			UserResourceChannel.publishUserUpdateConfirmed(data);
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			UserResourceChannel.publishUserUpdateFailed(data);
+			defer.reject(data);
+		});
+	
+		return defer.promise;
 	};
 
 	/*
@@ -554,7 +589,34 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * 
 	 */
 	var _delete = function( uid ) {
-		return;
+		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + uid,
+		defer = $q.defer(),
+		requestConfig = {
+			method :'DELETE',
+			url : createPath
+		},
+		errors = [];
+	
+		//if not given
+		if(!uid) { errors.push('Param uid is required.');}
+
+		if(errors.length != 0) {
+			UserResourceChannel.publishUserDeleteFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		};
+		
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			UserResourceChannel.publishUserDeleteConfirmed(data);
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			UserResourceChannel.publishUserDeleteFailed(data);
+			defer.reject(data);
+		});
+	
+		return defer.promise;
 	};
 	
 	/*
@@ -840,9 +902,9 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	//public methods	
 	return {
 		retrieve : retrieve,
-		//create : create,
-		//update : update,
-		//_delete : _delete,
+		create : create,
+		update : update,
+		_delete : _delete,
 		index : index,
 		login : login,
 		logout : logout,

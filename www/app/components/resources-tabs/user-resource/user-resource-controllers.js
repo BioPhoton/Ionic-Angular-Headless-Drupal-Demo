@@ -59,6 +59,9 @@ userResourceControllers.controller('ResourcesUserResourceCtrl',
 			   //get params for create request
 			   //NOTE: username is set automatically on server through authed request
 			   $scope.userCreate = {};
+			   $scope.userCreate.name = 'test_name';
+			   $scope.userCreate.mail = 'test@name.com';
+			   $scope.userCreate.pass = 'testPassword';
 			     
 			   $scope.callUserRecourceCreate = function(user) {
 				   requestStart = Date.now();
@@ -90,7 +93,8 @@ userResourceControllers.controller('ResourcesUserResourceCtrl',
 				   //get params for create request
 				   //NOTE: username is set automatically on server through authed request
 				   $scope.userUpdate = {};
-				   $scope.userUpdate.uid = null; 
+				   $scope.userUpdate.uid = null;
+				   $scope.userUpdate.name = 'test_name';
 				   
 				  
 				   $scope.callUserRecourceUpdate = function(user) {
