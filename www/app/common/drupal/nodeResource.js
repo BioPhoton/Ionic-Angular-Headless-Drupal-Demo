@@ -405,7 +405,7 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceCo
 	 */
 	var retrieve = function(nid){
 
-		var retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + NodeResourceConfig.resourcePath + '/' + nid,
+		var retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid,
 			defer = $q.defer(),
 			requestConfig = {
 				method :'GET',
@@ -450,7 +450,7 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceCo
 	 * 
 	 */
 	var create = function( node ) {
-		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + NodeResourceConfig.resourcePath + NodeResourceConfig.actions.create,
+		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + NodeResourceConfig.actions.create,
 		defer = $q.defer(),
 		requestConfig = {
 			method :'POST',
@@ -500,7 +500,7 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceCo
 	 * 
 	 */
 	var update = function( nid, node ) {
-		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + NodeResourceConfig.resourcePath + '/' + nid,
+		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid,
 		defer = $q.defer(),
 		requestConfig = {
 			method :'PUT',
@@ -552,7 +552,7 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceCo
 	 */
 	var _delete = function( nid ) {
 		
-		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + NodeResourceConfig.resourcePath + '/' + nid,
+		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid,
 		defer = $q.defer(),
 		requestConfig = {
 			method :'DELETE',
@@ -607,7 +607,7 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceCo
 	var index = function(page, fields, parameters, pagesize) {
 		
 		var IndexParams = getPreparedIndexParams(page, fields, parameters, pagesize),
-			retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + NodeResourceConfig.resourcePath + (IndexParams?'?'+IndexParams:''),
+			retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + (IndexParams?'?'+IndexParams:''),
 			defer = $q.defer(),
 			requestConfig = {
 				method :'GET',
@@ -653,7 +653,7 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceCo
 	 */
 	var files = function(nid, file_contents, image_styles) {
 		console.log(nid, file_contents, image_styles); 
-		var attachFilePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + NodeResourceConfig.resourcePath + '/' + nid + '/' + NodeResourceConfig.actions.files + ((file_contents)?('/'+file_contents):'')+((image_styles)?('/'+image_styles):''),
+		var attachFilePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid + '/' + NodeResourceConfig.actions.files + ((file_contents)?('/'+file_contents):'')+((image_styles)?('/'+image_styles):''),
 			defer = $q.defer(),
 			requestConfig = {
 				method :'GET',
@@ -702,7 +702,7 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceCo
 	 */
 	var comments = function(nid, count, offset) {
 		
-		var attachFilePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + NodeResourceConfig.resourcePath + '/' + nid +'/' + NodeResourceConfig.actions.comments + '/' + ((count != undefined ||  offset != undefined)?'?':'')+ ((count != undefined)?('count='+count+','):'') + ((offset != undefined)?('offset=' + offset):''),
+		var attachFilePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid +'/' + NodeResourceConfig.actions.comments + '/' + ((count != undefined ||  offset != undefined)?'?':'')+ ((count != undefined)?('count='+count+','):'') + ((offset != undefined)?('offset=' + offset):''),
 			defer = $q.defer(),
 			requestConfig = {
 				method :'GET',
@@ -752,7 +752,7 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceCo
 	 */
 	var attach_file = function(nid, field_name, attach, field_values) {
 		
-		var attachFilePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + NodeResourceConfig.resourcePath + '/' + nid + '/' + NodeResourceConfig.actions.attach_file,
+		var attachFilePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid + '/' + NodeResourceConfig.actions.attach_file,
 			defer = $q.defer(),
 			requestConfig = {
 				method :'POST',

@@ -3,15 +3,16 @@
 <ion-content>
 <h1>UserResource</h1>
 
-<h2>Token</h2>
+
+<h2>Retrieve</h2>
 <ion-list>
-  <div ng-repeat="(key,request) in userTokenRequests">
+  <div ng-repeat="(key,request) in userRetrieveRequests">
     <ion-item class="item-stable"
               ng-click="toggleRequest(key)"
               ng-class="{active: isRequestShown(key)}">
         <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
       &nbsp;
-      Token Request {{key}} at {{request.requestStart | date}}
+      Retrieve Request {{key}} at {{request.requestStart | date}}
     </ion-item>
     <ion-item class="item-accordion"
               ng-repeat="(name, value) in request"
@@ -24,20 +25,6 @@
     </ion-item>
   </div>
 </ion-list>
-<button class="button button-small" ng-click="callUserRecourceToken()">call UserRecource token</button>
-<hr />
-
-
-<h2>Retrieve</h2>
-<div ng-repeat="request in userRetrieveRequests">
-	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
-	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
-	<b>Duration:</b> {{request.requestDuration}}<br />
-	<b>Data:</b> 
-	<pre>
-	{{ request.data | json}}
-	</pre>
-</div>
 
 <label class="item item-input">
 <input type="text" ng-init="userRetrieve.uid=1" ng-model="userRetrieve.uid" placeholder="uid" >
@@ -46,15 +33,26 @@
 <hr />
 
 <h2>Index</h2>
-<div ng-repeat="request in userIndexRequests">
-	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
-	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
-	<b>Duration:</b> {{request.requestDuration}}<br />
-	<b>Data:</b> 
-	<pre>
-	{{ request.data | json}}
-	</pre>
-</div>
+<ion-list>
+  <div ng-repeat="(key,request) in userIndexRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Retrieve Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
 
 <label class="item item-input">
 <input type="text" ng-init="userIndex.page=0" ng-model="userIndex.page" placeholder="page" >
@@ -73,11 +71,29 @@
 <hr />
 
 
+
+
 <h2>Register User</h2>
-<b>registerData:</b>
-<pre>
-	{{registerData | json}}
-</pre>
+<ion-list>
+  <div ng-repeat="(key,request) in userRegisterRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Retrieve Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
 <form name="registerForm" novalidate="" ng-submit="register(registerForm)">
 	<div class="form-errors" ng-show="registerForm.$submitted">
 		<div ng-bind-html="error" class="form-error"
@@ -142,9 +158,28 @@
 		<div class="form-error" ng-message="minlength">This field must be at least 5 characters.</div>
 		</script> 
 	
-	<b>loginData:<b /><b /> <pre>
-			{{loginData | json}}
-		</pre>
+	<ion-list>
+	</hr>
+	
+  <div ng-repeat="(key,request) in userLoginRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Retrieve Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
 	<form name="loginForm" class="css-form" novalidate>
 		<div class="list list-inset">
 			<label class="item item-input item-floating-label"> <span
@@ -181,5 +216,31 @@
 	</pre>
 
 	<hr/>
+	
+	
+<h2>Token</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in userTokenRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Token Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+<button class="button button-small" ng-click="callUserRecourceToken()">call UserRecource token</button>
+<hr />
+	
 	
 	</ion-content> </ion-view>

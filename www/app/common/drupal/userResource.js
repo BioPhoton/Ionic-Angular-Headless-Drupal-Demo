@@ -213,7 +213,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * 
 	 */
 	var retrieve = function( uid ) {
-		var retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + UserResourceConfig.resourcePath + '/'+uid,
+		var retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/'+uid,
 		defer = $q.defer(),
 		requestConfig = {
 			method :'GET',
@@ -321,7 +321,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 */	
 	 var login = function( username, password ) {
 					
-		var pathToLogin = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.login;
+		var pathToLogin = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.login;
 			requestConfig = {
 					method :'POST',
 					url : pathToLogin,
@@ -362,7 +362,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * 
 	 */
 	var logout = function() {
-		 var pathToLogout = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.logout;
+		 var pathToLogout = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.logout;
 		 	 requestConfig = {
 		 			method: 'POST',
 					url : pathToLogout,
@@ -402,7 +402,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 */
 	var token = function() {
 		 var defer = $q.defer(),
-         pathToToken = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.token;
+         pathToToken = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.token;
 
 	     $http({
 	       url: pathToToken,
@@ -454,7 +454,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 */
 	var register = function(account){
 		
-		 var pathToRegister = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.register;
+		 var pathToRegister = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.register;
 	 	 	 requestConfig = {
 	 			method: 'POST',
 				url : pathToRegister,

@@ -193,7 +193,7 @@ SystemRecourceModules.service('SystemResource', [ 'drupalApiConfig', 'SystemReso
 	 */
 	var connect = function() {
 		
-		var connectPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + SystemResourceConfig.resourcePath + '/' + SystemResourceConfig.actions.connect,
+		var connectPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + SystemResourceConfig.resourcePath + '/' + SystemResourceConfig.actions.connect,
 		defer = $q.defer(),
 		requestConfig = {
 				method :'POST',
@@ -233,7 +233,7 @@ SystemRecourceModules.service('SystemResource', [ 'drupalApiConfig', 'SystemReso
 	 */
 	var get_variable = function(name, _default){
 		
-		var getVariablePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + SystemResourceConfig.resourcePath + '/' + SystemResourceConfig.actions.get_variable,
+		var getVariablePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + SystemResourceConfig.resourcePath + '/' + SystemResourceConfig.actions.get_variable,
 		defer = $q.defer(),
 		requestConfig = {
 				method 	:'POST',
@@ -285,7 +285,7 @@ SystemRecourceModules.service('SystemResource', [ 'drupalApiConfig', 'SystemReso
 	 * 
 	 */
 	var set_variable = function(name, value){
-		var setVariablePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + SystemResourceConfig.resourcePath + '/' + SystemResourceConfig.actions.set_variable,
+		var setVariablePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + SystemResourceConfig.resourcePath + '/' + SystemResourceConfig.actions.set_variable,
 		defer = $q.defer(),
 		requestConfig = {
 				method 	:'POST',
@@ -337,7 +337,7 @@ SystemRecourceModules.service('SystemResource', [ 'drupalApiConfig', 'SystemReso
 	 * 
 	 */
 	var del_variable = function(name){
-		var delVariablePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoints.default.path + SystemResourceConfig.resourcePath + '/' + SystemResourceConfig.actions.del_variable,
+		var delVariablePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + SystemResourceConfig.resourcePath + '/' + SystemResourceConfig.actions.del_variable,
 		defer = $q.defer(),
 		requestConfig = {
 				method 	:'POST',
