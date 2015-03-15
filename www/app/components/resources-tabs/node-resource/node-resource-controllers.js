@@ -1,13 +1,13 @@
 /* Controllers of apiServicesControllers component */
 //______________________________________________
 
-var anonNodeResourceControllers = angular.module('resources.node-resource.controllers', ['common.drupal.api-services', 'common.drupal.api-resources', 'common.directives']);
+var anonNodeResourceControllers = angular.module('resources.node-resource.controllers', ['NodeRecourceModules']);
 
 
 /* Node Resource Controller */
 anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl', 
-		   ['$scope', 'NodeResource', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', 
-    function($scope,   NodeResource,   drupalApiNotificationChannel,   DrupalAuthenticationService) {
+		   ['$scope', 'NodeResource', 'NodeResourceChannel', 
+    function($scope,   NodeResource,   NodeResourceChannel) {
 			   
 			   $scope.toggleRequest = function(request) {
 				     if ($scope.isRequestShown(request)) {
@@ -51,12 +51,12 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 				    );
 			   };
 			   //
-			   drupalApiNotificationChannel.onNodeRetrieveConfirmed($scope, function(data) { 
+			   NodeResourceChannel.onNodeRetrieveConfirmed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.nodeRetrieveRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
 			 
-			   drupalApiNotificationChannel.onNodeRetrieveFailed($scope, function(data) { 
+			   NodeResourceChannel.onNodeRetrieveFailed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.nodeRetrieveRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
@@ -89,11 +89,11 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 				    );
 			    };
 			    //
-			   drupalApiNotificationChannel.onNodeCreateConfirmed($scope, function(data) { 
+			   NodeResourceChannel.onNodeCreateConfirmed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.nodeCreateRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
-			   drupalApiNotificationChannel.onNodeCreateFailed($scope, function(data) { 
+			   NodeResourceChannel.onNodeCreateFailed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.nodeCreateRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
@@ -130,11 +130,11 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 					    );
 				    };
 				    //
-				   drupalApiNotificationChannel.onNodeUpdateConfirmed($scope, function(data) { 
+				   NodeResourceChannel.onNodeUpdateConfirmed($scope, function(data) { 
 					   requestEnd = Date.now();
 		    		   $scope.nodeUpdateRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 				   });
-				   drupalApiNotificationChannel.onNodeUpdateFailed($scope, function(data) { 
+				   NodeResourceChannel.onNodeUpdateFailed($scope, function(data) { 
 					   requestEnd = Date.now();
 		    		   $scope.nodeUpdateRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 				   });
@@ -163,11 +163,11 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 					    );
 				    };
 				    //
-					drupalApiNotificationChannel.onNodeDeleteConfirmed($scope, function(data) { 
+					NodeResourceChannel.onNodeDeleteConfirmed($scope, function(data) { 
 						   requestEnd = Date.now();
 			    		   $scope.nodeDeleteRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 					});
-					drupalApiNotificationChannel.onNodeDeleteFailed($scope, function(data) { 
+					NodeResourceChannel.onNodeDeleteFailed($scope, function(data) { 
 						   requestEnd = Date.now();
 			    		   $scope.nodeDeleteRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 					});
@@ -197,11 +197,11 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 						    );
 					    };
 					    //
-					   drupalApiNotificationChannel.onNodeIndexConfirmed($scope, function(data) { 
+					   NodeResourceChannel.onNodeIndexConfirmed($scope, function(data) { 
 						   requestEnd = Date.now();
 			    		   $scope.nodeIndexRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 					   });
-					   drupalApiNotificationChannel.onNodeIndexFailed($scope, function(data) { 
+					   NodeResourceChannel.onNodeIndexFailed($scope, function(data) { 
 						   requestEnd = Date.now();
 			    		   $scope.nodeIndexRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 					   });
@@ -230,12 +230,12 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 						    );
 					   };
 					   //
-					   drupalApiNotificationChannel.onNodeFilesConfirmed($scope, function(data) { 
+					   NodeResourceChannel.onNodeFilesConfirmed($scope, function(data) { 
 						   requestEnd = Date.now();
 			    		   $scope.nodeFilesRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 					   });
 					 
-					   drupalApiNotificationChannel.onNodeFilesFailed($scope, function(data) { 
+					   NodeResourceChannel.onNodeFilesFailed($scope, function(data) { 
 						   requestEnd = Date.now();
 			    		   $scope.nodeFilesRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 					   });
@@ -263,12 +263,12 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 						    );
 					   };
 					   //
-					   drupalApiNotificationChannel.onNodeCommentsConfirmed($scope, function(data) { 
+					   NodeResourceChannel.onNodeCommentsConfirmed($scope, function(data) { 
 						   requestEnd = Date.now();
 			    		   $scope.nodeCommentsRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 					   });
 					 
-					   drupalApiNotificationChannel.onNodeCommentsFailed($scope, function(data) { 
+					   NodeResourceChannel.onNodeCommentsFailed($scope, function(data) { 
 						   requestEnd = Date.now();
 			    		   $scope.nodeCommentsRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 					   });
@@ -298,12 +298,12 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 						    );
 					   };
 					   //
-					   drupalApiNotificationChannel.onNodeAttachFileConfirmed($scope, function(data) { 
+					   NodeResourceChannel.onNodeAttachFileConfirmed($scope, function(data) { 
 						   requestEnd = Date.now();
 			    		   $scope.nodeAttachFileRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 					   });
 					 
-					   drupalApiNotificationChannel.onNodeAttachFileFailed($scope, function(data) { 
+					   NodeResourceChannel.onNodeAttachFileFailed($scope, function(data) { 
 						   requestEnd = Date.now();
 			    		   $scope.nodeAttachFileRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 					   });

@@ -1,9 +1,9 @@
-var authedTabsNodeDemoControllers = angular.module('authed-tabs.node-demo.controllers',  ['common.drupal.api-services', 'common.drupal.api-resources']);
+var authedTabsNodeDemoControllers = angular.module('authed-tabs.node-demo.controllers',  ['NodeRecourceModules']);
 
 /* Node Demo Controller */
 authedTabsNodeDemoControllers.controller('NodeListCtrl', 
-		   ['$scope', '$state', '$timeout', '$ionicModal', 'NodeResource', 'drupalApiNotificationChannel', 'pageSize', 'pageFirst', 'newNodes', 
-    function($scope,   $state,   $timeout,   $ionicModal,   NodeResource,   drupalApiNotificationChannel,   pageSize,   pageFirst,   newNodes) {
+		   ['$scope', '$state', '$timeout', '$ionicModal', 'NodeResource', 'NodeResourceChannel', 'pageSize', 'pageFirst', 'newNodes', 
+    function($scope,   $state,   $timeout,   $ionicModal,   NodeResource,   NodeResourceChannel,   pageSize,   pageFirst,   newNodes) {
 			   
 			   var mergeNodes = function(newNodes, mergeNodes) {
 				   var uniqueNodes = [];
@@ -31,7 +31,7 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 			   };
 			   
 
-				drupalApiNotificationChannel.onNodeUpdateConfirmed($scope, function(data) { 
+				NodeResourceChannel.onNodeUpdateConfirmed($scope, function(data) { 
 					console.log('onNodeUpdateConfirmed');
 					angular.forEach($scope.nodes, function(node, key) {
     					if(node.nid == updatedNode.nid) {
@@ -40,7 +40,7 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
     				});
 				});
 				
-				drupalApiNotificationChannel.onNodeCreateConfirmed($scope, function(node) { 
+				NodeResourceChannel.onNodeCreateConfirmed($scope, function(node) { 
 					console.log('onNodeCreateConfirmed');
 					$scope.doRefresh();
 				});
@@ -130,8 +130,8 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 			  $state.go('app.authed-tabs.node-detail', {nid:nid});
 		   }
 		   
-		   drupalApiNotificationChannel.onNodeRetrieveConfirmed($scope, function(data) { $scope.loadingDetail = false;});
-		   drupalApiNotificationChannel.onNodeRetrieveFailed($scope, function(node) { $scope.loadingDetail = false;});
+		   NodeResourceChannel.onNodeRetrieveConfirmed($scope, function(data) { $scope.loadingDetail = false;});
+		   NodeResourceChannel.onNodeRetrieveFailed($scope, function(node) { $scope.loadingDetail = false;});
 		   
 		   
 		   

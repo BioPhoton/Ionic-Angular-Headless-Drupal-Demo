@@ -6,15 +6,11 @@
 var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClient', ['ionic',
   
   'drupalIonicAngularJSAPIClient.configuration',
-  'common.drupal.api-services',
-  'common.drupal.api-resources',
+
   'common.accesss-control',
   'common.services.localstorage',
+  'ApiAuthModules',
   
-  'systemRecourceModules',
-  
-  
-
   'app.controllers',
   'tour.controllers',
   'login.controllers',
@@ -41,17 +37,17 @@ drupalIonicAngularJSAPIClient
             abstract: true,
             templateUrl: "app/templates/base_view.html",
             controller: 'AppCtrl',
-           /* resolve: {
+           resolve: {
             	// init connection state
             	// this fires just on app launge 
             	// switching child states will not resolve this again
-                connectedUser: function(DrupalAuthenticationService, drupalApiServiceConfig) {
+                connectedUser: function(ApiAuthService, drupalApiConfig) {
                 	
-        			if(DrupalAuthenticationService.getLastConnectTime() < (Date.now() - drupalApiServiceConfig.session_expiration_time) ) {       				
-        				return DrupalAuthenticationService.refreshConnection();
+        			if(ApiAuthService.getLastConnectTime() < (Date.now() - drupalApiConfig.session_expiration_time) ) {       				
+        				return ApiAuthService.refreshConnection();
         			}
                 },
-            },*/
+            },
             data: {
               access: AppSettings.accessLevels.public
             }
@@ -79,7 +75,7 @@ drupalIonicAngularJSAPIClient
             }
 
           })
-         /* .state('app.register', {
+          .state('app.register', {
             url: '/register',
             views: {
               'menuContent': {
@@ -92,7 +88,7 @@ drupalIonicAngularJSAPIClient
             	  return NodeResource.retrieve(AppSettings.terms_and_conditions_nid);
               }
             }
-          })*/
+          })
 	      //    
 	      //Abstract states for anonymous tabs
 		  //______________________________________________
@@ -105,7 +101,7 @@ drupalIonicAngularJSAPIClient
 			      }
 			    }
 		  })
-		 /*
+		 
 		  //
 		  //Node Resource
 		  //______________________________________________
@@ -117,7 +113,7 @@ drupalIonicAngularJSAPIClient
 			  		controller:  'ResourcesNodeResourceCtrl' 
 			      }
 			    }
-		   })*/
+		   })
 		  //
 		  //System Resource
 		  //______________________________________________
@@ -130,7 +126,7 @@ drupalIonicAngularJSAPIClient
 			      }
 			    }
 		   })
-		 /*  //
+		   //
 		   //User Resource
 		   //______________________________________________
 		   .state('app.resources-tabs.user-resource', {
@@ -153,7 +149,7 @@ drupalIonicAngularJSAPIClient
 			      }
 			    }
 		   })
-	*/
+	
 	      //states for authenticted user
 	      //=================================================================
 	      .state('app.authed-tabs', {
@@ -179,12 +175,12 @@ drupalIonicAngularJSAPIClient
 	          }
 	        },
 	         resolve: {
-	              userObj: function (DrupalAuthenticationService) {
-	                return DrupalAuthenticationService.getCurrentUser();
+	              userObj: function (ApiAuthService) {
+	                return ApiAuthService.getCurrentUser();
 	              }
 	            }
 	      })
-	     /* 
+	     
 	      .state('app.authed-tabs.node-list', {
 	        url: "/nodes",
 	        views: {
@@ -231,7 +227,7 @@ drupalIonicAngularJSAPIClient
 	                return NodeResource.retrieve($stateParams.nid);
 	            }	
 		    }
-	      })*/
+	      })
 	      
 	      
 	      ;
@@ -242,14 +238,14 @@ drupalIonicAngularJSAPIClient
 }]);
 
 
-drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', 'AccessControlService', '$state',
-                          function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   drupalApiNotificationChannel,   DrupalAuthenticationService,   AccessControlService,   $state) {
+drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'ApiAuthService', 'AccessControlService', '$state',
+                          function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   ApiAuthService,   AccessControlService,   $state) {
 	
 	
 	
 	//restrict access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-     /* console.log('want go from ' + fromState.name + ' to ' + toState.name); 
+      console.log('want go from ' + fromState.name + ' to ' + toState.name); 
       
       var firstVisit = 1; //$localstorage.getItem('firstVisit', false);
       var isRegistered = 1; //$localstorage.getItem('isRegistered', false);
@@ -261,7 +257,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
   		event.preventDefault();
   		$state.go('app.tour'); 	
   		return;
-  	  }  */
+  	  }  
   	  
      /* if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
         event.preventDefault();
@@ -279,15 +275,15 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
       }*/
            
       //custom redirect
-     /* if  (toState.name == 'app.login' || toState.name == 'app.register') {
+      if  (toState.name == 'app.login' || toState.name == 'app.register') {
     
-        if (DrupalAuthenticationService.getConnectionState()) {
+        if (ApiAuthService.getConnectionState()) {
           console.log('redirect 5: app.authed-tabs.profile'); 
           event.preventDefault();
           $state.go('app.authed-tabs.profile');
           return;
         } 
-      }*/
+      }
     });
     
 }]);

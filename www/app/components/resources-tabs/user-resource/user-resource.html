@@ -4,15 +4,26 @@
 <h1>UserResource</h1>
 
 <h2>Token</h2>
-<div ng-repeat="request in userTokenRequests">
-	<b>Request at:</b> {{request.requestStart| date:'medium'}}<br />
-	<b>Response at:</b> {{request.requestEnd| date:'medium'}}<br />
-	<b>Duration:</b> {{request.requestDuration}}<br />
-	<b>Data:</b> 
-	<pre>
-	{{ request.data | json}}
-	</pre>
-</div>
+<ion-list>
+  <div ng-repeat="(key,request) in userTokenRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Token Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
 <button class="button button-small" ng-click="callUserRecourceToken()">call UserRecource token</button>
 <hr />
 

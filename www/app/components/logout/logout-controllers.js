@@ -1,4 +1,4 @@
-var logoutControllers = angular.module('logout.controllers', ['common.drupal.api-resources'])
+var logoutControllers = angular.module('logout.controllers', ['UserResourceModules'])
 
 logoutControllers.controller('LogoutCtrl', ['$rootScope', '$scope', '$state', 'UserResource',
   function ($rootScope, $scope, $state, UserResource) {

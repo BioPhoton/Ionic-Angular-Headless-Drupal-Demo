@@ -1,13 +1,13 @@
 /* Controllers of apiServicesControllers component */
 //______________________________________________
 
-var ViewsResourceControllers = angular.module('resources.views-resource.controllers', ['common.drupal.api-services', 'common.drupal.api-resources']);
+var ViewsResourceControllers = angular.module('resources.views-resource.controllers', ['ViewsResourceModules']);
 
 
 /* Views Resource Controller */
 ViewsResourceControllers.controller('ResourcesViewsResourceCtrl', 
-		   ['$scope', 'ViewsResource', 'drupalApiNotificationChannel', 
-    function($scope,   ViewsResource,   drupalApiNotificationChannel) {
+		   ['$scope', 'ViewsResource', 'ViewsResourceChannel', 
+    function($scope,   ViewsResource,   ViewsResourceChannel) {
 			   
 			   $scope.toggleRequest = function(request) {
 				     if ($scope.isRequestShown(request)) {
@@ -53,12 +53,12 @@ ViewsResourceControllers.controller('ResourcesViewsResourceCtrl',
 				    );
 			   };		
 			   //
-			   drupalApiNotificationChannel.onViewsRetrieveConfirmed($scope, function(data) { 
+			   ViewsResourceChannel.onViewsRetrieveConfirmed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.viewsRetrieveRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
 			 
-			   drupalApiNotificationChannel.onViewsRetrieveFailed($scope, function(data) { 
+			   ViewsResourceChannel.onViewsRetrieveFailed($scope, function(data) { 
 				   requestEnd = Date.now();
 	    		   $scope.viewsRetrieveRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });

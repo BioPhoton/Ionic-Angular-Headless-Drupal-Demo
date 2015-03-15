@@ -1,4 +1,4 @@
-var loginControllers = angular.module('login.controllers', ['common.drupal.api-resources'])
+var loginControllers = angular.module('login.controllers', ['UserResourceModules'])
 
 loginControllers.controller('LoginCtrl', ['$scope', '$localstorage', '$state', '$rootScope', 'UserResource',
   function ($scope, $localstorage, $state, $rootScope, UserResource) {

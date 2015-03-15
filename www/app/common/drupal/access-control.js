@@ -1,16 +1,16 @@
 /* Drupals api depending services*/
 //______________________________________________
-var accessControl = angular.module('common.accesss-control', ['common.drupal.api-services']);
+var accessControl = angular.module('common.accesss-control', ['ApiAuthModules']);
 
 /**
  * AccessControlService
  * 
  */
-accessControl.service('AccessControlService', function($rootScope, $http, $q, drupalApiServiceConfig, DrupalAuthenticationService) {
+accessControl.service('AccessControlService', function($rootScope, $http, $q, ApiAuthService) {
 	
 	var authorize = function(accessLevel, roles) {
 		 //if no user is given set unauthorized user
-		 currentUser = DrupalAuthenticationService.getCurrentUser();
+		 currentUser = ApiAuthService.getCurrentUser();
 		 //
 	     if(roles === undefined) {
 			roles = currentUser.roles; 
@@ -36,18 +36,18 @@ accessControl.service('AccessControlService', function($rootScope, $http, $q, dr
 	
 });
 
-accessControl.directive('accessLevel', ['AccessControlService', 'drupalApiNotificationChannel', 'DrupalAuthenticationService', 
-                                function(AccessControlService,   drupalApiNotificationChannel,   DrupalAuthenticationService) {
+accessControl.directive('accessLevel', ['AccessControlService', 'ApiAuthChannel', 'ApiAuthService', 
+                                function(AccessControlService,   ApiAuthChannel,   ApiAuthService) {
     return {
         restrict: 'A',
         link: function($scope, element, attrs) {
         	
-        	$scope.user = DrupalAuthenticationService.getCurrentUser();
+        	$scope.user = ApiAuthService.getCurrentUser();
         	var prevDisp = element.css('display')
                 , userRoles = $scope.user.roles 
                 , accessLevel;
 
-            drupalApiNotificationChannel.onCurrentUserUpdated($scope, function (user){
+                ApiAuthChannel.onCurrentUserUpdated($scope, function (user){
             	$scope.user = user;
                 userRoles = $scope.user.roles;
                 updateCSS();
