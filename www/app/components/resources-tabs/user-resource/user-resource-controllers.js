@@ -215,31 +215,88 @@ userResourceControllers.controller('ResourcesUserResourceCtrl',
 				   $scope.userTokenRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
 			   
-			 //login
-			 $scope.lastTimeRequestToUserResourceLogin = null;
-			 $scope.lastResultRequestToUserResourceLogin = null;
+			     //Register
+				 $scope.userRegisterRequests = [];
+				 
+				 $scope.RegisterData = {};
+				 $scope.RegisterData.username = "test-user1";
+				 $scope.RegisterData.email = "test@email1.com";
+				 $scope.RegisterData.password = "password";
+				 
+				 $scope.callUserResourceRegister = function(RegisterData) {
+					    requestStart = Date.now();
+						UserResource.register(RegisterData)
+						    .then(
+						    		//success
+						    		function(data) { console.log('user register success');},
+						    		//error
+						    		function(data) { console.log('user register error');}
+						    );
+			    }
+				 //
+				   UserResourceChannel.onUserRegisterConfirmed($scope, function(token) { 
+					   requestEnd = Date.now();
+					   console.log('onUserRegisterConfirmed'); 
+					   $scope.userRegisterRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:token});
+				   });
+				   UserResourceChannel.onUserRegisterFailed($scope, function(data) { 
+					   requestEnd = Date.now();
+					   console.log('onUserRegisterFailed'); 
+					   $scope.userRegisterRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+				   });
 			   
-			 $scope.callUserResourceLogin = function(loginData) {
-					$scope.lastTimeRequestToUserResourceLogin = Date.now();
-					UserResource.login(  loginData.username,  loginData.password )
+			 //Login
+				 $scope.userLoginRequests = [];
+				 
+				 $scope.LoginData = {};
+				 $scope.LoginData.username = "basic-user";
+				 $scope.LoginData.password = "basic-user";
+				 
+				 $scope.callUserResourceLogin = function(LoginData) {
+					    requestStart = Date.now();
+						UserResource.login(LoginData.username, LoginData.password)
+						    .then(
+						    		//success
+						    		function(data) { console.log('user login success');},
+						    		//error
+						    		function(data) { console.log('user login error');}
+						    );
+			    }
+				 //
+				   UserResourceChannel.onUserLoginConfirmed($scope, function(token) { 
+					   requestEnd = Date.now();
+					   console.log('onUserLoginConfirmed'); 
+					   $scope.userLoginRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:token});
+				   });
+				   UserResourceChannel.onUserLoginFailed($scope, function(data) { 
+					   requestEnd = Date.now();
+					   console.log('onUserLoginFailed'); 
+					   $scope.userLoginRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+				   });
+			   
+			 //Logout
+			 $scope.userLogoutRequests = [];
+			 $scope.callUserRecourceLogout = function() {
+				    requestStart = Date.now();
+					UserResource.logout()
 					    .then(
 					    		//success
-					    		function(data) {
-					    			$scope.lastResultRequestToUserResourceLogin = data;
-					    		},
+					    		function(data) { console.log('user logout success');},
 					    		//error
-					    		function(data) {
-					    			$scope.lastResultRequestToUserResourceLogin = data;
-					    		}
+					    		function(data) { console.log('user logout error');}
 					    );
 		    }
-			 
-		   //logout
-		   $scope.lastTimeRequestToUserResourceLogout = null;
-		   $scope.lastResultRequestToUserResourceLogout = null;
-		   
-		   $scope.callUserResourceLogout = function() {
-				UserResource.logout();
-		   }
+			 //
+			   UserResourceChannel.onUserLogoutConfirmed($scope, function(token) { 
+				   requestEnd = Date.now();
+				   console.log('onUserLogoutConfirmed'); 
+				   $scope.userLogoutRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:token});
+			   });
+			   UserResourceChannel.onUserLogoutFailed($scope, function(data) { 
+				   requestEnd = Date.now();
+				   console.log('onUserLogoutFailed'); 
+				   $scope.userLogoutRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+			   });
+		  
 			  
 }]);
