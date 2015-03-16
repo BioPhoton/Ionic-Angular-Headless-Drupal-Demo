@@ -39,34 +39,44 @@ UserResourceModules.constant("UserResourceConfig", {
 	//
 	// Actions:
 	// Retrieve action
-	user_retrieveConfirmed  : 'event:drupal-user-retrieveConfirmed',
-	user_retrieveFailed  	: 'event:drupal-user-retrieveFailed',
+	user_retrieveConfirmed 				 : 'event:drupal-user-retrieveConfirmed',
+	user_retrieveFailed  				: 'event:drupal-user-retrieveFailed',
 	// Create action
-	user_createConfirmed	: 'event:drupal-user-createConfirmed',
-	user_createFailed  		: 'event:drupal-user-createFailed',
+	user_createConfirmed				: 'event:drupal-user-createConfirmed',
+	user_createFailed  					: 'event:drupal-user-createFailed',
 	// Update action
-	user_updateConfirmed	: 'event:drupal-user-updateConfirmed',
-	user_updateFailed  		: 'event:drupal-user-updateFailed',
-	// Delete action
-	user_deleteConfirmed	: 'event:drupal-user-deleteConfirmed',
-	user_deleteFailed  		: 'event:drupal-user-deleteFailed',
+	user_updateConfirmed				: 'event:drupal-user-updateConfirmed',
+	user_updateFailed  					: 'event:drupal-user-updateFailed',
+	// Delete action	
+	user_deleteConfirmed				: 'event:drupal-user-deleteConfirmed',
+	user_deleteFailed  					: 'event:drupal-user-deleteFailed',
 	// Index action
-	user_indexConfirmed  	: 'event:drupal-user-indexConfirmed',
-	user_indexFailed  		: 'event:drupal-user-indexFailed',
-	
+	user_indexConfirmed  				: 'event:drupal-user-indexConfirmed',
+	user_indexFailed  					: 'event:drupal-user-indexFailed',
+	//Request new password action
+	user_requestNewPasswordConfirmed  	: 'event:drupal-user-requestNewPasswordConfirmed',
+	user_requestNewPasswordFailed  		: 'event:drupal-user-requestNewPasswordFailed',
+	//Cancel action
+	user_CancelConfirmed  				: 'event:drupal-user-CancelConfirmed',
+	user_CancelFailed  					: 'event:drupal-user-CancelFailed',
+	//Password Reset
+	user_passwordResetConfirmed  		: 'event:drupal-user-passwordResetConfirmed',
+	user_passwordResetFailed  			: 'event:drupal-user-passwordResetFailed',
+	//Resend Welcome Email
+	user_resendWelcomeEmailConfirmed  	: 'event:drupal-user-resendWelcomeEmailConfirmed',
+	user_resendWelcomeEmailFailed  		: 'event:drupal-user-resendWelcomeEmailFailed',
 	// Token action
-	user_tokenConfirmed  	: 'event:drupal-user-tokenConfirmed',
-	user_tokenFailed  		: 'event:drupal-user-tokenFailed',
+	user_tokenConfirmed  				: 'event:drupal-user-tokenConfirmed',
+	user_tokenFailed  					: 'event:drupal-user-tokenFailed',
 	// Register action
-	user_registerConfirmed  : 'event:drupal-user-registerConfirmed',
-	user_registerFailed  	: 'event:drupal-user-registerFailed',
+	user_registerConfirmed  			: 'event:drupal-user-registerConfirmed',
+	user_registerFailed  				: 'event:drupal-user-registerFailed',
 	// Login action
-	user_loginConfirmed  	: 'event:drupal-user-loginConfirmed',
-	user_loginFailed  		: 'event:drupal-user-loginFailed',
+	user_loginConfirmed  				: 'event:drupal-user-loginConfirmed',
+	user_loginFailed  					: 'event:drupal-user-loginFailed',
 	// Logout action
-	user_logoutConfirmed  	: 'event:drupal-user-logoutConfirmed',
-	user_logoutFailed  		: 'event:drupal-user-logoutFailed',
-	
+	user_logoutConfirmed  				: 'event:drupal-user-logoutConfirmed',
+	user_logoutFailed  					: 'event:drupal-user-logoutFailed'
 });
 
 /**
@@ -294,55 +304,171 @@ UserResourceModules.service('UserResourceChannel', ['$rootScope', 'UserResourceC
 	    handler(args.error);
 	   });	
     };
+    
+    //Request new password action
+        
+	// Publish user requestNewPassword confirmed event
+    var publishUserRequestNewPasswordConfirmed = function (respons) {
+        $rootScope.$broadcast(UserResourceConfig.user_requestNewPasswordConfirmed, {respons: respons});
+    };
+    // Subscribe to user requestNewPassword confirmed event
+    var onUserRequestNewPasswordConfirmed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_requestNewPasswordConfirmed, function(event, args) {
+	    handler(args.respons);
+	   });	
+    };
+    
+    // Publish user requestNewPassword failed event
+    var publishUserRequestNewPasswordFailed = function (error) {
+        $rootScope.$broadcast(UserResourceConfig.user_requestNewPasswordFailed, {error: error});
+    };
+    // Subscribe to user requestNewPassword failed event
+    var onUserRequestNewPasswordFailed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_requestNewPasswordFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    //Cancel action
 
+	// Publish user cancel confirmed event
+    var publishUserCancelConfirmed = function (respons) {
+        $rootScope.$broadcast(UserResourceConfig.user_cancelConfirmed, {respons: respons});
+    };
+    // Subscribe to user cancel confirmed event
+    var onUserCancelConfirmed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_cancelConfirmed, function(event, args) {
+	    handler(args.respons);
+	   });	
+    };
+    
+    // Publish user cancel failed event
+    var publishUserCancelFailed = function (error) {
+        $rootScope.$broadcast(UserResourceConfig.user_cancelFailed, {error: error});
+    };
+    // Subscribe to user cancel failed event
+    var onUserCancelFailed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_cancelFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+    //Password Reset action 
+    
+    // Publish user login failed event
+    var publishUserPasswordResetFailed = function (error) {
+        $rootScope.$broadcast(UserResourceConfig.user_passwordResetFailed, {error: error});
+    };
+    // Subscribe to user login failed event
+    var onUserPasswordResetFailed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_passwordResetFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+	// Publish user password_reset confirmed event
+    var publishUserPasswordResetConfirmed = function (respons) {
+        $rootScope.$broadcast(UserResourceConfig.user_passwordResetConfirmed, {respons: respons});
+    };
+    // Subscribe to user password_reset confirmed event
+    var onUserPasswordResetConfirmed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_passwordResetConfirmed, function(event, args) {
+	    handler(args.respons);
+	   });	
+    };
+    
+    
+	//Resend Welcome Email
+    
+    // Publish user ResendWelcomeEmail failed event
+    var publishUserResendWelcomeEmailFailed = function (error) {
+        $rootScope.$broadcast(UserResourceConfig.user_resendWelcomeEmailFailed, {error: error});
+    };
+    // Subscribe to user ResendWelcomeEmail failed event
+    var onUserResendWelcomeEmailFailed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_resendWelcomeEmailFailed, function(event, args) {
+	    handler(args.error);
+	   });	
+    };
+    
+	// Publish user ResendWelcomeEmail confirmed event
+    var publishUserResendWelcomeEmailConfirmed = function (respons) {
+        $rootScope.$broadcast(UserResourceConfig.user_resendWelcomeEmailConfirmed, {respons: respons});
+    };
+    // Subscribe to user ResendWelcomeEmail confirmed event
+    var onUserResendWelcomeEmailConfirmed = function($scope, handler) {
+    	$scope.$on(UserResourceConfig.user_resendWelcomeEmailConfirmed, function(event, args) {
+	    handler(args.respons);
+	   });	
+    };	
 
  // public methods
  return {	   
 	   // Retrieve events
-	   publishUserRetrieveConfirmed 	: publishUserRetrieveConfirmed,
-	   onUserRetrieveConfirmed			: onUserRetrieveConfirmed,
-	   publishUserRetrieveFailed		: publishUserRetrieveFailed,
-	   onUserRetrieveFailed				: onUserRetrieveFailed,
+	   publishUserRetrieveConfirmed 				: publishUserRetrieveConfirmed,
+	   onUserRetrieveConfirmed						: onUserRetrieveConfirmed,
+	   publishUserRetrieveFailed					: publishUserRetrieveFailed,
+	   onUserRetrieveFailed							: onUserRetrieveFailed,
 	   // Create action
-	   publishUserCreateConfirmed		: publishUserCreateConfirmed,
-	   onUserCreateConfirmed			: onUserCreateConfirmed,
-	   publishUserCreateFailed			: publishUserCreateFailed,
-	   onUserCreateFailed 				: onUserCreateFailed,
+	   publishUserCreateConfirmed					: publishUserCreateConfirmed,
+	   onUserCreateConfirmed						: onUserCreateConfirmed,
+	   publishUserCreateFailed						: publishUserCreateFailed,
+	   onUserCreateFailed 							: onUserCreateFailed,
 	   // Update action
-	   publishUserUpdateConfirmed		: publishUserUpdateConfirmed,
-	   onUserUpdateConfirmed			: onUserUpdateConfirmed,
-	   publishUserUpdateFailed			: publishUserUpdateFailed,
-	   onUserUpdateFailed 				: onUserUpdateFailed,
+	   publishUserUpdateConfirmed					: publishUserUpdateConfirmed,
+	   onUserUpdateConfirmed						: onUserUpdateConfirmed,
+	   publishUserUpdateFailed						: publishUserUpdateFailed,
+	   onUserUpdateFailed 							: onUserUpdateFailed,
 	   // Delete action
-	   publishUserDeleteConfirmed		: publishUserDeleteConfirmed,
-	   onUserDeleteConfirmed			: onUserDeleteConfirmed,
-	   publishUserDeleteFailed			: publishUserDeleteFailed,
-	   onUserDeleteFailed 				: onUserDeleteFailed,
+	   publishUserDeleteConfirmed					: publishUserDeleteConfirmed,
+	   onUserDeleteConfirmed						: onUserDeleteConfirmed,
+	   publishUserDeleteFailed						: publishUserDeleteFailed,
+	   onUserDeleteFailed 							: onUserDeleteFailed,
 	   // Index events
-	   publishUserIndexConfirmed 		: publishUserIndexConfirmed,
-	   onUserIndexConfirmed				: onUserIndexConfirmed,
-	   publishUserIndexFailed			: publishUserIndexFailed,
-	   onUserIndexFailed				: onUserIndexFailed,
+	   publishUserIndexConfirmed 					: publishUserIndexConfirmed,
+	   onUserIndexConfirmed							: onUserIndexConfirmed,
+	   publishUserIndexFailed						: publishUserIndexFailed,
+	   onUserIndexFailed							: onUserIndexFailed,
+	   // Request new password
+	   publishUserRequestNewPasswordConfirmed 		: publishUserRequestNewPasswordConfirmed,
+	   onUserRequestNewPasswordConfirmed			: onUserRequestNewPasswordConfirmed,
+	   publishUserRequestNewPasswordFailed			: publishUserRequestNewPasswordFailed,
+	   onUserRequestNewPasswordFailed				: onUserRequestNewPasswordFailed,
+	   // Cancel
+	   publishUserCancelConfirmed 					: publishUserCancelConfirmed,
+	   onUserCancelConfirmed						: onUserCancelConfirmed,
+	   publishUserCancelFailed						: publishUserCancelFailed,
+	   onUserCancelFailed							: onUserCancelFailed,
+	   // Password reset
+	   publishUserPasswordResetConfirmed 			: publishUserPasswordResetConfirmed,
+	   onUserPasswordResetConfirmed					: onUserPasswordResetConfirmed,
+	   publishUserPasswordResetFailed				: publishUserPasswordResetFailed,
+	   onUserPasswordResetFailed					: onUserPasswordResetFailed,
+	   // Resend welcome email
+	   publishUserResendWelcomeEmailConfirmed 		: publishUserResendWelcomeEmailConfirmed,
+	   onUserResendWelcomeEmailConfirmed			: onUserResendWelcomeEmailConfirmed,
+	   publishUserResendWelcomeEmailFailed			: publishUserResendWelcomeEmailFailed,
+	   onUserResendWelcomeEmailFailed				: onUserResendWelcomeEmailFailed,
 	   // Token events
-	   publishUserTokenConfirmed 		: publishUserTokenConfirmed,
-	   onUserTokenConfirmed				: onUserTokenConfirmed,
-	   publishUserTokenFailed			: publishUserTokenFailed,
-	   onUserTokenFailed				: onUserTokenFailed,
+	   publishUserTokenConfirmed 					: publishUserTokenConfirmed,
+	   onUserTokenConfirmed							: onUserTokenConfirmed,
+	   publishUserTokenFailed						: publishUserTokenFailed,
+	   onUserTokenFailed							: onUserTokenFailed,
 	   // Register events
-	   publishUserRegisterConfirmed 	: publishUserRegisterConfirmed,
-	   onUserRegisterConfirmed			: onUserRegisterConfirmed,
-	   publishUserRegisterFailed		: publishUserRegisterFailed,
-	   onUserRegisterFailed				: onUserRegisterFailed,
+	   publishUserRegisterConfirmed 				: publishUserRegisterConfirmed,
+	   onUserRegisterConfirmed						: onUserRegisterConfirmed,
+	   publishUserRegisterFailed					: publishUserRegisterFailed,
+	   onUserRegisterFailed							: onUserRegisterFailed,
 	   // Login events
-	   publishUserLoginConfirmed		: publishUserLoginConfirmed,
-	   onUserLoginConfirmed				: onUserLoginConfirmed,
-	   publishUserLoginFailed			: publishUserLoginFailed,
-	   onUserLoginFailed				: onUserLoginFailed,
+	   publishUserLoginConfirmed					: publishUserLoginConfirmed,
+	   onUserLoginConfirmed							: onUserLoginConfirmed,
+	   publishUserLoginFailed						: publishUserLoginFailed,
+	   onUserLoginFailed							: onUserLoginFailed,
 	   // Logout events
-	   publishUserLogoutConfirmed 		: publishUserLogoutConfirmed,
-	   onUserLogoutConfirmed			: onUserLogoutConfirmed,
-	   publishUserLogoutFailed			: publishUserLogoutFailed,
-	   onUserLogoutFailed				: onUserLogoutFailed
+	   publishUserLogoutConfirmed 					: publishUserLogoutConfirmed,
+	   onUserLogoutConfirmed						: onUserLogoutConfirmed,
+	   publishUserLogoutFailed						: publishUserLogoutFailed,
+	   onUserLogoutFailed							: onUserLogoutFailed
  	};
 }]);
 
@@ -763,15 +889,14 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 */
 	var token = function() {
 		 var defer = $q.defer(),
-         pathToToken = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.token;
-
-	     $http({
-	       url: pathToToken,
-	       method: 'POST',
-	       withCredentials: true
-	     })
+         pathToToken = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.token,
+		 requestConfig = {
+			       url: pathToToken,
+			       method: 'POST'
+		};
+			
+	     $http(requestConfig)
          .success(function (data) {
-        	 console.log(data); 
            UserResourceChannel.publishUserTokenConfirmed(data.token);
            defer.resolve(data.token);
          })
@@ -797,7 +922,35 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * 
 	 */
 	var request_new_password = function(name) {
-		return;
+		var defer = $q.defer(),
+        pathToRequestNewPassword = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.request_new_password,
+        requestConfig = {
+			       url: pathToRequestNewPassword,
+			       method: 'POST',
+			       data : { name: name }
+		},
+		errors = [];
+	
+		//if not given
+		if(!name) { errors.push('Param name is required.');}
+
+		if(errors.length != 0) {
+			UserResourceChannel.publishUserRequestNewPasswordFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		};
+		
+	     $http(requestConfig)
+        .success(function (data) {
+          UserResourceChannel.publishUserRequestNewPasswordConfirmed(data);
+          defer.resolve(data);
+        })
+        .error(function (data) {
+          UserResourceChannel.publishUserRequestNewPasswordFailed(data);
+          defer.reject(data);
+        });
+
+	     return defer.promise;
 	};
 		
 	/*
@@ -857,14 +1010,40 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * @return 	{Promise}
 	 * 
 	 */
-	var cancel = function(name) {
-		return;
+	var cancel = function(uid) {
+		var defer = $q.defer(),
+        pathToCancel = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.cancel,
+        requestConfig = {
+			       url: pathToCancel,
+			       method: 'POST'
+		},
+		errors = [];
+	
+		//if not given
+		if(!uid) { errors.push('Param uid is required.');}
+
+		if(errors.length != 0) {
+			UserResourceChannel.publishUserCancelFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		};
+		
+	     $http(requestConfig)
+        .success(function (data) {
+          UserResourceChannel.publishUserCancelConfirmed(data);
+          defer.resolve(data);
+        })
+        .error(function (data) {
+          UserResourceChannel.publishUserCancelFailed(data);
+          defer.reject(data);
+        });
+
+	     return defer.promise;
 	};
 		
 	/*
 	 * password_reset
 	 * 
-	 * NOTE the docs in services definitions is not uop to date 
 	 * 
 	 * resets the password
 	 * Method: POST
@@ -877,13 +1056,39 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * 
 	 */
 	var password_reset = function(uid) {
-		return;
+		var defer = $q.defer(),
+        pathToPasswordReset = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.password_reset,
+        requestConfig = {
+			       url: pathToPasswordReset,
+			       method: 'POST'
+		},
+		errors = [];
+		
+		//if not given
+		if(!uid) { errors.push('Param uid is required.');}
+
+		if(errors.length != 0) {
+			UserResourceChannel.publishUserPasswordResetFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		};
+		
+	     $http(requestConfig)
+        .success(function (data) {
+          UserResourceChannel.publishUserPasswordResetConfirmed(data);
+          defer.resolve(data);
+        })
+        .error(function (data) {
+          UserResourceChannel.publishUserPasswordResetFailed(data);
+          defer.reject(data);
+        });
+
+	     return defer.promise;
 	};
 		
 	/*
 	 * resend_welcome_email
 	 * 
-	 * NOTE the docs in services definitions is not uop to date 
 	 * 
 	 * resets the password
 	 * Method: POST
@@ -896,7 +1101,34 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * 
 	 */
 	var resend_welcome_email = function(uid) {
-		return;
+		var defer = $q.defer(),
+        pathToResendWelcomeEmail = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.resend_welcome_email,
+        requestConfig = {
+			       url: pathToResendWelcomeEmail,
+			       method: 'POST'
+		},
+		errors = [];
+		
+		//if not given
+		if(!uid) { errors.push('Param uid is required.');}
+
+		if(errors.length != 0) {
+			UserResourceChannel.publishUserResendWelcomeEmailFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		};
+		
+	     $http(requestConfig)
+        .success(function (data) {
+          UserResourceChannel.publishUserResendWelcomeEmailConfirmed(data);
+          defer.resolve(data);
+        })
+        .error(function (data) {
+          UserResourceChannel.publishUserResendWelcomeEmailFailed(data);
+          defer.reject(data);
+        });
+
+	     return defer.promise;
 	};
 
 	//public methods	
@@ -909,11 +1141,11 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 		login : login,
 		logout : logout,
 		token : token,
-		//request_new_password : request_new_password,
+		request_new_password : request_new_password,
 		register : register,
-		//cancel : cancel,
-		//password_reset : password_reset,
-		//resend_welcome_email : resend_welcome_email,
+		cancel : cancel,
+		password_reset : password_reset,
+		resend_welcome_email : resend_welcome_email,
 	};
 	
 }]);

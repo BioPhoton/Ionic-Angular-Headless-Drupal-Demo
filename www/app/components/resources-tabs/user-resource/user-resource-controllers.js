@@ -287,16 +287,73 @@ userResourceControllers.controller('ResourcesUserResourceCtrl',
 					    );
 		    }
 			 //
-			   UserResourceChannel.onUserLogoutConfirmed($scope, function(token) { 
+			   UserResourceChannel.onUserLogoutConfirmed($scope, function(data) { 
 				   requestEnd = Date.now();
 				   console.log('onUserLogoutConfirmed'); 
-				   $scope.userLogoutRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:token});
+				   $scope.userLogoutRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
 			   UserResourceChannel.onUserLogoutFailed($scope, function(data) { 
 				   requestEnd = Date.now();
 				   console.log('onUserLogoutFailed'); 
 				   $scope.userLogoutRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 			   });
+			   
+			 //RequestNewPassword
+			 $scope.userRequestNewPasswordRequests = [];
+			 
+			 $scope.RequestNewPasswordData = {};
+			 $scope.RequestNewPasswordData.name = "basic-user";
+			 
+			 $scope.callUserResourceRequestNewPassword = function(RequestNewPasswordData) {
+				    requestStart = Date.now();
+					UserResource.request_new_password(RequestNewPasswordData.name)
+					    .then(
+					    		//success
+					    		function(data) { console.log('user request_new_password success');},
+					    		//error
+					    		function(data) { console.log('user request_new_password error');}
+					    );
+		    }
+			 //
+			   UserResourceChannel.onUserRequestNewPasswordConfirmed($scope, function(data) { 
+				   requestEnd = Date.now();
+				   console.log('onUserRequestNewPasswordConfirmed'); 
+				   $scope.userRequestNewPasswordRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+			   });
+			   UserResourceChannel.onUserRequestNewPasswordFailed($scope, function(data) { 
+				   requestEnd = Date.now();
+				   console.log('onUserRequestNewPasswordFailed'); 
+				   $scope.userRequestNewPasswordRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+			   });
 		  
+			 //Cancel
+				 $scope.userCancelRequests = [];
+				 
+				 $scope.CancelData = {};
+				 $scope.CancelData.uid = "12";
+				 
+				 $scope.callUserCancle = function(CancelData) {
+					 console.log('ASdf'); 
+					    requestStart = Date.now();
+						UserResource.cancel(CancelData.uid)
+						    .then(
+						    		//success
+						    		function(data) { console.log('user request_new_password success');},
+						    		//error
+						    		function(data) { console.log('user request_new_password error');}
+						    );
+			     }
+				 //
+				 UserResourceChannel.onUserCancelConfirmed($scope, function(data) { 
+					   requestEnd = Date.now();
+					   console.log('onUserCancelConfirmed'); 
+					   $scope.userCancelRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+				 });
+				 UserResourceChannel.onUserCancelFailed($scope, function(data) { 
+					   requestEnd = Date.now();
+					   console.log('onUserCancelFailed'); 
+					   $scope.userCancelRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+				 });
+			  
 			  
 }]);

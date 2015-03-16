@@ -230,10 +230,10 @@
 	<form name="loginForm" class="css-form" novalidate>
 		<div class="list list-inset">
 			<label class="item item-input item-floating-label"> <span
-				class="input-label">Username</span> <!--@TODO remove ng-Init when publish  -->
+				class="input-label">Username</span>
 				<input type="text" placeholder="What is you username" name="username" ng-model="loginData.username">
 			</label> <label class="item item-input item-floating-label"> <span
-				class="input-label">Password</span> <!--@TODO remove ng-Init when publish  -->
+				class="input-label">Password</span>
 				<input type="password" placeholder="What is your password?" name="password" ng-model="loginData.password">
 			</label>
 			<button type="submit" class="button  button-block button-positive"
@@ -289,6 +289,74 @@
 </ion-list>
 <button class="button button-small" ng-click="callUserRecourceToken()">call UserRecource token</button>
 <hr />
+
+	
+<h2>RequestNewPassword</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in userRequestNewPasswordRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Token Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+<form>
+		<div class="list list-inset">
+			<label class="item item-input item-floating-label"> <span
+				class="input-label">Name or Email</span>
+				<input type="text" placeholder="Name or Email" name="name" ng-model="RequestNewPasswordData.name">
+			</label> 
+			<button type="submit" class="button  button-block button-positive"
+				ng-click="callUserResourceRequestNewPassword(RequestNewPasswordData)">call UserResource.request_new_password</button>
+		</div>
+</form> 
+<hr />
+
+<h2>Cancle</h2>
+	<ion-list>
+	  <div ng-repeat="(key,request) in userCancleRequests">
+	    <ion-item class="item-stable"
+	              ng-click="toggleRequest(key)"
+	              ng-class="{active: isRequestShown(key)}">
+	        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+	      &nbsp;
+	      Token Request {{key}} at {{request.requestStart | date}}
+	    </ion-item>
+	    <ion-item class="item-accordion"
+	              ng-repeat="(name, value) in request"
+	              ng-show="isRequestShown(key)">
+	      <h2>{{name}}</h2>
+		  <p ng-show="name != 'data'">{{value}}</p>
+		  <pre ng-show="name == 'data'">
+		  {{ request.data | json}}
+		  </pre>
+	    </ion-item>
+	  </div>
+	</ion-list>
+	<form>
+		<div class="list list-inset">
+			<label class="item item-input item-floating-label"> 
+				<span class="input-label">Uid</span>
+				<input type="text" placeholder="Uid" name="uid" ng-model="CancelData.uid">
+			</label> 
+			<button type="submit" class="button  button-block button-positive" ng-click="callUserCancle()">call UserResource.cancle</button>
+		</div>
+	</form> 
+<hr />
+
+
 	
 	
 	</ion-content> </ion-view>
