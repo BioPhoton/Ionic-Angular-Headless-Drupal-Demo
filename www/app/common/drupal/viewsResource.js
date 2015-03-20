@@ -96,13 +96,14 @@ ViewsResourceModules.service('ViewsResource', [ 'drupalApiConfig', 'ViewsResourc
 	 * Url: http://drupal_instance/api_endpoint/views/{VIEW_NAME}
 	 * Headers: Content-Type:application/json
 	 * 
-	 * @param {String} view_name The name of the view to get., required:true, source:path
-	 * @param {String} display_id The display ID of the view to get., required:false, source:param
-	 * @param {Array} args A list of arguments to pass to the view., required:false, source:param
-	 * @param {Integer} offset The number of the entry for the page begin with., required:false, source:param
-	 * @param {Integer} limit The total number of entries to list., required:false, source:param
-	 * @param {Boolean} format_output Whether to return the raw data results or style the results., required:false, source:param
-	 * @param {Array} filters A list of filters to pass to the view. These are defined by the exposed filters on your view. Example call: /views/your_view?filters[nid]=12345, required:false, source:param
+	 * @param {Json-Object} options
+	 * options@key {String} view_name The name of the view to get., required:true, source:path
+	 * options@key {String} display_id The display ID of the view to get., required:false, source:param
+	 * options@key {Array} args A list of arguments to pass to the view., required:false, source:param
+	 * options@key {Integer} offset The number of the entry for the page begin with., required:false, source:param
+	 * options@key {Integer} limit The total number of entries to list., required:false, source:param
+	 * options@key {Boolean} format_output Whether to return the raw data results or style the results., required:false, source:param
+	 * options@key {Array} exposed_filters A list of filters to pass to the view. These are defined by the exposed filters on your view. Example call: /views/your_view?filters[nid]=12345, required:false, source:param
 	 * 
 	 * 
 	 * @return 	{Promise}
@@ -113,18 +114,19 @@ ViewsResourceModules.service('ViewsResource', [ 'drupalApiConfig', 'ViewsResourc
 	 * 
 	 * 
 	*/
-	var retrieve = function(view_name, display_id, args, offset, limit, format_output, filters, exp_sort){
-		
+	var retrieve = function(view_name, options){
+				
 		var retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + ViewsResourceConfig.resourcePath + '/' + view_name; 
-		retrievePath +=  ((display_id || args || offset || limit || format_output || filters || exp_sort)?'?':'');
-		retrievePath += ( (display_id)?('display_id='+display_id+'&'):'') + ((args)?('args='+args+'&'):'') + ((offset)?('offset='+offset+'&'):'') + ((limit)?('limit='+limit+'&'):'') + ((format_output)?('format_output='+format_output+'&'):'') + ((filters)?(filters+'&'):'');
-		retrievePath +=  ((exp_sort)?(exp_sort):'') 
+			
+		retrievePath +=  (Object.getOwnPropertyNames(options).length > 0)?'?':'';
+		
+		retrievePath += ( (options.display_id)?('display_id='+options.display_id+'&'):'') + ((options.args)?('args='+options.args+'&'):'') + ((options.offset)?('offset='+options.offset+'&'):'') + ((options.limit)?('limit='+options.limit+'&'):'') + ((options.format_output)?('format_output='+options.format_output+'&'):'');
+		retrievePath +=  ((options.exposed_filters)?(options.exposed_filters):'') 
 		
 			requestConfig = {
 	 			method: 'GET',
 				url : retrievePath,
 				headers: {
-					//@TODO use the format of drupalApiServiceConfig
 					"Accept" 		: "application/json",
 					"Content-Type"	: "application/json",
 				},
@@ -132,14 +134,14 @@ ViewsResourceModules.service('ViewsResource', [ 'drupalApiConfig', 'ViewsResourc
 	 	 	  defer = $q.defer(),
 			errors = [];
  			
- 			//if not given
- 			//if(!view_name) { errors.push('Param view_name is required.'); }
- 			
- 			if(errors.length != 0) {
- 				ViewsResourceChannel.publishViewsRetrieveFailed(errors);
- 				defer.reject(errors); 
- 				return defer.promise;
- 			}
+		//if not given
+		if(!view_name) { errors.push('Param view_name is required.'); }
+		
+		if(errors.length != 0) {
+			ViewsResourceChannel.publishViewsRetrieveFailed(errors);
+			defer.reject(errors); 
+			return defer.promise;
+		}		
 		
 		
 		$http(requestConfig)

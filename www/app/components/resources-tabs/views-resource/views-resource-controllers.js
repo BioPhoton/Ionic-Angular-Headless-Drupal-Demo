@@ -38,14 +38,15 @@ ViewsResourceControllers.controller('ResourcesViewsResourceCtrl',
 			   $scope.viewsRetrieve.offset = '1';
 			   $scope.viewsRetrieve.limit = '2';
 			   $scope.viewsRetrieve.format_output = '0';
-			   $scope.viewsRetrieve.filters = "comment_count=4";
-			   $scope.viewsRetrieve.exp_sort = "sort_by=created&sort_order=ASC";
+			   $scope.viewsRetrieve.exposed_filters = "comment_count=4&sort_by=created&sort_order=ASC";
 
 			   $scope.callViewsRecourceRetrieve = function(viewsRetrieve) {
 				   requestStart = Date.now();
-		
-				   ViewsResource.retrieve(viewsRetrieve.view_name, viewsRetrieve.display_id, viewsRetrieve.args, viewsRetrieve.offset, viewsRetrieve.limit, viewsRetrieve.format_output, viewsRetrieve.exp_sort  ).then(
-						//conncet success
+				   var view_name = viewsRetrieve.view_name;
+				   delete viewsRetrieve.view_name;
+				   //ViewsResource.retrieve(viewsRetrieve.view_name, viewsRetrieve.display_id, viewsRetrieve.args, viewsRetrieve.offset, viewsRetrieve.limit, viewsRetrieve.format_output, viewsRetrieve.exp_sort  ).then(
+				   ViewsResource.retrieve(view_name, viewsRetrieve).then(
+				   //	conncet success
 				    	function(data) { console.log('views retrieve success'); },
 				    	//conncet error
 				    	function(data) { console.log('views retrieve error'); }
