@@ -223,7 +223,7 @@ userResourceControllers.controller('ResourcesUserResourceCtrl',
 				 $scope.RegisterData.mail = "test@email1.com";
 				 $scope.RegisterData.pass = "password";
 				// $scope.RegisterData.theme = "theme";
-				// $scope.RegisterData.signature = "signature";
+				 $scope.RegisterData.signature = "signature";
 				// $scope.RegisterData.signature_format = "plain_text";
 				// $scope.RegisterData.created = "created";
 				// $scope.RegisterData.access = "access";
