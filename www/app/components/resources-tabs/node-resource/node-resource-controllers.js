@@ -179,13 +179,19 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 					   //get params for index request
 					   $scope.nodeIndex = {};
 					   $scope.nodeIndex.page = null;
-					   $scope.nodeIndex.fields = null;
+					   
+					   $scope.nodeIndex.fields = {};
+					   $scope.nodeIndex.fields.nid = true;
+					   $scope.nodeIndex.fields.created = true;
+					   $scope.nodeIndex.fields.type = true;
+					   $scope.nodeIndex.fields.title = true;
+					   
 					   $scope.nodeIndex.parameters = null;
 					   $scope.nodeIndex.pagesize = null;
 					   
 					   $scope.callNodeRecourceIndex = function(nodeIndex) {
 						   requestStart = Date.now();
-						   NodeResource.index(nodeIndex.page, nodeIndex.fields, nodeIndex.parameters, nodeIndex.pagesize).then(
+						   NodeResource.index(nodeIndex).then(
 						    		//success
 						    		function(data) { 
 						    			console.log('node index request success');  
@@ -274,7 +280,7 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 					   });
 					   
 					   
-					  //Attach File
+					   //Attach File
 					   $scope.nodeAttachFileRequests = [];
 					   
 					   $scope.nodeAttachFile = {};

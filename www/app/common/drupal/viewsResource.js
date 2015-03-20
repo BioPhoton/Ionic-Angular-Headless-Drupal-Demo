@@ -1,7 +1,7 @@
 /**
  * Views Resource Modules
  */
-var ViewsResourceModules = angular.module('ViewsResourceModules', ['drupal.configurations']);
+var ViewsResourceModules = angular.module('ViewsResourceModules', ['drupalBaseModules']);
 
 
 //@TODO config provider
@@ -83,57 +83,37 @@ ViewsResourceModules.service('ViewsResourceChannel', ['$rootScope', 'ViewsResour
  * https://www.drupal.org/project/views_datasource
  * 
 **/
-ViewsResourceModules.service('ViewsResource', [ 'drupalApiConfig', 'ViewsResourceConfig', 'ViewsResourceChannel', '$http', '$q', 
-                                        function(drupalApiConfig,   ViewsResourceConfig,   ViewsResourceChannel,   $http,   $q) {
-	
-	var getParams = [];
-	/*
-	 * getPreparedIndexParams
-	 * */
-	var prepareAndSetParam = function(key, values, type) {
-		
-		
-		if(key) { 
-			key = (key || key === 0)?key:false;
-			if(key === false) {return false;}
-		}
-		else { return false; }
-		
-		
-		if(values) { 
-			values = (values || values === 0)?values:false;
-			if(values === false) {return false;}
-		}
-		else { return false; }
-		
-		if(type) {
-			if(type != 'json') {
-				return false;
-			}
-		}
-		
-		
-		//normal param
-		if(!type) {
-			getParams.push(key + '=' + values);
-			console.log(getParams); 
-			return true;
-		}
-		//json
-		if(type === 'json') {
-			angular.forEach(values, function(value , key) {
-				getParams.push(key + '=' + value)
-			});
-			
-			console.log(getParams); 
-			return true;
-		}
-	
-		
-	};
-	
-	
 
+//http://blog.revolunet.com/blog/2014/02/14/angularjs-services-inheritance/
+ViewsResourceModules.factory('ViewsResource', [  'baseResource', 'drupalApiConfig', '$http', '$q', 'ViewsResourceConfig', 'ViewsResourceChannel', 
+                                        function( baseResource,   drupalApiConfig,   $http,   $q,   ViewsResourceConfig,   ViewsResourceChannel) {
+
+	// create our new custom object that reuse the original object constructor
+    var ViewsResource = function() {
+    	baseResource.apply(this, arguments);
+    };
+        
+    // reuse the original object prototype
+    ViewsResource.prototype = new baseResource();
+    console.log(this); 
+    // define a new internal private method for this object
+    function prepareRetrieveGetParams(options) {
+    	console.log(this); 
+
+        var type = undefined;
+		//prepare and set optional params
+		angular.forEach(options, function(value , key) {
+			if(key === 'exposed_filters') { type = 'json'; }
+			this.prepareAndSetGetParam(key, value, type);
+	        type = undefined;
+	    });
+		
+		var getParamsString = this.getParams.join('&');
+		this.getParams = [];
+		
+		return getParamsString;
+    }
+	
 	/*
 	 * Retrieve
 	 * 
@@ -143,8 +123,8 @@ ViewsResourceModules.service('ViewsResource', [ 'drupalApiConfig', 'ViewsResourc
 	 * Url: http://drupal_instance/api_endpoint/views/{VIEW_NAME}
 	 * Headers: Content-Type:application/json
 	 * 
+	 * @param {String} view_name The name of the view to get., required:true, source:path
 	 * @param {Json-Object} options
-	 * options@key {String} view_name The name of the view to get., required:true, source:path
 	 * options@key {String} display_id The display ID of the view to get., required:false, source:param
 	 * options@key {Array} args A list of arguments to pass to the view., required:false, source:param
 	 * options@key {Integer} offset The number of the entry for the page begin with., required:false, source:param
@@ -160,37 +140,26 @@ ViewsResourceModules.service('ViewsResource', [ 'drupalApiConfig', 'ViewsResourc
 	 * order by : create them in the view under "Sort criteria".  Expose it for users and use it like => sort_by=created&sort_order=ASC
 	 * 
 	 * 
-	*/
-	var retrieve = function(view_name, options){
-				
+	 */
+	ViewsResource.prototype.retrieve = function(view_name, options){
+		
+		var self = this;
+		
 		var retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + ViewsResourceConfig.resourcePath + '/' + view_name; 
-			
 		retrievePath +=  (Object.getOwnPropertyNames(options).length > 0)?'?':'';
-		 
-		var type = undefined;
-		angular.forEach(options, function(value , key) {
-			if(key === 'exposed_filters') {
-				type = 'json';
-			}
-			
-	        prepareAndSetParam(key, value, type);
-	        
-	        type = undefined;
-	    });
+		retrievePath += prepareRetrieveGetParams(options);
 		
-		retrievePath += ( (options.display_id)?('display_id='+options.display_id+'&'):'') + ((options.args)?('args='+options.args+'&'):'') + ((options.offset)?('offset='+options.offset+'&'):'') + ((options.limit)?('limit='+options.limit+'&'):'') + ((options.format_output)?('format_output='+options.format_output+'&'):'');
-		retrievePath +=  ((options.exposed_filters)?(options.exposed_filters):'') 
-		
-			requestConfig = {
-	 			method: 'GET',
-				url : retrievePath,
-				headers: {
-					"Accept" 		: "application/json",
-					"Content-Type"	: "application/json",
-				},
-	 	 	  },
-	 	 	  defer = $q.defer(),
-			errors = [];
+		requestConfig = {
+ 			method: 'GET',
+			url : retrievePath,
+			//@TODO set these over the format options in baseRecource
+			headers: {
+				"Accept" 		: "application/json",
+				"Content-Type"	: "application/json",
+			},
+ 	 	},
+ 	 	defer = $q.defer(),
+		errors = [];
  			
 		//if not given
 		if(!view_name) { errors.push('Param view_name is required.'); }
@@ -216,9 +185,6 @@ ViewsResourceModules.service('ViewsResource', [ 'drupalApiConfig', 'ViewsResourc
 
 	};
 
-	//public methods	
-	return {
-		retrieve : retrieve
-	};
+	return new ViewsResource;
 	
 }]);

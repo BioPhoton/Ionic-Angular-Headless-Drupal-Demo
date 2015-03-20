@@ -314,74 +314,62 @@ NodeRecourceModules.service('NodeResourceChannel', ['$rootScope', 'NodeResourceC
 NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceConfig', 'NodeResourceChannel', '$http', '$q', 
                             function(drupalApiConfig,   NodeResourceConfig,   NodeResourceChannel,   $http,   $q) {
 	
-	/*
-	 * getPreparedIndexParams
-	 * */
-	var getPreparedIndexParams = function(page, fields, parameters, pagesize) {
-		
-		var preparedIndexParams = [],
-			ampersand = '&';
-		
-		//Prepare page param
-		page = (page || page === 0)?page:false;
-		if(page !== false) {page = (parseInt(page) != NaN)?parseInt(page):false; }
-		if(page !== false && page !== NaN) { 
-			page = "page="+page;
-			preparedIndexParams += (preparedIndexParams != '')?ampersand+page:page; 
-			}
-			
-		//Prepare pagesize param
-		pagesize = (pagesize)?pagesize:false;
-		if(pagesize !== false) { pagesize = (parseInt(pagesize) != NaN)?parseInt(pagesize):false; }
-		if(pagesize !== false) { 
-			pagesize = "pagesize="+pagesize;
-			preparedIndexParams += (preparedIndexParams != '')?ampersand+pagesize:pagesize; 
-			}
-		
-		//Prepare fields param
-		fields = (fields)?fields:false;
-		if(fields !== false) {
-			//parse array
-			fields = fields.split(',');
-			var newFields = [];
-			
-			angular.forEach(fields, function(value, key) {
-			
-				if(value.trim() != '') {
-					this.push(value.trim()+ (fields.length >= key?'':','));
-				}
-			},newFields);
-			fields = newFields;
-		}
-		if(fields !== false) { 
-			fields = "fields="+fields;
-			preparedIndexParams += (preparedIndexParams != '')?ampersand+fields:fields; 
-		}
-		
-		//Prepare parameters param
-		parameters = (parameters)?parameters:false;
-		if(parameters !== false) {
+	var getParams = [];
 
-			parameters = parameters.split(',');
-			var newParameters = '',
-				param = '';
-			angular.forEach(parameters, function(value, key) {
-				if(value.trim() != '' ) {
-					value = value.split('=');
-					if(value[0].trim() != '' && value[1].trim()) {
-						param = "parameters['"+value[0].trim() + "']="+ value[1];
-						newParameters += (newParameters != '')?ampersand+param:param;
-					}
-				}
-			});
-			parameters = newParameters;
+	var prepareAndSetGetParam = function(key, values, type) {
+		//validate key
+		if(key) { 
+			key = (key)?key:false;
+			if(key === false) {return false;}
+		} else { return false; }
+		//validate values
+		if(values) { 
+			values = (values || values === 0)?values:false;
+			if(values === false) {return false;}
+			else if (Object.getOwnPropertyNames(values).length <= 0) { return false; }
+		} else { return false; }
+		//validate type
+		if(type) { if(type != 'array' && type != 'json' && type != 'array_keys') { return false; } }
+		
+		//normal param
+		if(!type) {
+			getParams.push(key + '=' + values);
+			return true;
 		}
-		if(parameters !== false) { 
-			preparedIndexParams += (preparedIndexParams != '')?ampersand+parameters:parameters; 
+		//json
+		if(type === 'json') {
+			angular.forEach(values, function(value, k) {
+				getParams.push(k + '=' + value)
+			});
+			return true;
+		}
+		//array
+		if(type === 'array') {
+			var arrayValues = [];
+			angular.forEach(values, function(value, k) {
+				if(value !== false) { this.push(k); }
+			}, arrayValues);
+			
+			getParams.push(key + '=' + arrayValues.join(','))
+			return true;
+		}
+		//array_keys
+		if(type === 'array_keys') {
+			angular.forEach(values, function(value, k) {
+				if(value !== false) { getParams.push(key + '=' + k) }
+			});
+			return true;
+		}
+		//array_key_value
+		if(type === 'array_key_value') {
+			angular.forEach(values, function(value, k) {
+				getParams.push(key+"['"+k+"']="+ value);
+			});
+			return true;
 		}
 		
-		return preparedIndexParams;
 	};
+	
 	
 	/*
 	 * 
@@ -603,16 +591,28 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceCo
 	 * @return 	{Promise}
 	 * 
 	 */
-	var index = function(page, fields, parameters, pagesize) {
+	var index = function(options) {
+	
+		var indexPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath;
+		indexPath +=  (Object.getOwnPropertyNames(options).length > 0)?'?':'';
 		
-		var IndexParams = getPreparedIndexParams(page, fields, parameters, pagesize),
-			retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + (IndexParams?'?'+IndexParams:''),
-			defer = $q.defer(),
-			requestConfig = {
-				method :'GET',
-				url : retrievePath,
-			},
-			errors = [];
+		var type = undefined;
+		//prepare and set optional params
+		angular.forEach(options, function(value , key) {
+			if(key === 'parameters') { type = 'array_key_value'; }
+			else if(key === 'fields') { type = 'array'; }
+			prepareAndSetGetParam(key, value, type);
+	        type = undefined;
+	    });
+		
+		indexPath += getParams.join('&');
+		
+		var defer = $q.defer(),
+		requestConfig = {
+			method :'GET',
+			url : indexPath,
+		},
+		errors = [];		
 		
 		if(errors.length != 0) {
 			NodeResourceChannel.publishNodeIndexFailed(errors);

@@ -485,74 +485,43 @@ UserResourceModules.service('UserResourceChannel', ['$rootScope', 'UserResourceC
 UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceConfig', 'UserResourceChannel', '$http', '$q', 
                             function(drupalApiConfig,   UserResourceConfig,   UserResourceChannel,   $http,   $q) {
 	
+	var getParams = [];
 
-	/*
-	 * getPreparedIndexParams
-	 * */
-	var getPreparedIndexParams = function(page, fields, parameters, pagesize) {
+	var prepareAndSetGetParam = function(key, values, type) {
+		//validate key
+		if(key) { 
+			key = (key)?key:false;
+			if(key === false) {return false;}
+		} else { return false; }
+		//validate values
+		if(values) { 
+			values = (values || values === 0)?values:false;
+			if(values === false) {return false;}
+			else if (Object.getOwnPropertyNames(values).length <= 0) { return false; }
+		} else { return false; }
+		//validate type
+		if(type) { if(type != 'array' && type != 'json') { return false; } }
 		
-		var preparedIndexParams = [],
-			ampersand = '&';
-		
-		//Prepare page param
-		page = (page || page === 0)?page:false;
-		if(page !== false) {page = (parseInt(page) != NaN)?parseInt(page):false; }
-		if(page !== false && page !== NaN) { 
-			page = "page="+page;
-			preparedIndexParams += (preparedIndexParams != '')?ampersand+page:page; 
-			}
-			
-		//Prepare pagesize param
-		pagesize = (pagesize)?pagesize:false;
-		if(pagesize !== false) { pagesize = (parseInt(pagesize) != NaN)?parseInt(pagesize):false; }
-		if(pagesize !== false) { 
-			pagesize = "pagesize="+pagesize;
-			preparedIndexParams += (preparedIndexParams != '')?ampersand+pagesize:pagesize; 
-			}
-		
-		//Prepare fields param
-		fields = (fields)?fields:false;
-		if(fields !== false) {
-			//parse array
-			fields = fields.split(',');
-			var newFields = [];
-			
-			angular.forEach(fields, function(value, key) {
-			
-				if(value.trim() != '') {
-					this.push(value.trim()+ (fields.length >= key?'':','));
-				}
-			},newFields);
-			fields = newFields;
+		//normal param
+		if(!type) {
+			getParams.push(key + '=' + values);
+			return true;
 		}
-		if(fields !== false) { 
-			fields = "fields="+fields;
-			preparedIndexParams += (preparedIndexParams != '')?ampersand+fields:fields; 
-		}
-		
-		//Prepare parameters param
-		parameters = (parameters)?parameters:false;
-		if(parameters !== false) {
-
-			parameters = parameters.split(',');
-			var newParameters = '',
-				param = '';
-			angular.forEach(parameters, function(value, key) {
-				if(value.trim() != '' ) {
-					value = value.split('=');
-					if(value[0].trim() != '' && value[1].trim()) {
-						param = "parameters['"+value[0].trim() + "']="+ value[1];
-						newParameters += (newParameters != '')?ampersand+param:param;
-					}
-				}
+		//json
+		if(type === 'json') {
+			angular.forEach(values, function(value, k) {
+				getParams.push(k + '=' + value)
 			});
-			parameters = newParameters;
+			return true;
 		}
-		if(parameters !== false) { 
-			preparedIndexParams += (preparedIndexParams != '')?ampersand+parameters:parameters; 
+		//array
+		if(type === 'array') {
+			angular.forEach(values, function(value, k) {
+				getParams.push(key+"['"+k+"']="+ value);
+			});
+			return true;
 		}
 		
-		return preparedIndexParams;
 	};
 	
 	
@@ -764,21 +733,28 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * @return 	{Promise}
 	 * 
 	 */
-	var index = function( page, fields, parameters, pagesize ) {
-		var IndexParams = getPreparedIndexParams(page, fields, parameters, pagesize),
-		retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + (IndexParams?'?'+IndexParams:''),
-		defer = $q.defer(),
+	var index = function( options ) {
+		
+		var indexPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath;
+		indexPath +=  (Object.getOwnPropertyNames(options).length > 0)?'?':'';
+		
+		var defer = $q.defer(),
 		requestConfig = {
 			method :'GET',
-			url : retrievePath,
+			url : indexPath,
 		},
 		errors = [];
-	
-	if(errors.length != 0) {
-		UserResourceChannel.publishUserIndexFailed(errors);
-		defer.reject(errors); 
-		return defer.promise;
-	};
+		
+		var type = undefined;
+		//prepare and set optional params
+		angular.forEach(options, function(value , key) {
+			if(key === 'parameters') { type = 'array'; }
+			else if(key === 'fields') { type = 'json'; }
+	        prepareAndSetParam(key, value, type);
+	        type = undefined;
+	    });
+		indexPath += getParams.join('&');
+		
 	
 	$http(requestConfig)
 	.success(function(data, status, headers, config){

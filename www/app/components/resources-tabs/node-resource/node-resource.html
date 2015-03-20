@@ -164,11 +164,21 @@
 <label class="item item-input">
 <input type="text" ng-init="nodeIndex.pagesize=5" ng-model="nodeIndex.pagesize" placeholder="pagesize" >
 </label>
+<p><b>Fields:</b><br>
+Fields of node that are returned
+</p>
+<ion-checkbox ng-model="nodeIndex.fields.nid">fields.nid</ion-checkbox>
+<ion-checkbox ng-model="nodeIndex.fields.created">fields.created</ion-checkbox>
+<ion-checkbox ng-model="nodeIndex.fields.type">fields.type</ion-checkbox>
+<ion-checkbox ng-model="nodeIndex.fields.title">fields.title</ion-checkbox>
+<p><b>Parameters:</b><br>
+Parameters of node that are returned
+</p>
 <label class="item item-input">
-<input type="text" ng-init="nodeIndex.fields='nid, created, type, title'" ng-model="nodeIndex.fields" placeholder="fields" >
+	<input type="text" ng-model="viewsRetrieve.parameters.nid" placeholder="nid" >
 </label>
 <label class="item item-input">
-<input type="text" ng-init="nodeIndex.parameters='nid=1, type=page, '" ng-model="nodeIndex.parameters" placeholder="parameters" >
+	<input type="text" ng-model="viewsRetrieve.parameters.type" placeholder="type" >
 </label>
 <button class="button button-small" ng-click="callNodeRecourceIndex(nodeIndex)">call NodeRecource.index</button>
 <hr />
