@@ -38,7 +38,11 @@ ViewsResourceControllers.controller('ResourcesViewsResourceCtrl',
 			   $scope.viewsRetrieve.offset = '1';
 			   $scope.viewsRetrieve.limit = '2';
 			   $scope.viewsRetrieve.format_output = '0';
-			   $scope.viewsRetrieve.exposed_filters = "comment_count=4&sort_by=created&sort_order=ASC";
+			   
+			   $scope.viewsRetrieve.exposed_filters = {};
+			   $scope.viewsRetrieve.exposed_filters.comment_count = 4;
+			   $scope.viewsRetrieve.exposed_filters.sort_by = 'created';
+			   $scope.viewsRetrieve.exposed_filters.sort_order = 'ASC';
 
 			   $scope.callViewsRecourceRetrieve = function(viewsRetrieve) {
 				   requestStart = Date.now();

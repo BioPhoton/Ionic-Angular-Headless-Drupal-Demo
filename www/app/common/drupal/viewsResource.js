@@ -86,6 +86,53 @@ ViewsResourceModules.service('ViewsResourceChannel', ['$rootScope', 'ViewsResour
 ViewsResourceModules.service('ViewsResource', [ 'drupalApiConfig', 'ViewsResourceConfig', 'ViewsResourceChannel', '$http', '$q', 
                                         function(drupalApiConfig,   ViewsResourceConfig,   ViewsResourceChannel,   $http,   $q) {
 	
+	var getParams = [];
+	/*
+	 * getPreparedIndexParams
+	 * */
+	var prepareAndSetParam = function(key, values, type) {
+		
+		
+		if(key) { 
+			key = (key || key === 0)?key:false;
+			if(key === false) {return false;}
+		}
+		else { return false; }
+		
+		
+		if(values) { 
+			values = (values || values === 0)?values:false;
+			if(values === false) {return false;}
+		}
+		else { return false; }
+		
+		if(type) {
+			if(type != 'json') {
+				return false;
+			}
+		}
+		
+		
+		//normal param
+		if(!type) {
+			getParams.push(key + '=' + values);
+			console.log(getParams); 
+			return true;
+		}
+		//json
+		if(type === 'json') {
+			angular.forEach(values, function(value , key) {
+				getParams.push(key + '=' + value)
+			});
+			
+			console.log(getParams); 
+			return true;
+		}
+	
+		
+	};
+	
+	
 
 	/*
 	 * Retrieve
@@ -119,6 +166,17 @@ ViewsResourceModules.service('ViewsResource', [ 'drupalApiConfig', 'ViewsResourc
 		var retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + ViewsResourceConfig.resourcePath + '/' + view_name; 
 			
 		retrievePath +=  (Object.getOwnPropertyNames(options).length > 0)?'?':'';
+		 
+		var type = undefined;
+		angular.forEach(options, function(value , key) {
+			if(key === 'exposed_filters') {
+				type = 'json';
+			}
+			
+	        prepareAndSetParam(key, value, type);
+	        
+	        type = undefined;
+	    });
 		
 		retrievePath += ( (options.display_id)?('display_id='+options.display_id+'&'):'') + ((options.args)?('args='+options.args+'&'):'') + ((options.offset)?('offset='+options.offset+'&'):'') + ((options.limit)?('limit='+options.limit+'&'):'') + ((options.format_output)?('format_output='+options.format_output+'&'):'');
 		retrievePath +=  ((options.exposed_filters)?(options.exposed_filters):'') 
