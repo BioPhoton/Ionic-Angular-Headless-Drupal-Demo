@@ -57,8 +57,8 @@ UserResourceModules.constant("UserResourceConfig", {
 	user_requestNewPasswordConfirmed  	: 'event:drupal-user-requestNewPasswordConfirmed',
 	user_requestNewPasswordFailed  		: 'event:drupal-user-requestNewPasswordFailed',
 	//Cancel action
-	user_CancelConfirmed  				: 'event:drupal-user-CancelConfirmed',
-	user_CancelFailed  					: 'event:drupal-user-CancelFailed',
+	user_cancelConfirmed  				: 'event:drupal-user-cancelConfirmed',
+	user_cancelFailed  					: 'event:drupal-user-cancelFailed',
 	//Password Reset
 	user_passwordResetConfirmed  		: 'event:drupal-user-passwordResetConfirmed',
 	user_passwordResetFailed  			: 'event:drupal-user-passwordResetFailed',
@@ -344,6 +344,7 @@ UserResourceModules.service('UserResourceChannel', ['$rootScope', 'UserResourceC
     
     // Publish user cancel failed event
     var publishUserCancelFailed = function (error) {
+    	console.log('error', error, UserResourceConfig.user_cancelFailed); 
         $rootScope.$broadcast(UserResourceConfig.user_cancelFailed, {error: error});
     };
     // Subscribe to user cancel failed event
@@ -976,11 +977,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 					"Accept" 		: "application/json",
 					"Content-Type"	: "application/json",
 				},
-				data : {
-					name : account.username,
-					pass : account.password,
-					mail : account.email
-				}
+				data : account
 	 	 	  },
 	 	 	  defer = $q.defer();
 		
@@ -1002,7 +999,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * 
 	 * Cancel a user
 	 * Method: POST
-	 * Url: http://drupal_instance/api_endpoint/user/cancel/{UID}
+	 * Url: http://drupal_instance/api_endpoint/user/{UID}/cancel
 	 * Headers: Content-Type:application/json
 	 * 
 	 * @param {Integer} uid The user object, required:true, source:path
@@ -1012,13 +1009,13 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 */
 	var cancel = function(uid) {
 		var defer = $q.defer(),
-        pathToCancel = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.cancel,
+        pathToCancel = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + uid + '/' + UserResourceConfig.actions.cancel,
         requestConfig = {
 			       url: pathToCancel,
 			       method: 'POST'
 		},
 		errors = [];
-	
+		
 		//if not given
 		if(!uid) { errors.push('Param uid is required.');}
 
@@ -1028,7 +1025,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 			return defer.promise;
 		};
 		
-	     $http(requestConfig)
+	    $http(requestConfig)
         .success(function (data) {
           UserResourceChannel.publishUserCancelConfirmed(data);
           defer.resolve(data);
@@ -1047,7 +1044,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * 
 	 * resets the password
 	 * Method: POST
-	 * Url: http://drupal_instance/api_endpoint/user/password_reset/{UID}
+	 * Url: http://drupal_instance/api_endpoint/user/{UID}/password_reset
 	 * Headers: Content-Type:application/json
 	 * 
 	 * @param {Integer} uid The id of the user whose password to reset., required:true, source:path
@@ -1057,7 +1054,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 */
 	var password_reset = function(uid) {
 		var defer = $q.defer(),
-        pathToPasswordReset = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.password_reset,
+        pathToPasswordReset = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + uid + '/' + UserResourceConfig.actions.password_reset,
         requestConfig = {
 			       url: pathToPasswordReset,
 			       method: 'POST'
@@ -1092,7 +1089,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 * 
 	 * resets the password
 	 * Method: POST
-	 * Url: http://drupal_instance/api_endpoint/user/resend_welcome_email/{UID}
+	 * Url: http://drupal_instance/api_endpoint/user/{UID}/resend_welcome_email
 	 * Headers: Content-Type:application/json
 	 * 
 	 * @param {Integer} uid The id of the user whose welcome email to resend., required:true, source:path
@@ -1102,7 +1099,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	 */
 	var resend_welcome_email = function(uid) {
 		var defer = $q.defer(),
-        pathToResendWelcomeEmail = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + UserResourceConfig.actions.resend_welcome_email,
+        pathToResendWelcomeEmail = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath + '/' + uid + '/' + UserResourceConfig.actions.resend_welcome_email,
         requestConfig = {
 			       url: pathToResendWelcomeEmail,
 			       method: 'POST'

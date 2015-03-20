@@ -190,13 +190,13 @@
 	<form name="registerForm" novalidate="" ng-submit="register(registerForm)">
 		<div class="list">
 			<label class="item item-input">
-				<input type="text" ng-model="RegisterData.username" placeholder="Username" name="username" spellcheck="false">
+				<input type="text" ng-model="RegisterData.name" placeholder="Username" name="name" spellcheck="false">
 			</label>
 			<label class="item item-input">
-				<input type="email" placeholder="Email Address" name="email" ng-model="RegisterData.email">
+				<input type="email" placeholder="Email Address" name="mail" ng-model="RegisterData.mail">
 			</label>
 			<label class="item item-input">
-				<input type="password" placeholder="Password" name="password" ng-model="RegisterData.password">
+				<input type="password" placeholder="Password" name="pass" ng-model="RegisterData.pass">
 			</label>
 			<div class="button-bar">
 				<button class="padding-top button button-block button-positive" ng-click="callUserResourceRegister(RegisterData)">call UserResourceLogin.login</button>
@@ -326,7 +326,7 @@
 
 <h2>Cancle</h2>
 	<ion-list>
-	  <div ng-repeat="(key,request) in userCancleRequests">
+	  <div ng-repeat="(key,request) in userCancelRequests">
 	    <ion-item class="item-stable"
 	              ng-click="toggleRequest(key)"
 	              ng-class="{active: isRequestShown(key)}">
@@ -351,7 +351,71 @@
 				<span class="input-label">Uid</span>
 				<input type="text" placeholder="Uid" name="uid" ng-model="CancelData.uid">
 			</label> 
-			<button type="submit" class="button  button-block button-positive" ng-click="callUserCancle()">call UserResource.cancle</button>
+			<button type="submit" class="button  button-block button-positive" ng-click="callUserCancle(CancelData)">call UserResource.cancle</button>
+		</div>
+	</form> 
+<hr />
+
+<h2>Password Reset</h2>
+	<ion-list>
+	  <div ng-repeat="(key,request) in userPasswordResetRequests">
+	    <ion-item class="item-stable"
+	              ng-click="toggleRequest(key)"
+	              ng-class="{active: isRequestShown(key)}">
+	        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+	      &nbsp;
+	      Token Request {{key}} at {{request.requestStart | date}}
+	    </ion-item>
+	    <ion-item class="item-accordion"
+	              ng-repeat="(name, value) in request"
+	              ng-show="isRequestShown(key)">
+	      <h2>{{name}}</h2>
+		  <p ng-show="name != 'data'">{{value}}</p>
+		  <pre ng-show="name == 'data'">
+		  {{ request.data | json}}
+		  </pre>
+	    </ion-item>
+	  </div>
+	</ion-list>
+	<form>
+		<div class="list list-inset">
+			<label class="item item-input item-floating-label"> 
+				<span class="input-label">Uid</span>
+				<input type="text" placeholder="Uid" name="uid" ng-model="PasswordResetData.uid">
+			</label> 
+			<button type="submit" class="button  button-block button-positive" ng-click="callUserPasswordReset(PasswordResetData)">call UserResource.password_reset</button>
+		</div>
+	</form> 
+<hr />
+
+<h2>Resend Welcome Email</h2>
+	<ion-list>
+	  <div ng-repeat="(key,request) in userResendWelcomeEmailRequests">
+	    <ion-item class="item-stable"
+	              ng-click="toggleRequest(key)"
+	              ng-class="{active: isRequestShown(key)}">
+	        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+	      &nbsp;
+	      Token Request {{key}} at {{request.requestStart | date}}
+	    </ion-item>
+	    <ion-item class="item-accordion"
+	              ng-repeat="(name, value) in request"
+	              ng-show="isRequestShown(key)">
+	      <h2>{{name}}</h2>
+		  <p ng-show="name != 'data'">{{value}}</p>
+		  <pre ng-show="name == 'data'">
+		  {{ request.data | json}}
+		  </pre>
+	    </ion-item>
+	  </div>
+	</ion-list>
+	<form>
+		<div class="list list-inset">
+			<label class="item item-input item-floating-label"> 
+				<span class="input-label">Uid</span>
+				<input type="text" placeholder="Uid" name="uid" ng-model="ResendWelcomeEmailData.uid">
+			</label> 
+			<button type="submit" class="button  button-block button-positive" ng-click="callUserResendWelcomeEmail(ResendWelcomeEmailData)">call UserResource.resend_welcome_email</button>
 		</div>
 	</form> 
 <hr />

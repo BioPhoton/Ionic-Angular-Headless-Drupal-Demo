@@ -219,9 +219,22 @@ userResourceControllers.controller('ResourcesUserResourceCtrl',
 				 $scope.userRegisterRequests = [];
 				 
 				 $scope.RegisterData = {};
-				 $scope.RegisterData.username = "test-user1";
-				 $scope.RegisterData.email = "test@email1.com";
-				 $scope.RegisterData.password = "password";
+				 $scope.RegisterData.name = "test-user1";
+				 $scope.RegisterData.mail = "test@email1.com";
+				 $scope.RegisterData.pass = "password";
+				// $scope.RegisterData.theme = "theme";
+				// $scope.RegisterData.signature = "signature";
+				// $scope.RegisterData.signature_format = "plain_text";
+				// $scope.RegisterData.created = "created";
+				// $scope.RegisterData.access = "access";
+				// $scope.RegisterData.login = "login";
+				 $scope.RegisterData.status = 1;
+				 //$scope.RegisterData.timezone = "timezone";
+				 //$scope.RegisterData.language = "language";
+				// $scope.RegisterData.picture = "picture";
+				// $scope.RegisterData.roles = "roles";
+				// $scope.RegisterData.field_nickname = "field_nickname";
+
 				 
 				 $scope.callUserResourceRegister = function(RegisterData) {
 					    requestStart = Date.now();
@@ -332,17 +345,17 @@ userResourceControllers.controller('ResourcesUserResourceCtrl',
 				 $scope.CancelData = {};
 				 $scope.CancelData.uid = "12";
 				 
-				 $scope.callUserCancle = function(CancelData) {
-					 console.log('ASdf'); 
-					    requestStart = Date.now();
-						UserResource.cancel(CancelData.uid)
-						    .then(
-						    		//success
-						    		function(data) { console.log('user request_new_password success');},
-						    		//error
-						    		function(data) { console.log('user request_new_password error');}
-						    );
-			     }
+				 $scope.callUserCancle = function(CancelData) { 
+					 requestStart = Date.now();
+					 UserResource.cancel(CancelData.uid)
+					    .then(
+					    		//success
+					    		function(data) { console.log('user cancle success');},
+					    		//error
+					    		function(data) { console.log('user cancle error');}
+					    );
+				 };
+				 
 				 //
 				 UserResourceChannel.onUserCancelConfirmed($scope, function(data) { 
 					   requestEnd = Date.now();
@@ -353,6 +366,66 @@ userResourceControllers.controller('ResourcesUserResourceCtrl',
 					   requestEnd = Date.now();
 					   console.log('onUserCancelFailed'); 
 					   $scope.userCancelRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+				 });
+				 
+				 //Password Reset
+				 $scope.userPasswordResetRequests = [];
+				 
+				 $scope.PasswordResetData = {};
+				 $scope.PasswordResetData.uid = "12";
+				 
+				 $scope.callUserPasswordReset = function(PasswordResetData) { 
+					
+					 requestStart = Date.now();
+					 UserResource.password_reset(PasswordResetData.uid)
+					    .then(
+					    		//success
+					    		function(data) { console.log('user password_reset success');},
+					    		//error
+					    		function(data) { console.log('user password_reset error');}
+					    );
+				 };
+				 
+				 //
+				 UserResourceChannel.onUserPasswordResetConfirmed($scope, function(data) { 
+					   requestEnd = Date.now();
+					   console.log('onUserPasswordResetConfirmed'); 
+					   $scope.userPasswordResetRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+				 });
+				 UserResourceChannel.onUserPasswordResetFailed($scope, function(data) { 
+					   requestEnd = Date.now();
+					   console.log('onUserPasswordResetFailed'); 
+					   $scope.userPasswordResetRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+				 });
+				 
+				//Resend Welcome Email
+				 $scope.userResendWelcomeEmailRequests = [];
+				 
+				 $scope.ResendWelcomeEmailData = {};
+				 $scope.ResendWelcomeEmailData.uid = "12";
+				 
+				 $scope.callUserResendWelcomeEmail = function(ResendWelcomeEmailData) { 
+					
+					 requestStart = Date.now();
+					 UserResource.resend_welcome_email(ResendWelcomeEmailData.uid)
+					    .then(
+					    		//success
+					    		function(data) { console.log('user resend_welcome_email success');},
+					    		//error
+					    		function(data) { console.log('user resend_welcome_email error');}
+					    );
+				 };
+				 
+				 //
+				 UserResourceChannel.onUserResendWelcomeEmailConfirmed($scope, function(data) { 
+					   requestEnd = Date.now();
+					   console.log('onUserPasswordResetConfirmed'); 
+					   $scope.userResendWelcomeEmailRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
+				 });
+				 UserResourceChannel.onUserResendWelcomeEmailFailed($scope, function(data) { 
+					   requestEnd = Date.now();
+					   console.log('onUserResendWelcomeEmailFailed'); 
+					   $scope.userResendWelcomeEmailRequests.push({requestStart:requestStart, requestEnd:requestEnd,  requestDuration:requestEnd-requestStart, data:data});
 				 });
 			  
 			  
