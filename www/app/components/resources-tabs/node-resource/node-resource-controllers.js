@@ -186,11 +186,12 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 					   $scope.nodeIndex.fields.type = true;
 					   $scope.nodeIndex.fields.title = true;
 					   
-					   $scope.nodeIndex.parameters = null;
+					   $scope.nodeIndex.parameters = {};
 					   $scope.nodeIndex.pagesize = null;
 					   
 					   $scope.callNodeRecourceIndex = function(nodeIndex) {
 						   requestStart = Date.now();
+						   console.log(nodeIndex);
 						   NodeResource.index(nodeIndex).then(
 						    		//success
 						    		function(data) { 

@@ -1,7 +1,7 @@
 /**
  * User Resource Modules
  */
-var UserResourceModules = angular.module('UserResourceModules', ['drupal.configurations']);
+var UserResourceModules = angular.module('UserResourceModules', ['drupal.configurations', 'drupalBaseModules']);
 
 
 //@TODO config provider
@@ -482,47 +482,26 @@ UserResourceModules.service('UserResourceChannel', ['$rootScope', 'UserResourceC
  * your_api_endpoint/user/*|<mirror>|GET, PUT, POST, DELETE|Content-Type,Authorization
  * 
 **/
-UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceConfig', 'UserResourceChannel', '$http', '$q', 
-                            function(drupalApiConfig,   UserResourceConfig,   UserResourceChannel,   $http,   $q) {
+UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'baseResource', 'UserResourceConfig', 'UserResourceChannel', '$http', '$q', 
+                                      function(drupalApiConfig,   baseResource,   UserResourceConfig,   UserResourceChannel,   $http,   $q) {
 	
-	var getParams = [];
+	// define a new internal private method for this object
+    function prepareIndexGetParams(options) {
 
-	var prepareAndSetGetParam = function(key, values, type) {
-		//validate key
-		if(key) { 
-			key = (key)?key:false;
-			if(key === false) {return false;}
-		} else { return false; }
-		//validate values
-		if(values) { 
-			values = (values || values === 0)?values:false;
-			if(values === false) {return false;}
-			else if (Object.getOwnPropertyNames(values).length <= 0) { return false; }
-		} else { return false; }
-		//validate type
-		if(type) { if(type != 'array' && type != 'json') { return false; } }
+    	var type = undefined;
+		//prepare and set optional params
+		angular.forEach(options, function(value , key) {
+			if(key === 'parameters') { type = 'array_key_value'; }
+			else if(key === 'fields') { type = 'array'; }
+			baseResource.prepareAndSetGetParam(value, key, type);
+	        type = undefined;
+	    });
+		console.log(baseResource);
+		var getParamsString = baseResource.getParams.join('&');
+		baseResource.getParams = [];
 		
-		//normal param
-		if(!type) {
-			getParams.push(key + '=' + values);
-			return true;
-		}
-		//json
-		if(type === 'json') {
-			angular.forEach(values, function(value, k) {
-				getParams.push(k + '=' + value)
-			});
-			return true;
-		}
-		//array
-		if(type === 'array') {
-			angular.forEach(values, function(value, k) {
-				getParams.push(key+"['"+k+"']="+ value);
-			});
-			return true;
-		}
-		
-	};
+		return getParamsString;
+    }
 	
 	
 	/*
@@ -736,7 +715,8 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 	var index = function( options ) {
 		
 		var indexPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath;
-		indexPath +=  (Object.getOwnPropertyNames(options).length > 0)?'?':'';
+		indexPath += (Object.getOwnPropertyNames(options).length > 0)?'?':'';
+		indexPath += prepareIndexGetParams(options); 
 		
 		var defer = $q.defer(),
 		requestConfig = {
@@ -744,29 +724,18 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'UserResourceCo
 			url : indexPath,
 		},
 		errors = [];
+
+		$http(requestConfig)
+		.success(function(data, status, headers, config){
+			UserResourceChannel.publishUserIndexConfirmed(data);
+			defer.resolve(data);
+		})
+		.error(function(data, status, headers, config){
+			UserResourceChannel.publishUserIndexFailed(data);
+			defer.reject(data);
+		});
 		
-		var type = undefined;
-		//prepare and set optional params
-		angular.forEach(options, function(value , key) {
-			if(key === 'parameters') { type = 'array'; }
-			else if(key === 'fields') { type = 'json'; }
-	        prepareAndSetParam(key, value, type);
-	        type = undefined;
-	    });
-		indexPath += getParams.join('&');
-		
-	
-	$http(requestConfig)
-	.success(function(data, status, headers, config){
-		UserResourceChannel.publishUserIndexConfirmed(data);
-		defer.resolve(data);
-	})
-	.error(function(data, status, headers, config){
-		UserResourceChannel.publishUserIndexFailed(data);
-		defer.reject(data);
-	});
-	
-	return defer.promise;
+		return defer.promise;
 	};
 			
 	/*

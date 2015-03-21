@@ -165,13 +165,13 @@ userResourceControllers.controller('ResourcesUserResourceCtrl',
 			   //get params for index request
 			   $scope.userIndex = {};
 			   $scope.userIndex.page = 0;
-			   $scope.userIndex.fields = "uid,name,mail,theme,signature,signature_format,created,access,login,status,timezone,language,picture,init,data";
-			   $scope.userIndex.parameters = "uid=1";
+			   $scope.userIndex.fields = {};
+			   $scope.userIndex.parameters = {};
 			   $scope.userIndex.pagesize = 5;
 			   
 			   $scope.callUserRecourceIndex = function(userIndex) {
 				   requestStart = Date.now();
-				   UserResource.index(userIndex.page, userIndex.fields, userIndex.parameters, userIndex.pagesize).then(
+				   UserResource.index(userIndex).then(
 				    		//success
 				    		function(data) { console.log('user index success'); },
 				    		//error

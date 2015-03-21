@@ -156,12 +156,69 @@
 <label class="item item-input">
 <input type="text"  ng-model="userIndex.pagesize" placeholder="pagesize" >
 </label>
+<ion-checkbox ng-model="userIndex.fields.uid">fields.uid</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.name">fields.name</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.mail">fields.mail</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.theme">fields.theme</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.signature">fields.signature</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.signature_format">fields.signature_format</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.created">fields.created</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.access">fields.access</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.login">fields.login</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.status">fields.status</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.timezone">fields.timezone</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.language">fields.language</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.picture">fields.picture</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.init">fields.init</ion-checkbox>
+<ion-checkbox ng-model="userIndex.fields.data">fields.data</ion-checkbox>
+
 <label class="item item-input">
-<input type="text" ng-model="userIndex.fields" placeholder="fields" >
+	<input type="text" ng-model="userIndex.parameters.uid" placeholder="uid" >
 </label>
 <label class="item item-input">
-<input type="text" ng-model="userIndex.parameters" placeholder="parameters" >
+	<input type="text" ng-model="userIndex.parameters.name" placeholder="name" >
 </label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.mail" placeholder="mail" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.theme" placeholder="theme" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.signature" placeholder="signature" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.signature_format" placeholder="signature_format" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.created" placeholder="created" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.access" placeholder="access" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.login" placeholder="login" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.status" placeholder="status" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.timezone" placeholder="timezone" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.language" placeholder="language" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.picture" placeholder="picture" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.init" placeholder="init" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="userIndex.parameters.data" placeholder="data" >
+</label>
+
+
 <button class="button button-small" ng-click="callUserRecourceIndex(userIndex)">callUserRecourceRetrieve</button>
 <hr />
 

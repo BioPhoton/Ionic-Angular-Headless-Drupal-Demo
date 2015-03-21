@@ -1,7 +1,7 @@
 /**
  * Node Resource Modules
  */
-var NodeRecourceModules = angular.module('NodeRecourceModules', ['drupal.configurations']);
+var NodeRecourceModules = angular.module('NodeRecourceModules', ['drupal.configurations', 'drupalBaseModules']);
 
 
 //@TODO config provider
@@ -311,64 +311,26 @@ NodeRecourceModules.service('NodeResourceChannel', ['$rootScope', 'NodeResourceC
  * your_api_endpoint/node*|<mirror>|POST|Content-Type
  * 
 **/
-NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceConfig', 'NodeResourceChannel', '$http', '$q', 
-                            function(drupalApiConfig,   NodeResourceConfig,   NodeResourceChannel,   $http,   $q) {
+NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'baseResource', 'NodeResourceConfig', 'NodeResourceChannel', '$http', '$q', 
+                                      function(drupalApiConfig,   baseResource,   NodeResourceConfig,   NodeResourceChannel,   $http,   $q) {
 	
-	var getParams = [];
+	// define a new internal private method for this object
+    function prepareIndexGetParams(options) {
 
-	var prepareAndSetGetParam = function(key, values, type) {
-		//validate key
-		if(key) { 
-			key = (key)?key:false;
-			if(key === false) {return false;}
-		} else { return false; }
-		//validate values
-		if(values) { 
-			values = (values || values === 0)?values:false;
-			if(values === false) {return false;}
-			else if (Object.getOwnPropertyNames(values).length <= 0) { return false; }
-		} else { return false; }
-		//validate type
-		if(type) { if(type != 'array' && type != 'json' && type != 'array_keys') { return false; } }
+    	var type = undefined;
+		//prepare and set optional params
+		angular.forEach(options, function(value , key) {
+			if(key === 'parameters') { type = 'array_key_value'; }
+			else if(key === 'fields') { type = 'array'; }
+			baseResource.prepareAndSetGetParam(value, key, type);
+	        type = undefined;
+	    });
+		console.log(baseResource); 
+		var getParamsString = baseResource.getParams.join('&');
+		baseResource.getParams = [];
 		
-		//normal param
-		if(!type) {
-			getParams.push(key + '=' + values);
-			return true;
-		}
-		//json
-		if(type === 'json') {
-			angular.forEach(values, function(value, k) {
-				getParams.push(k + '=' + value)
-			});
-			return true;
-		}
-		//array
-		if(type === 'array') {
-			var arrayValues = [];
-			angular.forEach(values, function(value, k) {
-				if(value !== false) { this.push(k); }
-			}, arrayValues);
-			
-			getParams.push(key + '=' + arrayValues.join(','))
-			return true;
-		}
-		//array_keys
-		if(type === 'array_keys') {
-			angular.forEach(values, function(value, k) {
-				if(value !== false) { getParams.push(key + '=' + k) }
-			});
-			return true;
-		}
-		//array_key_value
-		if(type === 'array_key_value') {
-			angular.forEach(values, function(value, k) {
-				getParams.push(key+"['"+k+"']="+ value);
-			});
-			return true;
-		}
-		
-	};
+		return getParamsString;
+    }
 	
 	
 	/*
@@ -595,17 +557,7 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'NodeResourceCo
 	
 		var indexPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath;
 		indexPath +=  (Object.getOwnPropertyNames(options).length > 0)?'?':'';
-		
-		var type = undefined;
-		//prepare and set optional params
-		angular.forEach(options, function(value , key) {
-			if(key === 'parameters') { type = 'array_key_value'; }
-			else if(key === 'fields') { type = 'array'; }
-			prepareAndSetGetParam(key, value, type);
-	        type = undefined;
-	    });
-		
-		indexPath += getParams.join('&');
+		indexPath += prepareIndexGetParams(options);
 		
 		var defer = $q.defer(),
 		requestConfig = {

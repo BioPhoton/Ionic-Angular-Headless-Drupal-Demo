@@ -47,8 +47,8 @@ ViewsResourceControllers.controller('ResourcesViewsResourceCtrl',
 			   $scope.callViewsRecourceRetrieve = function(viewsRetrieve) {
 				   requestStart = Date.now();
 				   var view_name = viewsRetrieve.view_name;
-				   delete viewsRetrieve.view_name;
-				   console.log(ViewsResource); 
+				   delete viewsRetrieve.view_name
+				   
 				   //ViewsResource.retrieve(viewsRetrieve.view_name, viewsRetrieve.display_id, viewsRetrieve.args, viewsRetrieve.offset, viewsRetrieve.limit, viewsRetrieve.format_output, viewsRetrieve.exp_sort  ).then(
 				   ViewsResource.retrieve(view_name, viewsRetrieve).then(
 				   //	conncet success

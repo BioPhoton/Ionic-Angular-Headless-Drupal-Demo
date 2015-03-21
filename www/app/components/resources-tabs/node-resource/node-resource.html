@@ -164,6 +164,7 @@
 <label class="item item-input">
 <input type="text" ng-init="nodeIndex.pagesize=5" ng-model="nodeIndex.pagesize" placeholder="pagesize" >
 </label>
+
 <p><b>Fields:</b><br>
 Fields of node that are returned
 </p>
@@ -175,10 +176,16 @@ Fields of node that are returned
 Parameters of node that are returned
 </p>
 <label class="item item-input">
-	<input type="text" ng-model="viewsRetrieve.parameters.nid" placeholder="nid" >
+	<input type="text" ng-model="nodeIndex.parameters.nid" placeholder="nid" >
 </label>
 <label class="item item-input">
-	<input type="text" ng-model="viewsRetrieve.parameters.type" placeholder="type" >
+	<input type="text" ng-model="nodeIndex.parameters.created" placeholder="created" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="nodeIndex.parameters.type" placeholder="type" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="nodeIndex.parameters.title" placeholder="title" >
 </label>
 <button class="button button-small" ng-click="callNodeRecourceIndex(nodeIndex)">call NodeRecource.index</button>
 <hr />

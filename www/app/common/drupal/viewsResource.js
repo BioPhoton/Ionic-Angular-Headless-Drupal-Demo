@@ -1,7 +1,7 @@
 /**
  * Views Resource Modules
  */
-var ViewsResourceModules = angular.module('ViewsResourceModules', ['drupalBaseModules']);
+var ViewsResourceModules = angular.module('ViewsResourceModules', ['drupal.configurations', 'drupalBaseModules']);
 
 
 //@TODO config provider
@@ -88,28 +88,19 @@ ViewsResourceModules.service('ViewsResourceChannel', ['$rootScope', 'ViewsResour
 ViewsResourceModules.factory('ViewsResource', [  'baseResource', 'drupalApiConfig', '$http', '$q', 'ViewsResourceConfig', 'ViewsResourceChannel', 
                                         function( baseResource,   drupalApiConfig,   $http,   $q,   ViewsResourceConfig,   ViewsResourceChannel) {
 
-	// create our new custom object that reuse the original object constructor
-    var ViewsResource = function() {
-    	baseResource.apply(this, arguments);
-    };
-        
-    // reuse the original object prototype
-    ViewsResource.prototype = new baseResource();
-    console.log(this); 
     // define a new internal private method for this object
     function prepareRetrieveGetParams(options) {
-    	console.log(this); 
 
         var type = undefined;
 		//prepare and set optional params
 		angular.forEach(options, function(value , key) {
 			if(key === 'exposed_filters') { type = 'json'; }
-			this.prepareAndSetGetParam(key, value, type);
+			baseResource.prepareAndSetGetParam(value, key, type);
 	        type = undefined;
 	    });
 		
-		var getParamsString = this.getParams.join('&');
-		this.getParams = [];
+		var getParamsString = baseResource.getParams.join('&');
+		baseResource.getParams = [];
 		
 		return getParamsString;
     }
@@ -141,7 +132,7 @@ ViewsResourceModules.factory('ViewsResource', [  'baseResource', 'drupalApiConfi
 	 * 
 	 * 
 	 */
-	ViewsResource.prototype.retrieve = function(view_name, options){
+	var retrieve = function(view_name, options){
 		
 		var self = this;
 		
@@ -185,6 +176,8 @@ ViewsResourceModules.factory('ViewsResource', [  'baseResource', 'drupalApiConfi
 
 	};
 
-	return new ViewsResource;
+	return {
+		retrieve : retrieve
+	};
 	
 }]);
