@@ -11,7 +11,7 @@ drupalBaseModules.factory('baseResource', function() {
     			  'array_keys' : true,
     			  'array_key_value' : true,
     			  'json' : true,
-    	}
+    }
     //define method
     var prepareAndSetGetParam = function(values, key, format) {
     	
