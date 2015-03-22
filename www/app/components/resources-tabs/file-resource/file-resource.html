@@ -1,0 +1,172 @@
+<ion-view title="File Resource"> 
+
+<ion-content>
+
+<h1>FileResource</h1>
+
+<h2>Retrieve</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in fileRetrieveRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+        <img width="32" height="32" style="float:right;" ng-src="{{'data:image/gif;base64,'+request.file}}">
+      &nbsp;
+      Retrieve Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion item-icon-right"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <img ng-show="name == 'file'" height="160px" ng-src="{{'data:image/gif;base64,'+request.file}}">
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="fileRetrieve.fid" placeholder="fid" >
+</label>
+<button class="button button-small" ng-click="callFileRecourceRetrieve(fileRetrieve.fid)">call FileRecource.retrieve</button>
+<hr />
+
+<h2>Create</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in fileCreateRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Create Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="fileCreate.file" placeholder="file" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="fileCreate.filename" placeholder="filename" >
+</label>
+<label class="item item-input">
+<input type="text" disabled ng-model="fileCreate.file.length" placeholder="filesize" >
+</label>
+
+<button class="button button-small" ng-click="callFileRecourceCreate(fileCreate)">call FileRecource.create</button>
+<hr />
+
+<h2>Delete</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in fileDeleteRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Delete Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-init="fileDelete.fid='3'" ng-model="fileDelete.fid" placeholder="fid" >
+</label>
+<button class="button button-small" ng-click="callFileRecourceDelete(fileDelete.fid)">call FileRecource.delete</button>
+
+<hr />
+
+
+<h2>Index</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in fileIndexRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+        <img width="32" height="32" style="float:right;" ng-src="{{'data:image/gif;base64,'+request.file}}">
+      &nbsp;
+      Retrieve Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion item-icon-right"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <img ng-show="name == 'file'" height="160px" ng-src="{{'data:image/gif;base64,'+request.file}}">
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-init="fileIndex.page=0" ng-model="fileIndex.page" placeholder="page" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="fileIndex.pagesize=5" ng-model="fileIndex.pagesize" placeholder="pagesize" >
+</label>
+
+<p><b>Fields:</b><br>
+Fields of file that are returned
+</p>
+<ion-checkbox ng-model="fileIndex.fields.fid">fields.fid</ion-checkbox>
+<ion-checkbox ng-model="fileIndex.fields.filename">fields.filename</ion-checkbox>
+<ion-checkbox ng-model="fileIndex.fields.filemime">fields.filemime</ion-checkbox>
+<ion-checkbox ng-model="fileIndex.fields.filesize">fields.filesize</ion-checkbox>
+<ion-checkbox ng-model="fileIndex.fields.status">fields.status</ion-checkbox>
+<ion-checkbox ng-model="fileIndex.fields.timestamp">fields.timestamp</ion-checkbox> 								  			   
+					   
+<p><b>Parameters:</b><br>
+Parameters of file that are returned
+</p>
+<label class="item item-input">
+	<input type="text" ng-model="fileIndex.parameters.fid" placeholder="fid" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="fileIndex.parameters.filename" placeholder="filename" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="fileIndex.parameters.filemime" placeholder="filemime" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="fileIndex.parameters.filesize" placeholder="filesize" >
+</label>   
+<label class="item item-input">
+	<input type="text" ng-model="fileIndex.parameters.status" placeholder="status" >
+</label>  
+<label class="item item-input">
+	<input type="text" ng-model="fileIndex.parameters.timestamp" placeholder="timestamp" >
+</label>  
+<button class="button button-small" ng-click="callFileRecourceIndex(fileIndex)">call FileRecource.index</button>
+<hr />
+
+<h2>Create Raw <span class="assertive">?</span></h2>
+<button class="button button-small" ng-click="callFileResourceAttachFile(createRawFile)">call FileRecource.attach_file</button>
+<hr />
+
+
+</ion-content> </ion-view>
