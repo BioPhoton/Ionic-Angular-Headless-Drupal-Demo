@@ -28,9 +28,13 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 ]);
 
 drupalIonicAngularJSAPIClient
-	.config( [  '$stateProvider', '$urlRouterProvider', '$httpProvider', 'AppSettings',
-     function (  $stateProvider,   $urlRouterProvider,   $httpProvider,   AppSettings ) {
+	.config( [  '$stateProvider', '$urlRouterProvider', '$httpProvider', 'AppSettings', 'drupalApiConfig',
+     function (  $stateProvider,   $urlRouterProvider,   $httpProvider,   AppSettings,   drupalApiConfig ) {
 		
+		//edit drupal config
+		drupalApiConfig.api_endpoint += 'v1/';
+		
+		//
 		$stateProvider
           .state('app', {
             url: "/app",
@@ -39,8 +43,7 @@ drupalIonicAngularJSAPIClient
             controller: 'AppCtrl',
            resolve: {
             	// init connection state
-            	// this fires just on app launge 
-            	// switching child states will not resolve this again
+            	// this fires just on app launge, switching child states will not resolve this again
                 connectedUser: function(ApiAuthService, drupalApiConfig) {
                 	
         			if(ApiAuthService.getLastConnectTime() < (Date.now() - drupalApiConfig.session_expiration_time) ) {       				
@@ -227,10 +230,7 @@ drupalIonicAngularJSAPIClient
 	                return NodeResource.retrieve($stateParams.nid);
 	            }	
 		    }
-	      })
-	      
-	      
-	      ;
+	      });
   
   $urlRouterProvider.otherwise('/app/tour');
   

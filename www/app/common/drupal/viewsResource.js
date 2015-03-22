@@ -3,12 +3,9 @@
  */
 var ViewsResourceModules = angular.module('ViewsResourceModules', ['drupal.configurations', 'drupalBaseModules']);
 
-
-//@TODO config provider
-
 /**
  *  Constants for ViewsResourceModules 
- */
+*/
 ViewsResourceModules.constant("ViewsResourceConfig", {
    //					   
    // Drupal depending settings
@@ -24,18 +21,18 @@ ViewsResourceModules.constant("ViewsResourceConfig", {
 	//
 	// Constants for NodeResourceChannel
 	//
-	// Actions:
-	// Retrieve action
+	// Event names:
+	// Retrieve events
 	views_retrieveConfirmed	: 'event:drupal-views-retrieveConfirmed',
 	views_retrieveFailed  	: 'event:drupal-views-retrieveFailed',
 
-});
+}); 
 
 /*Notification channel for the views resource */
 ViewsResourceModules.service('ViewsResourceChannel', ['$rootScope', 'ViewsResourceConfig',
                                              function ($rootScope,   ViewsResourceConfig) {	
 	
-// Retrieve Action
+	// Retrieve Action
 	
 	// Publish views retrieve confirmed event
     var publishViewsRetrieveConfirmed = function (viewData) {
@@ -85,8 +82,8 @@ ViewsResourceModules.service('ViewsResourceChannel', ['$rootScope', 'ViewsResour
 **/
 
 //http://blog.revolunet.com/blog/2014/02/14/angularjs-services-inheritance/
-ViewsResourceModules.factory('ViewsResource', [  'baseResource', 'drupalApiConfig', '$http', '$q', 'ViewsResourceConfig', 'ViewsResourceChannel', 
-                                        function( baseResource,   drupalApiConfig,   $http,   $q,   ViewsResourceConfig,   ViewsResourceChannel) {
+ViewsResourceModules.factory('ViewsResource', [   'ViewsResourceConfig', 'baseResource', 'drupalApiConfig', '$http', '$q',  'ViewsResourceChannel', 
+                                        function(  ViewsResourceConfig, baseResource,  drupalApiConfig,   $http,   $q,     ViewsResourceChannel) {
 
     // define a new internal private method for this object
     function prepareRetrieveGetParams(options) {
@@ -160,8 +157,7 @@ ViewsResourceModules.factory('ViewsResource', [  'baseResource', 'drupalApiConfi
 			defer.reject(errors); 
 			return defer.promise;
 		}		
-		
-		
+				
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
 			ViewsResourceChannel.publishViewsRetrieveConfirmed(data);
