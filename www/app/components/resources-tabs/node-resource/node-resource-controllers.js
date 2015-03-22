@@ -1,13 +1,13 @@
 /* Controllers of apiServicesControllers component */
 //______________________________________________
 
-var anonNodeResourceControllers = angular.module('resources.node-resource.controllers', ['NodeRecourceModules']);
+var anonNodeResourceControllers = angular.module('resources.node-resource.controllers', ['NodeResourceModules', 'ngCordova']);
 
 
 /* Node Resource Controller */
 anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl', 
-		   ['$scope', 'NodeResource', 'NodeResourceChannel', 
-    function($scope,   NodeResource,   NodeResourceChannel) {
+		   ['$scope', 'NodeResource', 'NodeResourceChannel', '$cordovaCamera',
+    function($scope,   NodeResource,   NodeResourceChannel,   $cordovaCamera) {
 			   
 			   $scope.toggleRequest = function(request) {
 				     if ($scope.isRequestShown(request)) {
@@ -286,10 +286,44 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 					   
 					   $scope.nodeAttachFile = {};
 					   $scope.nodeAttachFile.nid = 707;
-					   $scope.nodeAttachFile.field_name = 'testfilename', 
-					   $scope.nodeAttachFile.attach = 1, 
-					   $scope.nodeAttachFile.field_values = {'title':'AttachFile title', 'alt' : 'AttachFile alt' };
-					  
+					   $scope.nodeAttachFile.field_name = 'field_image', 
+					   $scope.nodeAttachFile.attach = "data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7", 
+					   $scope.nodeAttachFile.field_values = {};
+					   $scope.nodeAttachFile.field_values.title = 'AttachFile title';
+					   $scope.nodeAttachFile.field_values.alt = 'AttachFile alt'
+							   
+					   
+					   document.addEventListener("deviceready", function () {
+
+						    var options = {
+						      quality: 50,
+						      destinationType: Camera.DestinationType.DATA_URL,
+						      sourceType: Camera.PictureSourceType.CAMERA,
+						      allowEdit: true,
+						      encodingType: Camera.EncodingType.JPEG,
+						      targetWidth: 100,
+						      targetHeight: 100,
+						      popoverOptions: CameraPopoverOptions,
+						      saveToPhotoAlbum: false
+						    };
+
+						    $cordovaCamera.getPicture(options).then(function(imageData) {
+						     
+						      $scope.nodeAttachFile.attach = "data:image/jpeg;base64," + imageData;
+						      console.log(' $cordovaCamera.getPicture success');
+						      console.log(imageData, $scope.nodeAttachFile.attach); 
+						    }, function(err) {
+						      // error
+						    	console.log(' $cordovaCamera.getPicture error'); 
+						    });
+
+						  }, false);
+					   
+					   
+					   
+					   
+					   
+					   
 					   
 					   $scope.callNodeResourceAttachFile = function(nodeAttachFile) {
 						   requestStart = Date.now();
@@ -316,6 +350,61 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 					   });
 					   
 					   
+					   /*
+					   
+					   var uploader = $scope.uploader = new FileUploader({
+						   url: 'upload.php'
+						   });
+						   // FILTERS
+						   uploader.filters.push({
+						   name: 'customFilter',
+						   fn: function(item , options) {
+						   return this.queue.length < 10;
+						   }
+						   });
+						   // CALLBACKS
+						   uploader.onWhenAddingFileFailed = function(item , filter, options) {
+						   console.info('onWhenAddingFileFailed', item, filter, options);
+						   };
+						   uploader.onAfterAddingFile = function(fileItem) {
+						   console.info('onAfterAddingFile', fileItem);
+						   };
+						   uploader.onAfterAddingAll = function(addedFileItems) {
+						   console.info('onAfterAddingAll', addedFileItems);
+						   };
+						   uploader.onBeforeUploadItem = function(item) {
+						   console.info('onBeforeUploadItem', item);
+						   };
+						   uploader.onProgressItem = function(fileItem, progress) {
+						   console.info('onProgressItem', fileItem, progress);
+						   };
+						   uploader.onProgressAll = function(progress) {
+						   console.info('onProgressAll', progress);
+						   };
+						   uploader.onSuccessItem = function(fileItem, response, status, headers) {
+						   console.info('onSuccessItem', fileItem, response, status, headers);
+						   };
+						   uploader.onErrorItem = function(fileItem, response, status, headers) {
+						   console.info('onErrorItem', fileItem, response, status, headers);
+						   };
+						   uploader.onCancelItem = function(fileItem, response, status, headers) {
+						   console.info('onCancelItem', fileItem, response, status, headers);
+						   };
+						   uploader.onCompleteItem = function(fileItem, response, status, headers) {
+						   console.info('onCompleteItem', fileItem, response, status, headers);
+						   };
+						   uploader.onCompleteAll = function() {
+						   console.info('onCompleteAll');
+						   };
+						   console.info('uploader', uploader);
+						   // -------------------------------
+						   var controller = $scope.controller = {
+						   isImage: function(item) {
+						   var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+						   return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+						   }
+						   };
+					   */
 			    
 }]);
 

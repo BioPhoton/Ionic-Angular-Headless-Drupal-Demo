@@ -1,15 +1,15 @@
 /**
  * Node Resource Modules
  */
-var NodeRecourceModules = angular.module('NodeRecourceModules', ['drupal.configurations', 'drupalBaseModules']);
+var NodeResourceModules = angular.module('NodeResourceModules', ['drupal.configurations', 'drupalBaseModules']);
 
 
 //@TODO config provider
 
 /**
- *  Constants for NodeRecourceModules 
+ *  Constants for NodeResourceModules 
  */
-NodeRecourceModules.constant("NodeResourceConfig", {
+NodeResourceModules.constant("NodeResourceConfig", {
    //					   
    // Drupal depending settings
    //
@@ -25,7 +25,7 @@ NodeRecourceModules.constant("NodeResourceConfig", {
 		//index 		: 'index',
 		files 		: 'files',
 		comments	: 'comments',
-		attachFile  : 'attachFile'
+		attachFile  : 'attach_file'
 	},
 	  
 	//
@@ -62,7 +62,7 @@ NodeRecourceModules.constant("NodeResourceConfig", {
 });
 
 /*Notification channel for the node resource */
-NodeRecourceModules.service('NodeResourceChannel', ['$rootScope', 'NodeResourceConfig',
+NodeResourceModules.service('NodeResourceChannel', ['$rootScope', 'NodeResourceConfig',
                                            function ($rootScope,   NodeResourceConfig) {	
 	
 	// Retrieve Action
@@ -311,7 +311,7 @@ NodeRecourceModules.service('NodeResourceChannel', ['$rootScope', 'NodeResourceC
  * your_api_endpoint/node*|<mirror>|POST|Content-Type
  * 
 **/
-NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'baseResource', 'NodeResourceConfig', 'NodeResourceChannel', '$http', '$q', 
+NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'baseResource', 'NodeResourceConfig', 'NodeResourceChannel', '$http', '$q', 
                                       function(drupalApiConfig,   baseResource,   NodeResourceConfig,   NodeResourceChannel,   $http,   $q) {
 	
 	// define a new internal private method for this object
@@ -702,19 +702,19 @@ NodeRecourceModules.service('NodeResource', [ 'drupalApiConfig', 'baseResource',
 	 * 
 	 */
 	var attach_file = function(nid, field_name, attach, field_values) {
-		
-		var attachFilePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid + '/' + NodeResourceConfig.actions.attach_file,
+		console.log(nid, field_name, attach, field_values);
+		var attachFilePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid + '/' + NodeResourceConfig.actions.attachFile,
 			defer = $q.defer(),
 			requestConfig = {
 				method :'POST',
 				url : attachFilePath,
-				transformRequest: angular.identity,
+				//transformRequest: angular.identity,
 				headers : {
-					"Content-Type"	: "multipart/form-data",
+					//"Content-Type"	: "multipart/form-data",
 				},
 				data : {
 					field_name   : field_name,
-					attach 		 : attach,
+					attach 		: attach,
 					field_values : field_values,
 				}
 			},

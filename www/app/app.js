@@ -17,6 +17,7 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'logout.controllers',
   'register.controllers',
 
+  'resources.file-resource.controllers',
   'resources.node-resource.controllers',
   'resources.system-resource.controllers',
   'resources.user-resource.controllers',
@@ -104,6 +105,19 @@ drupalIonicAngularJSAPIClient
 			      }
 			    }
 		  })
+		  
+		   //
+		   //File Resource
+		   //______________________________________________
+		   .state('app.resources-tabs.file-resource', {
+		    url: '/file-recource',
+		    views: {
+			      'file-resource': {
+			    	templateUrl: 'app/components/resources-tabs/file-resource/file-resource.html',
+			  		controller:  'ResourcesFileResourceCtrl' 
+			      }
+			    }
+		   })
 		 
 		  //
 		  //Node Resource

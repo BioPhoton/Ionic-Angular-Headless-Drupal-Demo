@@ -28,6 +28,11 @@ $ cordova plugin add org.apache.cordova.network-information
 
 ##Drupal config
 
+drupalIonicAngularJSAPIClient
+	.config( function (  drupalApiConfig ) {
+		drupalApiConfig.api_endpoint += 'v1/';
+});
+
 ###account settings
 
 ###services

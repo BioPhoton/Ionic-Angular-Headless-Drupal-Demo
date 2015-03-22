@@ -1,4 +1,4 @@
-var authedTabsNodeDemoControllers = angular.module('authed-tabs.node-demo.controllers',  ['NodeRecourceModules']);
+var authedTabsNodeDemoControllers = angular.module('authed-tabs.node-demo.controllers',  ['NodeResourceModules']);
 
 /* Node Demo Controller */
 authedTabsNodeDemoControllers.controller('NodeListCtrl', 

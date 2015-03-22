@@ -53,13 +53,15 @@ drupalBaseModules.factory('baseResource', function() {
 		}
 		//array
 		//fields=value1, vaule2, value3, 
-		if(format === 'array') {
+		if(format === 'array' && Object.getOwnPropertyNames(values).length > 0) {
+		
 			var arrayValues = [];
 			angular.forEach(values, function(value, k) {
 				if(value !== false) { this.push(k); }
 			}, arrayValues);
+			if(arrayValues.length)
 			
-			self.getParams.push(key + '=' + arrayValues.join(','))
+			if(values.length) { self.getParams.push(key + '=' + arrayValues.join(',')); }
 			return true;
 		}
 		//array_keys

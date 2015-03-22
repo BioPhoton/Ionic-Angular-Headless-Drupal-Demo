@@ -1,6 +1,6 @@
 /* Controllers of apiServicesControllers component */
 //______________________________________________
-var anonSystemResourceControllers = angular.module('resources.system-resource.controllers', ['SystemRecourceModules']);
+var anonSystemResourceControllers = angular.module('resources.system-resource.controllers', ['SystemResourceModules']);
 
 
 /* System Resource Controller */

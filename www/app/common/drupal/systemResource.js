@@ -1,15 +1,15 @@
 /**
  * System Resource Modules
  */
-var SystemRecourceModules = angular.module('SystemRecourceModules', ['drupal.configurations']);
+var SystemResourceModules = angular.module('SystemResourceModules', ['drupal.configurations']);
 
 
 //@TODO config provider
 
 /**
- *  Constants for SystemRecourceModules 
+ *  Constants for SystemResourceModules 
  */
-SystemRecourceModules.constant("SystemResourceConfig", {
+SystemResourceModules.constant("SystemResourceConfig", {
    //					   
    // Drupal depending settings
    //
@@ -46,7 +46,7 @@ SystemRecourceModules.constant("SystemResourceConfig", {
 });
 
 /*Notification channel for asystem resource */
-SystemRecourceModules.service('SystemResourceChannel', ['$rootScope', 'SystemResourceConfig',
+SystemResourceModules.service('SystemResourceChannel', ['$rootScope', 'SystemResourceConfig',
                                                function ($rootScope,   SystemResourceConfig) {	
   // Connect Action
   // Publish system connect confirmed event
@@ -176,7 +176,7 @@ SystemRecourceModules.service('SystemResourceChannel', ['$rootScope', 'SystemRes
  * your_api_endpoint/system/*|<mirror>|POST|Content-Type,Authorization|true
  * 
 **/
-SystemRecourceModules.service('SystemResource', [ 'drupalApiConfig', 'SystemResourceConfig', 'SystemResourceChannel', '$http', '$q', 
+SystemResourceModules.service('SystemResource', [ 'drupalApiConfig', 'SystemResourceConfig', 'SystemResourceChannel', '$http', '$q', 
                               function(drupalApiConfig,   SystemResourceConfig,   SystemResourceChannel,   $http,   $q) {
 	
 	/*
