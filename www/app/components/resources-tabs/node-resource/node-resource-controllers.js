@@ -287,7 +287,7 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 					   $scope.nodeAttachFile = {};
 					   $scope.nodeAttachFile.nid = 707;
 					   $scope.nodeAttachFile.field_name = 'field_image', 
-					   $scope.nodeAttachFile.attach = "data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7", 
+					   $scope.nodeAttachFile.attach = "R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7", 
 					   $scope.nodeAttachFile.field_values = {};
 					   $scope.nodeAttachFile.field_values.title = 'AttachFile title';
 					   $scope.nodeAttachFile.field_values.alt = 'AttachFile alt'

@@ -706,17 +706,8 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'baseResource',
 		var attachFilePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid + '/' + NodeResourceConfig.actions.attachFile,
 			defer = $q.defer(),
 			requestConfig = {
-				method :'POST',
-				url : attachFilePath,
-				//transformRequest: angular.identity,
-				headers : {
-					//"Content-Type"	: "multipart/form-data",
-				},
-				data : {
-					field_name   : field_name,
-					attach 		: attach,
-					field_values : field_values,
-				}
+				transformRequest: angular.identity,
+				headers: {'Content-Type': undefined},
 			},
 			errors = [];
 		
@@ -729,8 +720,14 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'baseResource',
 			defer.reject(errors); 
 			return defer.promise;
 		};
-				
-		$http(requestConfig)
+		
+		var newForm = new FormData();
+		if(field_name) {newForm.append('field_name', field_name);}
+		if(attach) {newForm.append('attach', attach.attach);}
+		if(field_values) {newForm.append('field_values', field_values);}
+		
+		
+		$http.post(attachFilePath, newForm, requestConfig)
 		.success(function(data, status, headers, config){
 			NodeResourceChannel.publishNodeAttachFileConfirmed(data);
 			defer.resolve(data);

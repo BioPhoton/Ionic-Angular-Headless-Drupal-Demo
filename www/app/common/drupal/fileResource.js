@@ -302,7 +302,7 @@ FileResourceModules.service('FileResource', [ '$rootScope','drupalApiConfig', 'b
 	 * file = {
 	 *		file:base64data,
      *	    filename:filename,
-	 *		filesize:"" + filesize
+	 *		filesize:filesize {String}
 	 *		}
 	 * @return 	{Promise}
 	 * 
@@ -331,8 +331,10 @@ FileResourceModules.service('FileResource', [ '$rootScope','drupalApiConfig', 'b
 		}
 		
 		var newForm = new FormData();
-		newForm.append('filename', file.filename);
-		newForm.append('file', file.file);
+		if(file.filename) {newForm.append('filename', file.filename);}
+		if(file.file) {newForm.append('file', file.file);}
+		if(file.filesize) {newForm.append('filesize', "" + file.filesize);}
+		
 		
 		$http.post(createPath, newForm, requestConfig)
 		.success(function(data){
