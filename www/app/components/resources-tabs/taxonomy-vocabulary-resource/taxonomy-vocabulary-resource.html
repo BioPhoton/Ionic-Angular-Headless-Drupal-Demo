@@ -1,0 +1,247 @@
+<ion-view title="TaxonomyVocabulary Resource"> 
+
+<ion-content>
+
+<h1>TaxonomyVocabularyResource</h1>
+
+<h2>Retrieve</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in taxonomyVocabularyRetrieveRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Retrieve Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion item-icon-right"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="taxonomyVocabularyRetrieve.vid" placeholder="vid" >
+</label>
+<button class="button button-small" ng-click="callTaxonomyVocabularyRecourceRetrieve(taxonomyVocabularyRetrieve.vid)">call TaxonomyVocabularyRecource.retrieve</button>
+<hr />
+
+<h2>Create</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in taxonomyVocabularyCreateRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Create Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+<label class="item item-input">
+<input type="text" ng-model="taxomonyVocabularyCreate.name" placeholder="name" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="taxomonyVocabularyCreate.description" placeholder="description" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="taxomonyVocabularyCreate.format" placeholder="format" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="taxomonyVocabularyCreate.weight" placeholder="weight" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="taxomonyVocabularyCreate.machine_name" placeholder="machine_name" >
+</label>
+
+<button class="button button-small" ng-click="callTaxonomyVocabularyRecourceCreate(taxomonyVocabularyCreate)">call TaxonomyVocabularyRecource.create</button>
+<hr />
+
+
+<h2>Update</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in taxonomyVocabularyUpdateRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Update Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="taxonomyVocabularyUpdate.vid" placeholder="Vid" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="taxonomyVocabularyUpdate.name" placeholder="Vocabulary name" >
+</label>
+<label class="item item-input">
+<textarea rows="6" placeholder="Vocabulary description" ng-model="taxonomyVocabularyUpdate.description"></textarea>
+</label>
+<button class="button button-small" ng-click="callTaxomonyVocabularyRecourceUpdate(taxonomyVocabularyUpdate)">call TaxomonyVocabularyRecource.update</button>
+<hr />
+
+
+
+<h2>Delete</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in taxonomyVocabularyDeleteRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Delete Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-init="taxonomyVocabularyDelete.vid='3'" ng-model="taxonomyVocabularyDelete.vid" placeholder="vid" >
+</label>
+<button class="button button-small" ng-click="callTaxonomyVocabularyRecourceDelete(taxonomyVocabularyDelete.vid)">call TaxonomyVocabularyRecource.delete</button>
+
+<hr />
+
+
+<h2>Index</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in taxonomyVocabularyIndexRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Retrieve Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion item-icon-right"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-init="taxonomyVocabularyIndex.page=0" ng-model="taxonomyVocabularyIndex.page" placeholder="page" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="taxonomyVocabularyIndex.pagesize=5" ng-model="taxonomyVocabularyIndex.pagesize" placeholder="pagesize" >
+</label>
+
+<p><b>Fields:</b><br>
+Fields of taxonomyVocabulary that are returned
+</p>
+<ion-checkbox ng-model="taxonomyVocabularyIndex.fields.vid">fields.vid</ion-checkbox>		
+<ion-checkbox ng-model="taxonomyVocabularyIndex.fields.name">fields.name</ion-checkbox>		
+<ion-checkbox ng-model="taxonomyVocabularyIndex.fields.description">fields.description</ion-checkbox>		
+<ion-checkbox ng-model="taxonomyVocabularyIndex.fields.machine_name">fields.machine_name</ion-checkbox>		
+<ion-checkbox ng-model="taxonomyVocabularyIndex.fields.hierarchy">fields.hierarchy</ion-checkbox>		
+<ion-checkbox ng-model="taxonomyVocabularyIndex.fields.module">fields.module</ion-checkbox>		
+<ion-checkbox ng-model="taxonomyVocabularyIndex.fields.weight">fields.weight</ion-checkbox>		
+					   
+<p><b>Parameters:</b><br>
+Parameters of taxonomyVocabulary that are returned
+</p>
+<label class="item item-input">
+	<input type="text" ng-model="taxonomyVocabularyIndex.parameters.vid" placeholder="vid" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="taxonomyVocabularyIndex.parameters.name" placeholder="name" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="taxonomyVocabularyIndex.parameters.description" placeholder="description" >
+</label>   
+<label class="item item-input">
+	<input type="text" ng-model="taxonomyVocabularyIndex.parameters.machine_name" placeholder="machine_name" >
+</label>  
+<label class="item item-input">
+	<input type="text" ng-model="taxonomyVocabularyIndex.parameters.hierarchy" placeholder="hierarchy" >
+</label>  
+<label class="item item-input">
+	<input type="text" ng-model="taxonomyVocabularyIndex.parameters.module" placeholder="module" >
+</label>  
+<label class="item item-input">
+	<input type="text" ng-model="taxonomyVocabularyIndex.parameters.weight" placeholder="weight" >
+</label> 
+<button class="button button-small" ng-click="callTaxonomyVocabularyRecourceIndex(taxonomyVocabularyIndex)">call TaxonomyVocabularyRecource.index</button>
+<hr />
+
+<h2>GetTree </h2>
+<ion-list>
+  <div ng-repeat="(key,request) in taxonomyVocabularyGetTreeRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Retrieve Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion item-icon-right"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text"  ng-model="taxonomyVocabularyGetTree.vid" placeholder="vid" >
+</label>
+<label class="item item-input">
+<input type="text"  ng-model="taxonomyVocabularyGetTree.parent" placeholder="parent" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="taxonomyVocabularyGetTree.maxdepth" placeholder="maxdepth" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="taxonomyVocabularyGetTree.load_entities"  placeholder="load_entities" >
+</label>
+<button class="button button-small" ng-click="callTaxonomyVocabularyResourceGetTree(taxonomyVocabularyGetTree)">call callTaxonomyVocabularyResource.getTree</button>
+<hr />
+
+
+</ion-content> </ion-view>

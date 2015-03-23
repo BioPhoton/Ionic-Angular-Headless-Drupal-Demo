@@ -1,0 +1,261 @@
+<ion-view title="Comment Resource"> 
+
+<ion-content>
+
+<h1>CommentResource</h1>
+
+<h2>Retrieve</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in commentRetrieveRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Retrieve Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="commentRetrieve.cid" placeholder="cid" >
+</label>
+<button class="button button-small" ng-click="callCommentRecourceRetrieve(commentRetrieve.cid)">call CommentRecource.retrieve</button>
+<hr />
+
+<h2>Create</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in commentCreateRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Create Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="commentCreate.nid" placeholder="nid to post comment to" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="commentCreate.subject" placeholder="Comment title" >
+</label>
+
+<label class="item item-input">
+<textarea rows="6" placeholder="Comment sumary" type="text" ng-model="commentCreate.comment_body.und[0].summary"></textarea>
+</label>
+<label class="item item-input">
+<textarea rows="6" placeholder="Comment body" type="text" ng-model="commentCreate.comment_body.und[0].value"></textarea>
+</label>
+
+
+<button class="button button-small" ng-click="callCommentRecourceCreate(commentCreate)">call CommentRecource.create</button>
+<hr />
+<h2>Update <span class="assertive">?</span></h2>
+<ion-list>
+  <div ng-repeat="(key,request) in commentUpdateRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Update Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+<label class="item item-input">
+<input type="text" ng-model="commentUpdate.cid" placeholder="cid" >
+</label>
+<label class="item item-input">
+<input type="text"  ng-model="commentUpdate.subject" placeholder="Comment title" >
+</label>
+
+<label class="item item-input">
+<textarea rows="6" placeholder="Comment sumary" ng-model="commentUpdate.comment_body.und[0].summary"></textarea>
+</label>
+
+<label class="item item-input">
+<textarea rows="6" placeholder="Comment body" type="text" ng-model="commentUpdate.comment_body.und[0].value"></textarea>
+</label>
+
+<button class="button button-small" ng-click="callCommentRecourceUpdate(commentUpdate)">call CommentRecource.update</button>
+
+<hr />
+
+<h2>Delete</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in commentDeleteRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Delete Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-init="commentDelete.cid='3'" ng-model="commentDelete.cid" placeholder="cid" >
+</label>
+<button class="button button-small" ng-click="callCommentRecourceDelete(commentDelete.cid)">call CommentRecource.delete</button>
+
+<hr />
+
+
+<h2>Index</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in commentIndexRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Index Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-init="commentIndex.page=0" ng-model="commentIndex.page" placeholder="page" >
+</label>
+<label class="item item-input">
+<input type="text" ng-init="commentIndex.pagesize=5" ng-model="commentIndex.pagesize" placeholder="pagesize" >
+</label>
+
+<p><b>Fields:</b><br>
+Fields of comment that are returned
+</p>
+<ion-checkbox ng-model="commentIndex.fields.cid">fields.cid</ion-checkbox>
+<ion-checkbox ng-model="commentIndex.fields.created">fields.created</ion-checkbox>
+<ion-checkbox ng-model="commentIndex.fields.type">fields.type</ion-checkbox>
+<ion-checkbox ng-model="commentIndex.fields.title">fields.title</ion-checkbox>
+<p><b>Parameters:</b><br>
+Parameters of comment that are returned
+</p>
+<label class="item item-input">
+	<input type="text" ng-model="commentIndex.parameters.cid" placeholder="cid" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="commentIndex.parameters.created" placeholder="created" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="commentIndex.parameters.type" placeholder="type" >
+</label>
+<label class="item item-input">
+	<input type="text" ng-model="commentIndex.parameters.title" placeholder="title" >
+</label>   
+<button class="button button-small" ng-click="callCommentRecourceIndex(commentIndex)">call CommentRecource.index</button>
+<hr />
+
+<h2>CountAll</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in commentCountAllRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      CountAll Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="commentCountAll.nid" placeholder="nid" >
+</label>
+<button class="button button-small" ng-click="callCommentResourceCountAll(commentCountAll)">call CommentRecource.files</button>
+
+<hr />
+
+<h2>CountNew</h2>
+<ion-list>
+  <div ng-repeat="(key,request) in commentCountNewRequests">
+    <ion-item class="item-stable"
+              ng-click="toggleRequest(key)"
+              ng-class="{active: isRequestShown(key)}">
+        <i class="icon" ng-class="isRequestShown(key) ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      CountNew Request {{key}} at {{request.requestStart | date}}
+    </ion-item>
+    <ion-item class="item-accordion"
+              ng-repeat="(name, value) in request"
+              ng-show="isRequestShown(key)">
+      <h2>{{name}}</h2>
+	  <p ng-show="name != 'data'">{{value}}</p>
+	  <pre ng-show="name == 'data'">
+	  {{ request.data | json}}
+	  </pre>
+    </ion-item>
+  </div>
+</ion-list>
+
+<label class="item item-input">
+<input type="text" ng-model="commentCountNew.nid" placeholder="nid" >
+</label>
+<label class="item item-input">
+<input type="text" ng-model="commentCountNew.since" placeholder="since" >
+</label>
+
+<button class="button button-small" ng-click="callCommentResourceCountNew(commentCountNew)">call CommentRecource.comments</button>
+
+<hr />
+
+
+</ion-content> </ion-view>
