@@ -17,6 +17,9 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'logout.controllers',
   'register.controllers',
 
+  'resources.comment-resource.controllers',
+  'resources.taxonomy-vocabulary-resource.controllers',
+  'resources.taxonomy-term-resource.controllers',
   'resources.file-resource.controllers',
   'resources.node-resource.controllers',
   'resources.system-resource.controllers',
@@ -106,6 +109,45 @@ drupalIonicAngularJSAPIClient
 			    }
 		  })
 		  
+		  //
+		  //Comment Resource
+		  //______________________________________________
+		  .state('app.resources-tabs.comment-resource', {
+		  url: '/comment-recource',
+		  views: {
+			      'comment-resource': {
+			    	templateUrl: 'app/components/resources-tabs/comment-resource/comment-resource.html',
+			  		controller:  'ResourcesCommentResourceCtrl' 
+			      }
+			    }
+		   })
+		  
+		  //
+		  //Taxonomy Vocabulary Resource
+		  //______________________________________________
+		  .state('app.resources-tabs.taxonomy-vocabulary-resource', {
+		  url: '/taxonomy-vocabulary-recource',
+		  views: {
+			      'taxonomy-vocabulary-resource': {
+			    	templateUrl: 'app/components/resources-tabs/taxonomy-vocabulary-resource/taxonomy-vocabulary-resource.html',
+			  		controller:  'ResourcesTaxonomyVocabularyResourceCtrl' 
+			      }
+			    }
+		   })
+		  
+		  //
+		  //Taxonomy Terms Resource
+		  //______________________________________________
+		  .state('app.resources-tabs.taxonomy-term-resource', {
+		  url: '/taxonomy-term-recource',
+		  views: {
+			      'taxonomy-term-resource': {
+			    	templateUrl: 'app/components/resources-tabs/taxonomy-term-resource/taxonomy-term-resource.html',
+			  		controller:  'ResourcesTaxonomyTermResourceCtrl' 
+			      }
+			    }
+		   })
+		   
 		   //
 		   //File Resource
 		   //______________________________________________

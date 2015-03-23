@@ -64,16 +64,10 @@
 <label class="item item-input">
 <textarea rows="6" placeholder="Node body" type="text" ng-model="nodeCreate.body.und[0].value"></textarea>
 </label>
-<p>
-Image preview: 
-<img width="16" height="16" ng-src="{{'data:image/gif;base64,'+nodeCreate.field_image.und[0].file}}">
-</p>
 <label class="item item-input">
-<input type="text" ng-model="nodeCreate.field_image.und[0].file" placeholder="file (base64 data)"></textarea>
+<input type="text" ng-model="nodeCreate.field_image.und[0].fid" placeholder="fid"></textarea>
 </label>
-<label class="item item-input">
-<input type="text" ng-model="nodeCreate.field_image.und[0].filename" placeholder="filename"></textarea>
-</label>
+
 <button class="button button-small" ng-click="callNodeRecourceCreate(nodeCreate)">call NodeRecource.create</button>
 <hr />
 <h2>Update</h2>

@@ -214,8 +214,8 @@ FileResourceModules.service('FileResourceChannel', ['$rootScope', 'FileResourceC
  * your_api_endpoint/file*|<mirror>|POST|Content-Type
  * 
 **/
-FileResourceModules.service('FileResource', [ '$rootScope','drupalApiConfig', 'baseResource', 'FileResourceConfig', 'FileResourceChannel', '$http', '$q', 
-                                      function($rootScope,  drupalApiConfig,   baseResource,   FileResourceConfig,   FileResourceChannel,   $http,   $q) {
+FileResourceModules.service('FileResource', [ '$rootScope','drupalApiConfig', 'BaseResource', 'FileResourceConfig', 'FileResourceChannel', '$http', '$q', 
+                                      function($rootScope,  drupalApiConfig,   BaseResource,   FileResourceConfig,   FileResourceChannel,   $http,   $q) {
 	
 	// define a new internal private method for this object
     function prepareIndexGetParams(options) {
@@ -225,12 +225,12 @@ FileResourceModules.service('FileResource', [ '$rootScope','drupalApiConfig', 'b
 		angular.forEach(options, function(value , key) {
 			if(key === 'parameters') { type = 'array_key_value'; }
 			else if(key === 'fields') { type = 'array'; }
-			baseResource.prepareAndSetGetParam(value, key, type);
+			BaseResource.prepareAndSetGetParam(value, key, type);
 	        type = undefined;
 	    });
 
-		var getParamsString = baseResource.getParams.join('&');
-		baseResource.getParams = [];
+		var getParamsString = BaseResource.getParams.join('&');
+		BaseResource.getParams = [];
 		
 		return getParamsString;
     }
@@ -334,7 +334,7 @@ FileResourceModules.service('FileResource', [ '$rootScope','drupalApiConfig', 'b
 		if(file.filename) {newForm.append('filename', file.filename);}
 		if(file.file) {newForm.append('file', file.file);}
 		if(file.filesize) {newForm.append('filesize', "" + file.filesize);}
-		
+		if(file.image_file_name) {newForm.append('filepath', 'public://' + file.image_file_name); }
 		
 		$http.post(createPath, newForm, requestConfig)
 		.success(function(data){
@@ -407,10 +407,7 @@ FileResourceModules.service('FileResource', [ '$rootScope','drupalApiConfig', 'b
 	 * 
 	 * @param {Integer} page The zero-based index of the page to get, defaults to 0., required:false, source:param
 	 * @param {Array} fields The fields to get. Shouls be a comma seperated string., defaults to 0., required:false, source:param
-	 *     valide fields: ?????????
-	 *     invalide fields: ?????????
 	 * @param {Array} parameters Parameters array, required:false, source:param
-	 *     invalide and valide param names are same as in fields
 	 * @param {Integer} pagesize Number of records to get per page. For unauthorized users 25 is maximum., required:false, source:param
 	 * 
 	 * @return 	{Promise}

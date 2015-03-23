@@ -449,11 +449,11 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'BaseResource',
 	 * 
 	 */
 	var update = function( nid, node ) {
-		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid,
+		var updatePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid,
 		defer = $q.defer(),
 		requestConfig = {
 			method :'PUT',
-			url : createPath,
+			url : updatePath,
 			data : {
 				node : node
 			}
@@ -501,11 +501,11 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'BaseResource',
 	 */
 	var _delete = function( nid ) {
 		
-		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid,
+		var deletePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid,
 		defer = $q.defer(),
 		requestConfig = {
 			method :'DELETE',
-			url : createPath
+			url : deletePath
 		},
 		errors = [];
 	

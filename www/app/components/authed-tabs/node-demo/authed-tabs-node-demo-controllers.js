@@ -72,7 +72,7 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 			   $scope.nodeIndex.pageFirst = pageFirst!=undefined?pageFirst:0; 
 			   $scope.nodeIndex.pageLast = $scope.nodeIndex.pageFirst + 1;
 			   $scope.nodeIndex.fields = 'nid, type, title, created';
-			   $scope.nodeIndex.pagesize = pageSize!=undefined?pageSize:5;
+			   $scope.nodeIndex.pagesize = pageSize!=undefined?pageSize:25;
 			   	
 			   
 			   

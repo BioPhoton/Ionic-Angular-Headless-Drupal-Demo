@@ -69,12 +69,14 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 			   //get params for create request
 			   //NOTE: username is set automatically on server through authed request
 			   $scope.nodeCreate = {};
-			   $scope.nodeCreate.type = null; 
+			   $scope.nodeCreate.type = 'article'; 
 			   $scope.nodeCreate.body = BaseResource.structureField( {'value' : 'This is the full node body.', 'summary' : 'This is a short summary of the node body.'});
 			   
-			   $scope.nodeCreate.field_image = BaseResource.structureField( {	'file' 		: 'R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7', 
+			  /*  
+			  $scope.nodeCreate.field_image = BaseResource.structureField( {	'file' 		: 'R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7', 
 				   																'filename' 	: 'finename.jpg'});
-			   
+			  */
+			   $scope.nodeCreate.field_image =  BaseResource.structureField({'fid' : 2531});
 			   console.log( $scope.nodeCreate.body); 
 			  
 			   $scope.callNodeRecourceCreate = function(node) {
