@@ -1,13 +1,13 @@
 /* Controllers of apiServicesControllers component */
 //______________________________________________
 
-var anonNodeResourceControllers = angular.module('resources.node-resource.controllers', ['NodeResourceModules', 'ngCordova']);
+var anonNodeResourceControllers = angular.module('resources.node-resource.controllers', ['NodeResourceModules', 'drupalBaseModules', 'ngCordova']);
 
 
 /* Node Resource Controller */
 anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl', 
-		   ['$scope', 'NodeResource', 'NodeResourceChannel', '$cordovaCamera',
-    function($scope,   NodeResource,   NodeResourceChannel,   $cordovaCamera) {
+		   ['$scope', 'BaseResource', 'NodeResource', 'NodeResourceChannel', '$cordovaCamera',
+    function($scope,   BaseResource,   NodeResource,   NodeResourceChannel,   $cordovaCamera) {
 			   
 			   $scope.toggleRequest = function(request) {
 				     if ($scope.isRequestShown(request)) {
@@ -70,10 +70,12 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 			   //NOTE: username is set automatically on server through authed request
 			   $scope.nodeCreate = {};
 			   $scope.nodeCreate.type = null; 
+			   $scope.nodeCreate.body = BaseResource.structureField( {'value' : 'This is the full node body.', 'summary' : 'This is a short summary of the node body.'});
 			   
-			   $scope.nodeCreate.body = {};
-			   $scope.nodeCreate.body.und = []
-			   $scope.nodeCreate.body.und[0] = { value : '', summary : '' }
+			   $scope.nodeCreate.field_image = BaseResource.structureField( {	'file' 		: 'R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7', 
+				   																'filename' 	: 'finename.jpg'});
+			   
+			   console.log( $scope.nodeCreate.body); 
 			  
 			   $scope.callNodeRecourceCreate = function(node) {
 				   requestStart = Date.now();
@@ -107,10 +109,8 @@ anonNodeResourceControllers.controller('ResourcesNodeResourceCtrl',
 				   $scope.nodeUpdate = {};
 				   $scope.nodeUpdate.nid = null; 
 				   $scope.nodeUpdate.type = null; 
-				   
-				   $scope.nodeUpdate.body = {};
-				   $scope.nodeUpdate.body.und = []
-				   $scope.nodeUpdate.body.und[0] = { value : '', summary : '' }
+				   $scope.nodeUpdate.title = 'test titel edited';
+				   $scope.nodeUpdate.body = BaseResource.structureField( {'value' : 'This is the edited full node body.', 'summary' : 'This is a edited short summary of the node body.'});
 				   
 				   $scope.callNodeRecourceUpdate = function(node) {
 					   

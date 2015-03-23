@@ -3,7 +3,12 @@
  */
 var drupalBaseModules = angular.module('drupalBaseModules', ['drupal.configurations']);
 
-drupalBaseModules.factory('baseResource', function() {
+drupalBaseModules.constant('BaseResourceConfig', { 
+	LANGUAGE_NONE : 'und',
+});
+
+
+drupalBaseModules.factory('BaseResource', ['BaseResourceConfig',  function(baseResourceConfig) {
 	
     var getParams = [];
     var formats = { 
@@ -55,7 +60,7 @@ drupalBaseModules.factory('baseResource', function() {
 		}
 		
 		//json
-		//exposed_filter=value
+		//example: exposed_filter=value
 		if(format === 'json') {
 			angular.forEach(values, function(value, k) {
 				if(value) { self.getParams.push(k + '=' + value) }
@@ -63,7 +68,7 @@ drupalBaseModules.factory('baseResource', function() {
 			return true;
 		}
 		//array
-		//fields=value1, vaule2, value3, 
+		//example: fields=value1, vaule2, value3, 
 		if(format === 'array' && Object.getOwnPropertyNames(values).length > 0) {
 		
 			var arrayValues = [];
@@ -76,7 +81,7 @@ drupalBaseModules.factory('baseResource', function() {
 			return true;
 		}
 		//array_keys
-		//exposed_filter=key1
+		//example: exposed_filter1=key1
 		if(format === 'array_keys') {
 			angular.forEach(values, function(value, k) {
 				if(value) { self.getParams.push(key + '=' + k) }
@@ -85,7 +90,7 @@ drupalBaseModules.factory('baseResource', function() {
 		}
 
 		//array_key_value
-		//parameters[key1]=value1
+		//example: parameters[key1]=value1
 		if(format === 'array_key_value') {
 			
 			angular.forEach(values, function(value, k) {
@@ -100,12 +105,11 @@ drupalBaseModules.factory('baseResource', function() {
 	 * https://github.com/jbeuckm/drupal-client/blob/master/lib/field.js
 	 * Create the basic field structure for uploading a field.
 	 */
-	function structureField(value, _label) {
-
-
+	function structureField(value, _label, language) {
 
 	  // record optional label string or default to "value"
 	  var label = _label || "value";
+	  var language_key = (language)? function() {return language}:function() {return baseResourceConfig.LANGUAGE_NONE};
 
 	  if (isArray(value)) {
 
@@ -130,7 +134,7 @@ drupalBaseModules.factory('baseResource', function() {
 	    };
 
 	    return {
-	      und: [
+	    	und: [
 	        obj
 	      ]
 	    };
@@ -139,7 +143,7 @@ drupalBaseModules.factory('baseResource', function() {
 	  // field value given with label(s) already built
 	  if (typeof value == "object") {
 	    return {
-	      und: [
+	    	und: [
 	        value
 	      ]
 	    }
@@ -150,7 +154,7 @@ drupalBaseModules.factory('baseResource', function() {
 	  item[label] = value;
 
 	  return {
-	    und: [
+		  und: [
 	      item
 	    ]
 	  };
@@ -185,4 +189,4 @@ drupalBaseModules.factory('baseResource', function() {
 		serializeDrupalViewsFilter : serializeDrupalViewsFilter		
 	};
 	
-});
+}]);

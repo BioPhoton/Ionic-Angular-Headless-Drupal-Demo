@@ -311,8 +311,8 @@ NodeResourceModules.service('NodeResourceChannel', ['$rootScope', 'NodeResourceC
  * your_api_endpoint/node*|<mirror>|POST|Content-Type
  * 
 **/
-NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'baseResource', 'NodeResourceConfig', 'NodeResourceChannel', '$http', '$q', 
-                                      function(drupalApiConfig,   baseResource,   NodeResourceConfig,   NodeResourceChannel,   $http,   $q) {
+NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'BaseResource', 'NodeResourceConfig', 'NodeResourceChannel', '$http', '$q', 
+                                      function(drupalApiConfig,   BaseResource,   NodeResourceConfig,   NodeResourceChannel,   $http,   $q) {
 	
 	// define a new internal private method for this object
     function prepareIndexGetParams(options) {
@@ -322,12 +322,12 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'baseResource',
 		angular.forEach(options, function(value , key) {
 			if(key === 'parameters') { type = 'array_key_value'; }
 			else if(key === 'fields') { type = 'array'; }
-			baseResource.prepareAndSetGetParam(value, key, type);
+			BaseResource.prepareAndSetGetParam(value, key, type);
 	        type = undefined;
 	    });
-		console.log(baseResource); 
-		var getParamsString = baseResource.getParams.join('&');
-		baseResource.getParams = [];
+		console.log(BaseResource); 
+		var getParamsString = BaseResource.getParams.join('&');
+		BaseResource.getParams = [];
 		
 		return getParamsString;
     }

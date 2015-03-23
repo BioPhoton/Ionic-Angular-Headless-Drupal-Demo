@@ -482,8 +482,8 @@ UserResourceModules.service('UserResourceChannel', ['$rootScope', 'UserResourceC
  * your_api_endpoint/user/*|<mirror>|GET, PUT, POST, DELETE|Content-Type,Authorization
  * 
 **/
-UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'baseResource', 'UserResourceConfig', 'UserResourceChannel', '$http', '$q', 
-                                      function(drupalApiConfig,   baseResource,   UserResourceConfig,   UserResourceChannel,   $http,   $q) {
+UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'BaseResource', 'UserResourceConfig', 'UserResourceChannel', '$http', '$q', 
+                                      function(drupalApiConfig,   BaseResource,   UserResourceConfig,   UserResourceChannel,   $http,   $q) {
 	
 	// define a new internal private method for this object
     function prepareIndexGetParams(options) {
@@ -493,12 +493,12 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'baseResource',
 		angular.forEach(options, function(value , key) {
 			if(key === 'parameters') { type = 'array_key_value'; }
 			else if(key === 'fields') { type = 'array'; }
-			baseResource.prepareAndSetGetParam(value, key, type);
+			BaseResource.prepareAndSetGetParam(value, key, type);
 	        type = undefined;
 	    });
-		console.log(baseResource);
-		var getParamsString = baseResource.getParams.join('&');
-		baseResource.getParams = [];
+		console.log(BaseResource);
+		var getParamsString = BaseResource.getParams.join('&');
+		BaseResource.getParams = [];
 		
 		return getParamsString;
     }

@@ -1,9 +1,9 @@
-var authedTabsNodeDemoControllers = angular.module('authed-tabs.node-demo.controllers',  ['NodeResourceModules']);
+var authedTabsNodeDemoControllers = angular.module('authed-tabs.node-demo.controllers',  ['drupalBaseModules','NodeResourceModules']);
 
 /* Node Demo Controller */
 authedTabsNodeDemoControllers.controller('NodeListCtrl', 
-		   ['$scope', '$state', '$timeout', '$ionicModal', 'NodeResource', 'NodeResourceChannel', 'pageSize', 'pageFirst', 'newNodes', 
-    function($scope,   $state,   $timeout,   $ionicModal,   NodeResource,   NodeResourceChannel,   pageSize,   pageFirst,   newNodes) {
+		   ['$scope', '$state', '$timeout', '$ionicModal', 'BaseResource', 'NodeResource', 'NodeResourceChannel', 'pageSize', 'pageFirst', 'newNodes', 
+    function($scope,   $state,   $timeout,   $ionicModal,   BaseResource,   NodeResource,   NodeResourceChannel,   pageSize,   pageFirst,   newNodes) {
 			   
 			   var mergeNodes = function(newNodes, mergeNodes) {
 				   var uniqueNodes = [];
@@ -173,9 +173,7 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 			//new node
 			$scope.newPage = {};
 			$scope.newPage.type = 'page';
-		    $scope.newPage.body = {};
-		    $scope.newPage.body.und = []
-		    $scope.newPage.body.und[0] = { value : '', summary : '' }
+		    $scope.newPage.body = BaseResource.structureField( {'value' : '', 'summary' : ''});
 			   
 			$scope.createPage = function(newPage) {
 
