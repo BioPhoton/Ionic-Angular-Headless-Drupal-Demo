@@ -1,0 +1,25 @@
+{
+  "name": "ng-drupal-ionic",
+  "version": "0.0.1",
+  "homepage": "https://github.com/BioPhoton/ng-drupal-ionic",
+  "authors": [
+    "BioPhoton bio_photon@gmx.at"
+  ],
+  "description": "An API client for Drupal 7 and Services 3.x",
+  "main": "lib/common/drupalApiConfig.js",
+  "keywords": [
+    "Drupal",
+    "Ionic",
+    "API",
+    "Services3",
+    "Client"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
