@@ -26,8 +26,13 @@
     <!-- common js -->
     <script src="app/common/directives/common-directives.js"></script>
     <!-- ng-drupal-ionic -->
-    
+    <!-- ng-drupal-ionic commons-->
+    <script src="lib/ng-drupal-ionic/lib/common/drupalApiConfig.js"></script>    
+    <script src="lib/ng-drupal-ionic/lib/common/local-storage-service.js"></script>
+    <script src="lib/ng-drupal-ionic/lib/common/access-control.js"></script>
+    <!-- ng-drupal-ionic resources-->
     <script src="lib/ng-drupal-ionic/lib/resources/baseResource.js"></script>
+    <script src="lib/ng-drupal-ionic/lib/resources/systemResource.js"></script> 
     <script src="lib/ng-drupal-ionic/lib/resources/userResource.js"></script>
     <script src="lib/ng-drupal-ionic/lib/resources/nodeResource.js"></script>
     <script src="lib/ng-drupal-ionic/lib/resources/taxonomyTermResource.js"></script>
@@ -36,11 +41,6 @@
     <script src="lib/ng-drupal-ionic/lib/resources/fileResource.js"></script>
     <script src="lib/ng-drupal-ionic/lib/resources/viewsResource.js"></script>
     <script src="lib/ng-drupal-ionic/lib/resources/apiAuthService.js"></script>
-    
-    <script src="lib/ng-drupal-ionic/lib/common/drupalApiConfig.js"></script>
-    <script src="lib/ng-drupal-ionic/lib/common/local-storage-service.js"></script>
-    <script src="lib/ng-drupal-ionic/lib/common/access-control.js"></script>
-
     
     <!-- anonymouse user js -->
     <script src="app/components/tour/tour-controllers.js"></script>
@@ -65,6 +65,12 @@
   </head>
 
   <body ng-app="drupalIonicAngularJSAPIClient">
+  
+    <ion-nav-bar class="nav-title-slide-ios7 bar-light">
+        <ion-nav-back-button class="button-icon ion-arrow-left-c">
+        </ion-nav-back-button>
+    </ion-nav-bar>
+    
   <ion-nav-view></ion-nav-view>
 </body>
 </html>

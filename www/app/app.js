@@ -40,6 +40,11 @@ drupalIonicAngularJSAPIClient
 		
 		//
 		$stateProvider
+          .state('tour', {
+            url: '/tour',
+                templateUrl: 'app/components/tour/tour.html',
+                controller: 'TourCtrl'
+          })
           .state('app', {
             url: "/app",
             abstract: true,
@@ -63,15 +68,7 @@ drupalIonicAngularJSAPIClient
           //
           //stats for anonymouse user
           //=================================================================
-          .state('app.tour', {
-            url: '/tour',
-            views: {
-              'menuContent': {
-                templateUrl: 'app/components/tour/tour.html',
-                controller: 'TourCtrl'
-              }
-            }
-          })
+
           .state('app.login', {
             url: '/login',
             views: {
@@ -288,7 +285,7 @@ drupalIonicAngularJSAPIClient
 		    }
 	      });
   
-  $urlRouterProvider.otherwise('/app/tour');
+  $urlRouterProvider.otherwise('/tour');
   
   
 }]);
