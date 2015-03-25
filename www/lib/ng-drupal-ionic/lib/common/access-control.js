@@ -1,12 +1,32 @@
-/* Drupals api depending services*/
-//______________________________________________
-var accessControl = angular.module('common.accesss-control', ['ApiAuthModules']);
+/**
+ * AccessControlModule
+ * 
+ */
+var accessControlModule = angular.module('common.accesss-control', ['ApiAuthModules']);
+
+/**
+ * AccessControlConfig
+ * 
+ */
+accessControlModule.constant("accessControlConfig", {
+	   		roles :[
+               'anonymous user',
+               'authenticated user',
+               'administrator'],
+
+           accessLevels : {
+               'public' : "*",
+               'anon': ['anonymous user'],
+               'user' : ['authenticated user'],
+               'admin': ['administrator']
+           },      
+});
 
 /**
  * AccessControlService
  * 
  */
-accessControl.service('AccessControlService', function($rootScope, $http, $q, ApiAuthService) {
+accessControlModule.service('AccessControlService', function($rootScope, $http, $q, ApiAuthService) {
 	
 	var authorize = function(accessLevel, roles) {
 		 //if no user is given set unauthorized user
@@ -36,7 +56,7 @@ accessControl.service('AccessControlService', function($rootScope, $http, $q, Ap
 	
 });
 
-accessControl.directive('accessLevel', ['AccessControlService', 'ApiAuthChannel', 'ApiAuthService', 
+accessControlModule.directive('accessLevel', ['AccessControlService', 'ApiAuthChannel', 'ApiAuthService', 
                                 function(AccessControlService,   ApiAuthChannel,   ApiAuthService) {
     return {
         restrict: 'A',

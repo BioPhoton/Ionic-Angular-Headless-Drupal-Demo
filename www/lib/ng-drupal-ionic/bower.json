@@ -6,9 +6,26 @@
     "BioPhoton bio_photon@gmx.at"
   ],
   "description": "An API client for Drupal 7 and Services 3.x",
-  "main": "lib/common/drupalApiConfig.js",
+  "main": [
+  	"lib/common/drupalApiConfig.js",
+  	"lib/common/access-control.js",
+  	"lib/common/local-storage-service.js",
+  	"lib/resources/baseResource.js",
+  	"lib/resources/systemResource.js",
+  	"lib/resources/userResource.js",
+  	"lib/resources/nodeResource.js",
+  	"lib/resources/fileResource.js",
+  	"lib/resources/commentResource.js",
+  	"lib/resources/taxonomyTermResource.js",
+  	"lib/resources/taxonomyVocabularyResource.js",
+  	"lib/resources/ viewsResource.js",
+  	"lib/resources/apiAuthService.js"
+  ],
   "keywords": [
     "Drupal",
+    "Angular",
+    "Angularjs",
+    "ng",
     "Ionic",
     "API",
     "Services3",
@@ -21,5 +38,8 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "angular-cookie": "~4.0.6"
+  }
 }

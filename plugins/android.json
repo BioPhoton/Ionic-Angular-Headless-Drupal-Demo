@@ -23,6 +23,10 @@
                         {
                             "xml": "<feature name=\"Camera\"><param name=\"android-package\" value=\"org.apache.cordova.camera.CameraLauncher\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"networksettings\"><param name=\"android-package\" value=\"com.ionic.network.networksettings\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -58,6 +62,9 @@
         },
         "org.apache.cordova.camera": {
             "PACKAGE_NAME": "com.ionicframework.drupalapiclientdemo501453"
+        },
+        "com.networksettings": {
+            "PACKAGE_NAME": "com.ionicframework.ionicdrupalclientdemo603258"
         }
     },
     "dependent_plugins": {}

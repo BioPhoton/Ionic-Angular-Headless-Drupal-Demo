@@ -26,16 +26,8 @@
     </ion-header-bar>
 
     <ion-content drag-content="true">
-    
-      <ion-item nav-clear menu-close ui-sref="app.tour">Tour</ion-item>
-      <ion-item data-access-level="{{accessLevels.anon}}" nav-clear menu-close ui-sref="app.login">Login</ion-item>
-  	  <ion-item data-access-level="{{accessLevels.anon}}" nav-clear menu-close ui-sref="app.register">Register</ion-item>
-  	  <ion-item data-access-level="{{accessLevels.user}}" nav-clear menu-close ui-sref="app.authed-tabs.profile">Profile</ion-item>
-      <ion-item data-access-level="{{accessLevels.user}}" nav-clear menu-close ng-click="logout()">Logout</ion-item>
-       
-      <ng-include src="'app/templates/menus/resources-menu.html'"></ng-include>
-      
-      <ng-include ng-if="isLoggedIn" src="'app/templates/menus/authenticated-user-menu.html'"></ng-include>
+      <ng-include src="'app/templates/menus/base-menu.html'"></ng-include>
+      <ng-include data-access-level="{{accessLevels.user}}" src="'app/templates/menus/authenticated-user-menu.html'"></ng-include>
     </ion-content>
 
   </ion-side-menu>

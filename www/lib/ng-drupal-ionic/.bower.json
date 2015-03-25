@@ -5,9 +5,26 @@
     "BioPhoton bio_photon@gmx.at"
   ],
   "description": "An API client for Drupal 7 and Services 3.x",
-  "main": "lib/common/drupalApiConfig.js",
+  "main": [
+    "lib/common/drupalApiConfig.js",
+    "lib/common/access-control.js",
+    "lib/common/local-storage-service.js",
+    "lib/resources/baseResource.js",
+    "lib/resources/systemResource.js",
+    "lib/resources/userResource.js",
+    "lib/resources/nodeResource.js",
+    "lib/resources/fileResource.js",
+    "lib/resources/commentResource.js",
+    "lib/resources/taxonomyTermResource.js",
+    "lib/resources/taxonomyVocabularyResource.js",
+    "lib/resources/ viewsResource.js",
+    "lib/resources/apiAuthService.js"
+  ],
   "keywords": [
     "Drupal",
+    "Angular",
+    "Angularjs",
+    "ng",
     "Ionic",
     "API",
     "Services3",
@@ -21,13 +38,17 @@
     "test",
     "tests"
   ],
-  "_release": "98ba25cd2b",
+  "dependencies": {
+    "angular-cookie": "~4.0.6"
+  },
+  "_release": "bd31aabd63",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "98ba25cd2b781b3abf6c76ff94e657b2e091c6a3"
+    "commit": "bd31aabd63be30ddc3c8e79ca744ddec4eb5f57e"
   },
   "_source": "git://github.com/BioPhoton/ng-drupal-ionic.git",
   "_target": "*",
-  "_originalSource": "ng-drupal-ionic"
+  "_originalSource": "ng-drupal-ionic",
+  "_direct": true
 }

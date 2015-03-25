@@ -20,9 +20,6 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
 	 
 	$scope.accessLevels = AppSettings.accessLevels;
 	
-	//user login state
-    $scope.isLoggedIn = ApiAuthService.getConnectionState();
-  
 	//
 	// App redirects
 	//

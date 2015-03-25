@@ -9,22 +9,13 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 
   'common.accesss-control',
   'common.services.localstorage',
-  'ApiAuthModules',
+  //'ApiAuthModules',
   
   'app.controllers',
   'tour.controllers',
   'login.controllers',
   'logout.controllers',
   'register.controllers',
-
-  'resources.comment-resource.controllers',
-  'resources.taxonomy-vocabulary-resource.controllers',
-  'resources.taxonomy-term-resource.controllers',
-  'resources.file-resource.controllers',
-  'resources.node-resource.controllers',
-  'resources.system-resource.controllers',
-  'resources.user-resource.controllers',
-  'resources.views-resource.controllers',
 
   'authed-tabs.node-demo.controllers',
   'authed-tabs.profile.controllers',
@@ -69,6 +60,16 @@ drupalIonicAngularJSAPIClient
           //stats for anonymouse user
           //=================================================================
 
+          .state('app.no-network', {
+            url: '/no-network',
+            views: {
+              'menuContent': {
+                templateUrl: 'app/components/no-network/no-network.html',
+              }
+            }
+
+          })
+          
           .state('app.login', {
             url: '/login',
             views: {
@@ -93,118 +94,6 @@ drupalIonicAngularJSAPIClient
               }
             }
           })
-	      //    
-	      //Abstract states for anonymous tabs
-		  //______________________________________________
-		  .state('app.resources-tabs', {
-		    url: '/resources-tabs',
-		    abstract: true,
-		    views: {
-			      'menuContent': {
-			    	templateUrl: 'app/components/resources-tabs/resources-tabs.html',
-			      }
-			    }
-		  })
-		  
-		  //
-		  //Comment Resource
-		  //______________________________________________
-		  .state('app.resources-tabs.comment-resource', {
-		  url: '/comment-recource',
-		  views: {
-			      'comment-resource': {
-			    	templateUrl: 'app/components/resources-tabs/comment-resource/comment-resource.html',
-			  		controller:  'ResourcesCommentResourceCtrl' 
-			      }
-			    }
-		   })
-		  
-		  //
-		  //Taxonomy Vocabulary Resource
-		  //______________________________________________
-		  .state('app.resources-tabs.taxonomy-vocabulary-resource', {
-		  url: '/taxonomy-vocabulary-recource',
-		  views: {
-			      'taxonomy-vocabulary-resource': {
-			    	templateUrl: 'app/components/resources-tabs/taxonomy-vocabulary-resource/taxonomy-vocabulary-resource.html',
-			  		controller:  'ResourcesTaxonomyVocabularyResourceCtrl' 
-			      }
-			    }
-		   })
-		  
-		  //
-		  //Taxonomy Terms Resource
-		  //______________________________________________
-		  .state('app.resources-tabs.taxonomy-term-resource', {
-		  url: '/taxonomy-term-recource',
-		  views: {
-			      'taxonomy-term-resource': {
-			    	templateUrl: 'app/components/resources-tabs/taxonomy-term-resource/taxonomy-term-resource.html',
-			  		controller:  'ResourcesTaxonomyTermResourceCtrl' 
-			      }
-			    }
-		   })
-		   
-		   //
-		   //File Resource
-		   //______________________________________________
-		   .state('app.resources-tabs.file-resource', {
-		    url: '/file-recource',
-		    views: {
-			      'file-resource': {
-			    	templateUrl: 'app/components/resources-tabs/file-resource/file-resource.html',
-			  		controller:  'ResourcesFileResourceCtrl' 
-			      }
-			    }
-		   })
-		 
-		  //
-		  //Node Resource
-		  //______________________________________________
-		   .state('app.resources-tabs.node-resource', {
-		    url: '/node-recource',
-		    views: {
-			      'node-resource': {
-			    	templateUrl: 'app/components/resources-tabs/node-resource/node-resource.html',
-			  		controller:  'ResourcesNodeResourceCtrl' 
-			      }
-			    }
-		   })
-		  //
-		  //System Resource
-		  //______________________________________________
-		   .state('app.resources-tabs.system-resource', {
-		    url: '/system-recource',
-		    views: {
-			      'system-resource': {
-			    	templateUrl: 'app/components/resources-tabs/system-resource/system-resource.html',
-			  		controller:  'ResourcesSystemResourceCtrl' 
-			      }
-			    }
-		   })
-		   //
-		   //User Resource
-		   //______________________________________________
-		   .state('app.resources-tabs.user-resource', {
-		    url: '/user-recource',
-		    views: {
-			      'user-resource': {
-			    	templateUrl: 'app/components/resources-tabs/user-resource/user-resource.html',
-			  		controller:  'ResourcesUserResourceCtrl' 
-			      }
-			    }
-		   })
-		    //Views Resource
-		   //______________________________________________
-		   .state('app.resources-tabs.views-resource', {
-		    url: '/views-recource',
-		    views: {
-			      'views-resource': {
-			    	templateUrl: 'app/components/resources-tabs/views-resource/views-resource.html',
-			  		controller:  'ResourcesViewsResourceCtrl' 
-			      }
-			    }
-		   })
 	
 	      //states for authenticted user
 	      //=================================================================
