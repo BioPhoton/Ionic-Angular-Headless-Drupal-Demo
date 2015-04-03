@@ -9,7 +9,7 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 
   'common.accesss-control',
   'common.services.localstorage',
-  //'ApiAuthModules',
+  'ApiAuthModules',
   
   'app.controllers',
   'tour.controllers',
@@ -17,17 +17,32 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'logout.controllers',
   'register.controllers',
 
+ /* 'resources.comment-resource.controllers',
+  'resources.taxonomy-vocabulary-resource.controllers',
+  'resources.taxonomy-term-resource.controllers',
+  'resources.file-resource.controllers',
+  'resources.node-resource.controllers',
+  'resources.system-resource.controllers',
+  'resources.user-resource.controllers',
+  'resources.views-resource.controllers',*/
+
   'authed-tabs.node-demo.controllers',
   'authed-tabs.profile.controllers',
 
 ]);
 
 drupalIonicAngularJSAPIClient
-	.config( [  '$stateProvider', '$urlRouterProvider', '$httpProvider', 'AppSettings', 'drupalApiConfig',
-     function (  $stateProvider,   $urlRouterProvider,   $httpProvider,   AppSettings,   drupalApiConfig ) {
+	.config( [  '$stateProvider', '$urlRouterProvider', '$httpProvider', 'accessControlConfig', 'drupalApiConfig',
+     function (  $stateProvider,   $urlRouterProvider,   $httpProvider,   accessControlConfig,   drupalApiConfig ) {
 		
+		//Configure ng-drupal-ionic
 		//edit drupal config
+		drupalApiConfig.drupal_instance = 'http://dev-drupal-headless-ionic.pantheon.io/';
 		drupalApiConfig.api_endpoint += 'v1/';
+		
+		//edit accessControl config
+		accessControlConfig.accessLevels.user.push('administrator');
+		accessControlConfig.accessLevels.customLevel = ['authenticated user', 'administrator'];
 		
 		//
 		$stateProvider
@@ -52,7 +67,7 @@ drupalIonicAngularJSAPIClient
                 },
             },
             data: {
-              access: AppSettings.accessLevels.public
+              access: accessControlConfig.accessLevels.public
             }
            
           })
@@ -60,16 +75,6 @@ drupalIonicAngularJSAPIClient
           //stats for anonymouse user
           //=================================================================
 
-          .state('app.no-network', {
-            url: '/no-network',
-            views: {
-              'menuContent': {
-                templateUrl: 'app/components/no-network/no-network.html',
-              }
-            }
-
-          })
-          
           .state('app.login', {
             url: '/login',
             views: {
@@ -89,11 +94,123 @@ drupalIonicAngularJSAPIClient
               }
 	        },
             resolve: {
-              termsNodeObj: function (NodeResource, AppSettings) {
-            	  return NodeResource.retrieve(AppSettings.terms_and_conditions_nid);
+              termsNodeObj: function (NodeResource) {
+            	  return NodeResource.retrieve(1);
               }
             }
           })
+	     /* //    
+	      //Abstract states for anonymous tabs
+		  //______________________________________________
+		  .state('app.resources-tabs', {
+		    url: '/resources-tabs',
+		    abstract: true,
+		    views: {
+			      'menuContent': {
+			    	templateUrl: 'app/components/resources-tabs/resources-tabs.html',
+			      }
+			    }
+		  })
+		  
+		  //
+		  //Comment Resource
+		  //______________________________________________
+		  .state('app.resources-tabs.comment-resource', {
+		  url: '/comment-recource',
+		  views: {
+			      'comment-resource': {
+			    	templateUrl: 'app/components/resources-tabs/comment-resource/comment-resource.html',
+			  		controller:  'ResourcesCommentResourceCtrl' 
+			      }
+			    }
+		   })
+		  
+		  //
+		  //Taxonomy Vocabulary Resource
+		  //______________________________________________
+		  .state('app.resources-tabs.taxonomy-vocabulary-resource', {
+		  url: '/taxonomy-vocabulary-recource',
+		  views: {
+			      'taxonomy-vocabulary-resource': {
+			    	templateUrl: 'app/components/resources-tabs/taxonomy-vocabulary-resource/taxonomy-vocabulary-resource.html',
+			  		controller:  'ResourcesTaxonomyVocabularyResourceCtrl' 
+			      }
+			    }
+		   })
+		  
+		  //
+		  //Taxonomy Terms Resource
+		  //______________________________________________
+		  .state('app.resources-tabs.taxonomy-term-resource', {
+		  url: '/taxonomy-term-recource',
+		  views: {
+			      'taxonomy-term-resource': {
+			    	templateUrl: 'app/components/resources-tabs/taxonomy-term-resource/taxonomy-term-resource.html',
+			  		controller:  'ResourcesTaxonomyTermResourceCtrl' 
+			      }
+			    }
+		   })
+		   
+		   //
+		   //File Resource
+		   //______________________________________________
+		   .state('app.resources-tabs.file-resource', {
+		    url: '/file-recource',
+		    views: {
+			      'file-resource': {
+			    	templateUrl: 'app/components/resources-tabs/file-resource/file-resource.html',
+			  		controller:  'ResourcesFileResourceCtrl' 
+			      }
+			    }
+		   })
+		 
+		  //
+		  //Node Resource
+		  //______________________________________________
+		   .state('app.resources-tabs.node-resource', {
+		    url: '/node-recource',
+		    views: {
+			      'node-resource': {
+			    	templateUrl: 'app/components/resources-tabs/node-resource/node-resource.html',
+			  		controller:  'ResourcesNodeResourceCtrl' 
+			      }
+			    }
+		   })
+		  //
+		  //System Resource
+		  //______________________________________________
+		   .state('app.resources-tabs.system-resource', {
+		    url: '/system-recource',
+		    views: {
+			      'system-resource': {
+			    	templateUrl: 'app/components/resources-tabs/system-resource/system-resource.html',
+			  		controller:  'ResourcesSystemResourceCtrl' 
+			      }
+			    }
+		   })
+		   //
+		   //User Resource
+		   //______________________________________________
+		   .state('app.resources-tabs.user-resource', {
+		    url: '/user-recource',
+		    views: {
+			      'user-resource': {
+			    	templateUrl: 'app/components/resources-tabs/user-resource/user-resource.html',
+			  		controller:  'ResourcesUserResourceCtrl' 
+			      }
+			    }
+		   })
+		    //Views Resource
+		   //______________________________________________
+		   .state('app.resources-tabs.views-resource', {
+		    url: '/views-recource',
+		    views: {
+			      'views-resource': {
+			    	templateUrl: 'app/components/resources-tabs/views-resource/views-resource.html',
+			  		controller:  'ResourcesViewsResourceCtrl' 
+			      }
+			    }
+		   })*/
 	
 	      //states for authenticted user
 	      //=================================================================
@@ -106,7 +223,7 @@ drupalIonicAngularJSAPIClient
 	          }
 	        },
 	        data: {
-	          access: AppSettings.accessLevels.user
+	          access: accessControlConfig.accessLevels.user
 	        }
 	      })
 	      
@@ -189,19 +306,19 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
       console.log('want go from ' + fromState.name + ' to ' + toState.name); 
       
-      var firstVisit = 1; //$localstorage.getItem('firstVisit', false);
-      var isRegistered = 1; //$localstorage.getItem('isRegistered', false);
+      var firstVisit = $localstorage.getItem('firstVisit', false);
+      var isRegistered = $localstorage.getItem('isRegistered', false);
       //AccessControlService.authorize(toState.data.access);
       
       // if its the users first visit to the app play the apps tour
-  	  if ( !firstVisit && toState.name != 'app.tour') { 
-  		console.log('redirect 1: app.tour'); 
+  	  if ( !firstVisit && toState.name != 'tour') { 
+  		//console.log('redirect 1: tour'); 
   		event.preventDefault();
-  		$state.go('app.tour'); 	
+  		$state.go('tour'); 	
   		return;
   	  }  
   	  
-     /* if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
+     /*if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
         event.preventDefault();
       
         if (isRegistered) {

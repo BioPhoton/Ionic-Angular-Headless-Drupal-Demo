@@ -1,7 +1,7 @@
 var appControllers = angular.module('app.controllers', ['drupal.configurations', 'UserResourceModules', 'ApiAuthModules'])
 
-appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChannel', 'AppSettings', 'drupalApiConfig', 'ApiAuthService', 'UserResource', '$ionicPlatform', '$localstorage', '$state',
-                             function ($rootScope,   $scope,   UserResourceChannel,   AppSettings,   drupalApiConfig,   ApiAuthService,   UserResource,   $ionicPlatform,   $localstorage,   $state ) {
+appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChannel', 'AppSettings', 'accessControlConfig', 'drupalApiConfig', 'ApiAuthService', 'UserResource', '$ionicPlatform', '$localstorage', '$state',
+                             function ($rootScope,   $scope,   UserResourceChannel,   AppSettings,   accessControlConfig,   drupalApiConfig,   ApiAuthService,   UserResource,   $ionicPlatform,   $localstorage,   $state ) {
 	
 	$ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -18,7 +18,7 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
 	
 	$scope.logout = function () { UserResource.logout(); };
 	 
-	$scope.accessLevels = AppSettings.accessLevels;
+	$scope.accessLevels = accessControlConfig.accessLevels;
 	
 	//
 	// App redirects

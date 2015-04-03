@@ -925,7 +925,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'BaseResource',
 				data : account
 	 	 	  },
 	 	 	  defer = $q.defer();
-		
+		console.log(account); 
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
 			UserResourceChannel.publishUserRegisterConfirmed(data);

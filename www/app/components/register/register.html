@@ -10,11 +10,11 @@
         </div>
 
         <label class="item item-input"
-               ng-class="{ 'has-error' : registerForm.username.$invalid && registerForm.username.$dirty}">
+               ng-class="{ 'has-error' : registerForm.name.$invalid && registerForm.name.$dirty}">
           <input type="text" 
-                 ng-model="registerData.username" 
+                 ng-model="registerData.name" 
                  placeholder="Username" 
-                 name="username" 
+                 name="name" 
                  autocorrect="off" 
                  autocapitalize="off" 
                  required
@@ -22,43 +22,43 @@
         </label>
 
         <div class="form-errors" 
-             ng-show="registerForm.username.$invalid && registerForm.username.$dirty"
-             ng-messages="registerForm.username.$error" 
+             ng-show="registerForm.name.$invalid && registerForm.name.$dirty"
+             ng-messages="registerForm.name.$error" 
              ng-messages-include="templates/form-errors.html"
              >
         </div>
 
         <label class="item item-input"
-               ng-class="{ 'has-error' : registerForm.email.$invalid && registerForm.email.$dirty}">
+               ng-class="{ 'has-error' : registerForm.mail.$invalid && registerForm.mail.$dirty}">
           <input type="email" 
                  placeholder="Email Address" 
-                 name="email"  
-                 ng-model="registerData.email"
+                 name="mail"  
+                 ng-model="registerData.mail"
                  required
                  >
         </label>
 
         <div class="form-errors" 
-             ng-show="registerForm.email.$invalid && registerForm.email.$dirty"
-             ng-messages="registerForm.email.$error"
+             ng-show="registerForm.mail.$invalid && registerForm.mail.$dirty"
+             ng-messages="registerForm.mail.$error"
              ng-messages-include="templates/form-errors.html"
              >
-          <div class="form-error" ng-message="email">Not a valid email address.</div>
+          <div class="form-error" ng-message="mail">Not a valid mail address.</div>
         </div>
 
         <label class="item item-input"
-               ng-class="{ 'has-error' : registerForm.password.$invalid && registerForm.password.$dirty}">
+               ng-class="{ 'has-error' : registerForm.pass.$invalid && registerForm.pass.$dirty}">
           <input type="password"
                  placeholder="Password" 
-                 name="password" 
-                 ng-model="registerData.password"
+                 name="pass" 
+                 ng-model="registerData.pass"
                  required
                  >
         </label>
 
         <div class="form-errors"
-             ng-show="registerForm.password.$invalid && registerForm.password.$dirty"
-             ng-messages="registerForm.password.$error" 
+             ng-show="registerForm.pass.$invalid && registerForm.pass.$dirty"
+             ng-messages="registerForm.pass.$error" 
              ng-messages-include="templates/form-errors.html"
              >
         </div>
