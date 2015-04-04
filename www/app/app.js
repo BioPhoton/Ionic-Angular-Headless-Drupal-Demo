@@ -17,15 +17,6 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'logout.controllers',
   'register.controllers',
 
- /* 'resources.comment-resource.controllers',
-  'resources.taxonomy-vocabulary-resource.controllers',
-  'resources.taxonomy-term-resource.controllers',
-  'resources.file-resource.controllers',
-  'resources.node-resource.controllers',
-  'resources.system-resource.controllers',
-  'resources.user-resource.controllers',
-  'resources.views-resource.controllers',*/
-
   'authed-tabs.node-demo.controllers',
   'authed-tabs.profile.controllers',
 
@@ -44,6 +35,8 @@ drupalIonicAngularJSAPIClient
 		accessControlConfig.accessLevels.user.push('administrator');
 		accessControlConfig.accessLevels.customLevel = ['authenticated user', 'administrator'];
 		
+		
+		$urlRouterProvider.otherwise('app/login');
 		//
 		$stateProvider
           .state('tour', {
@@ -51,6 +44,7 @@ drupalIonicAngularJSAPIClient
                 templateUrl: 'app/components/tour/tour.html',
                 controller: 'TourCtrl'
           })
+         
           .state('app', {
             url: "/app",
             abstract: true,
@@ -71,6 +65,14 @@ drupalIonicAngularJSAPIClient
             }
            
           })
+                    
+           .state('app.no-network', {
+            url: '/no-network',
+            	'menuContent': {
+            		templateUrl: 'app/components/no-network/no-network.html',
+            	}  
+            })
+          
           //
           //stats for anonymouse user
           //=================================================================
@@ -99,119 +101,7 @@ drupalIonicAngularJSAPIClient
               }
             }
           })
-	     /* //    
-	      //Abstract states for anonymous tabs
-		  //______________________________________________
-		  .state('app.resources-tabs', {
-		    url: '/resources-tabs',
-		    abstract: true,
-		    views: {
-			      'menuContent': {
-			    	templateUrl: 'app/components/resources-tabs/resources-tabs.html',
-			      }
-			    }
-		  })
-		  
-		  //
-		  //Comment Resource
-		  //______________________________________________
-		  .state('app.resources-tabs.comment-resource', {
-		  url: '/comment-recource',
-		  views: {
-			      'comment-resource': {
-			    	templateUrl: 'app/components/resources-tabs/comment-resource/comment-resource.html',
-			  		controller:  'ResourcesCommentResourceCtrl' 
-			      }
-			    }
-		   })
-		  
-		  //
-		  //Taxonomy Vocabulary Resource
-		  //______________________________________________
-		  .state('app.resources-tabs.taxonomy-vocabulary-resource', {
-		  url: '/taxonomy-vocabulary-recource',
-		  views: {
-			      'taxonomy-vocabulary-resource': {
-			    	templateUrl: 'app/components/resources-tabs/taxonomy-vocabulary-resource/taxonomy-vocabulary-resource.html',
-			  		controller:  'ResourcesTaxonomyVocabularyResourceCtrl' 
-			      }
-			    }
-		   })
-		  
-		  //
-		  //Taxonomy Terms Resource
-		  //______________________________________________
-		  .state('app.resources-tabs.taxonomy-term-resource', {
-		  url: '/taxonomy-term-recource',
-		  views: {
-			      'taxonomy-term-resource': {
-			    	templateUrl: 'app/components/resources-tabs/taxonomy-term-resource/taxonomy-term-resource.html',
-			  		controller:  'ResourcesTaxonomyTermResourceCtrl' 
-			      }
-			    }
-		   })
-		   
-		   //
-		   //File Resource
-		   //______________________________________________
-		   .state('app.resources-tabs.file-resource', {
-		    url: '/file-recource',
-		    views: {
-			      'file-resource': {
-			    	templateUrl: 'app/components/resources-tabs/file-resource/file-resource.html',
-			  		controller:  'ResourcesFileResourceCtrl' 
-			      }
-			    }
-		   })
-		 
-		  //
-		  //Node Resource
-		  //______________________________________________
-		   .state('app.resources-tabs.node-resource', {
-		    url: '/node-recource',
-		    views: {
-			      'node-resource': {
-			    	templateUrl: 'app/components/resources-tabs/node-resource/node-resource.html',
-			  		controller:  'ResourcesNodeResourceCtrl' 
-			      }
-			    }
-		   })
-		  //
-		  //System Resource
-		  //______________________________________________
-		   .state('app.resources-tabs.system-resource', {
-		    url: '/system-recource',
-		    views: {
-			      'system-resource': {
-			    	templateUrl: 'app/components/resources-tabs/system-resource/system-resource.html',
-			  		controller:  'ResourcesSystemResourceCtrl' 
-			      }
-			    }
-		   })
-		   //
-		   //User Resource
-		   //______________________________________________
-		   .state('app.resources-tabs.user-resource', {
-		    url: '/user-recource',
-		    views: {
-			      'user-resource': {
-			    	templateUrl: 'app/components/resources-tabs/user-resource/user-resource.html',
-			  		controller:  'ResourcesUserResourceCtrl' 
-			      }
-			    }
-		   })
-		    //Views Resource
-		   //______________________________________________
-		   .state('app.resources-tabs.views-resource', {
-		    url: '/views-recource',
-		    views: {
-			      'views-resource': {
-			    	templateUrl: 'app/components/resources-tabs/views-resource/views-resource.html',
-			  		controller:  'ResourcesViewsResourceCtrl' 
-			      }
-			    }
-		   })*/
-	
+          
 	      //states for authenticted user
 	      //=================================================================
 	      .state('app.authed-tabs', {
@@ -291,7 +181,7 @@ drupalIonicAngularJSAPIClient
 		    }
 	      });
   
-  $urlRouterProvider.otherwise('/tour');
+
   
   
 }]);
@@ -309,16 +199,16 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
       var firstVisit = $localstorage.getItem('firstVisit', false);
       var isRegistered = $localstorage.getItem('isRegistered', false);
       //AccessControlService.authorize(toState.data.access);
-      
+    
       // if its the users first visit to the app play the apps tour
-  	  if ( !firstVisit && toState.name != 'tour') { 
+  	  if ( !firstVisit && toState.name != 'tour' ) { 
   		//console.log('redirect 1: tour'); 
   		event.preventDefault();
   		$state.go('tour'); 	
   		return;
   	  }  
   	  
-     /*if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
+      if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
         event.preventDefault();
       
         if (isRegistered) {
@@ -331,11 +221,10 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
           $state.go('app.register');
           return;
         } 
-      }*/
-           
+      }
+            
       //custom redirect
       if  (toState.name == 'app.login' || toState.name == 'app.register') {
-    
         if (ApiAuthService.getConnectionState()) {
           console.log('redirect 5: app.authed-tabs.profile'); 
           event.preventDefault();
@@ -343,6 +232,8 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
           return;
         } 
       }
+      
+      
     });
     
 }]);
