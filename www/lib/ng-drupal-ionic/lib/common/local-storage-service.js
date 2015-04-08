@@ -1,7 +1,7 @@
 var localstorageServices = angular.module('common.services.localstorage', []);
 
-localstorageServices.factory('$localstorage', ['$window',
-  function ($window) {
+localstorageServices.service('$localstorage', ['$window',
+                                      function ($window) {
     return {
        //
       setItem: function (key, value) {

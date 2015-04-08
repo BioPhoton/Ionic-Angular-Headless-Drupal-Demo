@@ -12,6 +12,12 @@ registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicM
       termsAgreed : false,
     };
     
+    $scope.gotToLogin = function () {
+    	// $localstorage.setItem('isRegistered', true);
+        // $rootScope.isRegistered = true;
+         $state.go('app.login');
+    };
+    
     $scope.register = function (form) {
       if (form.$valid) {
     	  UserResource.register($scope.registerData)

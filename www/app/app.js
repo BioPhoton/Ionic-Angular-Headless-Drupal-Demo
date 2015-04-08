@@ -63,8 +63,8 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
 }]);
 
 drupalIonicAngularJSAPIClient
-	.config( [  '$stateProvider', '$urlRouterProvider', '$httpProvider', 'accessControlConfig', 'drupalApiConfig',
-     function (  $stateProvider,   $urlRouterProvider,   $httpProvider,   accessControlConfig,   drupalApiConfig ) {
+	.config( [   '$stateProvider', '$urlRouterProvider', '$httpProvider', 'accessControlConfig', 'drupalApiConfig',
+     function (   $stateProvider,   $urlRouterProvider,   $httpProvider,   accessControlConfig,   drupalApiConfig ) {
 		
 		//Configure ng-drupal-ionic
 		//edit drupal config
@@ -75,8 +75,13 @@ drupalIonicAngularJSAPIClient
 		accessControlConfig.accessLevels.user.push('administrator');
 		accessControlConfig.accessLevels.customLevel = ['authenticated user', 'administrator'];
 		
+		if(window.localStorage.getItem("isRegistered") === null ) {
+			$urlRouterProvider.otherwise('app/register');
+		}
+		else {
+			$urlRouterProvider.otherwise('app/login');
+		}
 		
-		$urlRouterProvider.otherwise('app/login');
 		//
 		$stateProvider
           .state('tour', {

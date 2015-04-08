@@ -25,11 +25,15 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
 	 	 /**/
 	 	  //if user never registered 
 	 	 
-	 	  if ( $rootScope.isRegistered === false) { 
-	 		 console.log($rootScope.isRegistered === false); 
-	 		$state.go('app.register'); 	
-	 		return;
-	 	  }  
+	 	  //if ( $rootScope.isRegistered === false) { 
+	 		 // if( $state.current.name !== 'app.login') {
+	 			 console.log($state.current.name ); 
+	 			// $state.go('app.register');
+	 			//return;
+	 		 // }
+	 		// console.log($state.current.name ); 
+	 		// return;
+	 	 // }  
 		
 		//redirects 
 		if  ($state.current.name == 'app.login' || $state.current.name == 'app.register') {
