@@ -22,6 +22,39 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 
 ]);
 
+
+drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'ApiAuthService', 'AccessControlService', '$state',
+                          function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   ApiAuthService,   AccessControlService,   $state) {
+	
+	// init Authentication service
+	// ApiAuthService.refreshConnection();
+
+	 $rootScope.firstVisit 		= $localstorage.getItem('firstVisit', false);
+     $rootScope.isRegistered 	= $localstorage.getItem('isRegistered', false);
+	
+	//restrict access redirects
+    $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
+    	console.log(toState.name); 
+    	
+    	// if its the users first visit to the app play the apps tour
+  	  if ( $rootScope.firstVisit === false && toState.name != 'tour' ) { 
+  		event.preventDefault();
+  		$state.go('tour'); 	
+  		return;
+  	  }  
+  	  else if( $rootScope.firstVisit === false && toState.name === 'tour' ) { return; }
+  	  
+  	  //if user never registered 
+  	  if ( $rootScope.isRegistered === false && toState.name != 'app.register' ) { 
+  		event.preventDefault();
+  		$state.go('app.register'); 	
+  		return;
+  	  }  
+  	  else if ($rootScope.isRegistered && toState.name === 'app.register') { return; }
+    });
+    
+}]);
+
 drupalIonicAngularJSAPIClient
 	.config( [  '$stateProvider', '$urlRouterProvider', '$httpProvider', 'accessControlConfig', 'drupalApiConfig',
      function (  $stateProvider,   $urlRouterProvider,   $httpProvider,   accessControlConfig,   drupalApiConfig ) {
@@ -53,11 +86,13 @@ drupalIonicAngularJSAPIClient
            resolve: {
             	// init connection state
             	// this fires just on app launge, switching child states will not resolve this again
-                connectedUser: function(ApiAuthService, drupalApiConfig) {
-                	
-        			if(ApiAuthService.getLastConnectTime() < (Date.now() - drupalApiConfig.session_expiration_time) ) {       				
-        				return ApiAuthService.refreshConnection();
-        			}
+        	   currentUser: function(ApiAuthService, drupalApiConfig) {
+        			if(ApiAuthService.getLastConnectTime() < (Date.now() - drupalApiConfig.session_expiration_time) ) {    
+        				return ApiAuthService.refreshConnection().then(
+        						function() {
+        						return	ApiAuthService.getCurrentUser();
+        						});		
+        			} 
                 },
             },
             data: {
@@ -94,12 +129,7 @@ drupalIonicAngularJSAPIClient
                 templateUrl: 'app/components/register/register.html',
                 controller: 'RegisterCtrl'
               }
-	        },
-            resolve: {
-              termsNodeObj: function (NodeResource) {
-            	  return NodeResource.retrieve(1);
-              }
-            }
+	        }
           })
           
 	      //states for authenticted user
@@ -184,56 +214,4 @@ drupalIonicAngularJSAPIClient
 
   
   
-}]);
-
-
-drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'ApiAuthService', 'AccessControlService', '$state',
-                          function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   ApiAuthService,   AccessControlService,   $state) {
-	
-	
-	
-	//restrict access redirects
-    $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-      console.log('want go from ' + fromState.name + ' to ' + toState.name); 
-      
-      var firstVisit = $localstorage.getItem('firstVisit', false);
-      var isRegistered = $localstorage.getItem('isRegistered', false);
-      //AccessControlService.authorize(toState.data.access);
-    
-      // if its the users first visit to the app play the apps tour
-  	  if ( !firstVisit && toState.name != 'tour' ) { 
-  		//console.log('redirect 1: tour'); 
-  		event.preventDefault();
-  		$state.go('tour'); 	
-  		return;
-  	  }  
-  	  
-      if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
-        event.preventDefault();
-      
-        if (isRegistered) {
-          console.log('redirect 3: app.login'); 
-          $state.go('app.login');
-          return;
-        } 
-        else {
-          console.log('redirect 4: app.register'); 
-          $state.go('app.register');
-          return;
-        } 
-      }
-            
-      //custom redirect
-      if  (toState.name == 'app.login' || toState.name == 'app.register') {
-        if (ApiAuthService.getConnectionState()) {
-          console.log('redirect 5: app.authed-tabs.profile'); 
-          event.preventDefault();
-          $state.go('app.authed-tabs.profile');
-          return;
-        } 
-      }
-      
-      
-    });
-    
 }]);

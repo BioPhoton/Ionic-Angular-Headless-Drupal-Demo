@@ -1,7 +1,7 @@
-var appControllers = angular.module('app.controllers', ['drupal.configurations', 'UserResourceModules', 'ApiAuthModules'])
+var appControllers = angular.module('app.controllers', ['drupal.configurations', 'UserResourceModules', 'ApiAuthModules', 'common.accesss-control'])
 
-appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChannel', 'AppSettings', 'accessControlConfig', 'drupalApiConfig', 'ApiAuthService', 'UserResource', '$ionicPlatform', '$localstorage', '$state',
-                             function ($rootScope,   $scope,   UserResourceChannel,   AppSettings,   accessControlConfig,   drupalApiConfig,   ApiAuthService,   UserResource,   $ionicPlatform,   $localstorage,   $state ) {
+appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChannel', 'accessControlConfig', 'drupalApiConfig', 'ApiAuthService', 'AccessControlService', 'UserResource', '$ionicPlatform', '$state',
+                             function ($rootScope,   $scope,   UserResourceChannel,   accessControlConfig,   drupalApiConfig,   ApiAuthService,   AccessControlService,  UserResource,   $ionicPlatform,   $state ) {
 	
 	$ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -14,21 +14,37 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
       }
     });
 	
+	$scope.$on('$ionicView.enter', function() {
+		//redirects 
+		if  ($state.current.name == 'app.login' || $state.current.name == 'app.register') {
+			if(ApiAuthService.getConnectionState()) {
+				$state.go('app.authed-tabs.profile');
+			}
+	    } 
+		
+		//redirect if no permissions
+		if ( ('data' in $state.current) && ('access' in $state.current.data) && !AccessControlService.authorize($state.current.data.access) ) {
+	        if ($scope.isRegistered) { $state.go('app.login'); } 
+	        else { $state.go('app.register'); } 
+	      }
+	});
+	
+	
 	$scope.pathToCms 	= drupalApiConfig.drupal_instance;
 	
 	$scope.logout = function () { UserResource.logout(); };
-	 
+	//used in base-menu template
 	$scope.accessLevels = accessControlConfig.accessLevels;
 	
 	//
-	// App redirects
+	// App redirects events
 	//
     
     // on logou request confirmed do logout redirect
 	UserResourceChannel.onUserLogoutConfirmed($rootScope, function(data) { console.log('app-controller on logout');  $scope.isLoggedIn = false;  $state.go('app.login'); 	 });
     	
 	//
-	// Auth redirects
+	// Auth redirects events
 	//
 	
     // on login request confirmed do login redirect

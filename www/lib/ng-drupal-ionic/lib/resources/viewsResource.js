@@ -82,8 +82,8 @@ ViewsResourceModules.service('ViewsResourceChannel', ['$rootScope', 'ViewsResour
 **/
 
 //http://blog.revolunet.com/blog/2014/02/14/angularjs-services-inheritance/
-ViewsResourceModules.factory('ViewsResource', [   'ViewsResourceConfig', 'baseResource', 'drupalApiConfig', '$http', '$q',  'ViewsResourceChannel', 
-                                        function(  ViewsResourceConfig, baseResource,  drupalApiConfig,   $http,   $q,     ViewsResourceChannel) {
+ViewsResourceModules.factory('ViewsResource', [   'ViewsResourceConfig', 'BaseResource', 'drupalApiConfig', '$http', '$q',  'ViewsResourceChannel', 
+                                        function(  ViewsResourceConfig, BaseResource,  drupalApiConfig,   $http,   $q,     ViewsResourceChannel) {
 
     // define a new internal private method for this object
     function prepareRetrieveGetParams(options) {
@@ -92,12 +92,12 @@ ViewsResourceModules.factory('ViewsResource', [   'ViewsResourceConfig', 'baseRe
 		//prepare and set optional params
 		angular.forEach(options, function(value , key) {
 			if(key === 'exposed_filters') { type = 'json'; }
-			baseResource.prepareAndSetGetParam(value, key, type);
+			BaseResource.prepareAndSetGetParam(value, key, type);
 	        type = undefined;
 	    });
 		
-		var getParamsString = baseResource.getParams.join('&');
-		baseResource.getParams = [];
+		var getParamsString = BaseResource.getParams.join('&');
+		BaseResource.getParams = [];
 		
 		return getParamsString;
     }

@@ -1,9 +1,11 @@
 var tourControllers = angular.module('tour.controllers', [])
 
-tourControllers.controller('TourCtrl', ['$scope', '$state', '$localstorage', '$ionicSlideBoxDelegate',
-  function ($scope, $state, $localstorage, $ionicSlideBoxDelegate) {
+tourControllers.controller('TourCtrl', ['$rootScope', '$scope', '$state', '$localstorage', '$ionicSlideBoxDelegate',
+                               function ($rootScope,   $scope,   $state,   $localstorage,   $ionicSlideBoxDelegate) {
     $scope.start = function () {
+    	
       $localstorage.setItem('firstVisit', true);
+      $rootScope.firstVisit = true;
       $state.go('app.register');
     }
  
