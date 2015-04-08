@@ -3,7 +3,7 @@ var registerControllers = angular.module('register.controllers', ['UserResourceM
 registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicModal', '$state', 'UserResource', '$localstorage', 'NodeResource',
                                        function ($scope,   $rootScope,   $ionicModal,   $state,   UserResource,   $localstorage,   NodeResource) {
 
-	 NodeResource.retrieve(1).then(function(node) {$scope.termsNode = node }, function() {});
+	 NodeResource.retrieve(2700).then(function(node) {$scope.termsNode = node }, function() {});
 	
     $scope.registerData = { 
       name: '',
