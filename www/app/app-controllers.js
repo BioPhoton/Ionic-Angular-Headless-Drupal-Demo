@@ -15,6 +15,22 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
     });
 	
 	$scope.$on('$ionicView.enter', function() {
+		 
+	 	// if its the users first visit to the app play the apps tour
+	 	  if ( $rootScope.firstVisit === false) { 
+	 		$state.go('tour'); 	
+	 		return;
+	 	  }   
+	 	 
+	 	 /**/
+	 	  //if user never registered 
+	 	 
+	 	  if ( $rootScope.isRegistered === false) { 
+	 		 console.log($rootScope.isRegistered === false); 
+	 		$state.go('app.register'); 	
+	 		return;
+	 	  }  
+		
 		//redirects 
 		if  ($state.current.name == 'app.login' || $state.current.name == 'app.register') {
 			if(ApiAuthService.getConnectionState()) {

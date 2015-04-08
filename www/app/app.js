@@ -32,25 +32,32 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
 	 $rootScope.firstVisit 		= $localstorage.getItem('firstVisit', false);
      $rootScope.isRegistered 	= $localstorage.getItem('isRegistered', false);
 	
+    
+ 	 
+     
+     
 	//restrict access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-    	console.log(toState.name); 
     	
+   /*
     	// if its the users first visit to the app play the apps tour
   	  if ( $rootScope.firstVisit === false && toState.name != 'tour' ) { 
   		event.preventDefault();
+  		console.log(toState.name); 
   		$state.go('tour'); 	
   		return;
-  	  }  
+  	  }   
   	  else if( $rootScope.firstVisit === false && toState.name === 'tour' ) { return; }
-  	  
+  	 
   	  //if user never registered 
   	  if ( $rootScope.isRegistered === false && toState.name != 'app.register' ) { 
   		event.preventDefault();
+  		console.log(toState.name); 
   		$state.go('app.register'); 	
   		return;
   	  }  
   	  else if ($rootScope.isRegistered && toState.name === 'app.register') { return; }
+  	*/
     });
     
 }]);

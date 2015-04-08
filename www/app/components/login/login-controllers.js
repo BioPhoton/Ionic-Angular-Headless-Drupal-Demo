@@ -1,7 +1,7 @@
 var loginControllers = angular.module('login.controllers', ['UserResourceModules'])
 
 loginControllers.controller('LoginCtrl', ['$scope', '$localstorage', '$state', '$rootScope', 'UserResource',
-  function ($scope, $localstorage, $state, $rootScope, UserResource) {
+                                 function ($scope,   $localstorage,   $state,   $rootScope,   UserResource) {
     $scope.message = "";
     $scope.doingLogin = false;
     $scope.loginData = {
