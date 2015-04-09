@@ -292,7 +292,6 @@ CommentResourceModules.service('CommentResource', [ 'drupalApiConfig', 'BaseReso
 			BaseResource.prepareAndSetGetParam(value, key, type);
 	        type = undefined;
 	    });
-		console.log(BaseResource); 
 		var getParamsString = BaseResource.getParams.join('&');
 		BaseResource.getParams = [];
 		

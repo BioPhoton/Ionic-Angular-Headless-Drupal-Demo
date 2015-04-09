@@ -115,7 +115,6 @@ TaxonomyVocabularyResourceModules.service('TaxonomyVocabularyResourceChannel', [
     
 	// Publish taxonomyVocabulary update failed event
     var publishTaxonomyVocabularyUpdateFailed = function (error) {
-    	console.log(error); 
         $rootScope.$broadcast(TaxonomyVocabularyResourceConfig.taxonomyVocabulary_updateFailed, {error: error});
     };
     // Subscribe to taxonomyVocabulary update failed event
@@ -339,7 +338,6 @@ TaxonomyVocabularyResourceModules.service('TaxonomyVocabularyResource', [ '$root
 			}
 		},
 		errors = [];
-		console.log(vocabulary); 
 		//if not given
 		if( !vocabulary ) { errors.push('Param vocabulary is required.'); }
 		//if is not an array

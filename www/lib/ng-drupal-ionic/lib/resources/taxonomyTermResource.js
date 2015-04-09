@@ -115,7 +115,6 @@ TaxonomyTermResourceModules.service('TaxonomyTermResourceChannel', ['$rootScope'
     
 	// Publish taxonomyTerm update failed event
     var publishTaxonomyTermUpdateFailed = function (error) {
-    	console.log(error); 
         $rootScope.$broadcast(TaxonomyTermResourceConfig.taxonomyTerm_updateFailed, {error: error});
     };
     // Subscribe to taxonomyTerm update failed event
@@ -339,7 +338,6 @@ TaxonomyTermResourceModules.service('TaxonomyTermResource', [ '$rootScope','drup
 			}
 		},
 		errors = [];
-		console.log(term); 
 		//if not given
 		if( !term ) { errors.push('Param term is required.'); }
 		//if is not an array
@@ -381,7 +379,6 @@ TaxonomyTermResourceModules.service('TaxonomyTermResource', [ '$rootScope','drup
 	 * 
 	 */
 	var update = function( tid, term ) {
-		console.log(tid, term); 
 		var createPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + TaxonomyTermResourceConfig.resourcePath + '/' + tid,
 		defer = $q.defer(),
 		requestConfig = {

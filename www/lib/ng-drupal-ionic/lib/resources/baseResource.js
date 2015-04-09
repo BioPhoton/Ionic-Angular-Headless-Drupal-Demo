@@ -55,7 +55,6 @@ drupalBaseModules.factory('BaseResource', ['BaseResourceConfig',  function(baseR
 		
 		//validate format
 		if(!formats[format]) { 
-			console.log('invalide format'); 
 			return false; 
 		}
 		

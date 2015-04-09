@@ -325,7 +325,6 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'BaseResource',
 			BaseResource.prepareAndSetGetParam(value, key, type);
 	        type = undefined;
 	    });
-		console.log(BaseResource); 
 		var getParamsString = BaseResource.getParams.join('&');
 		BaseResource.getParams = [];
 		
@@ -603,7 +602,6 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'BaseResource',
 	 * 
 	 */
 	var files = function(nid, file_contents, image_styles) {
-		console.log(nid, file_contents, image_styles); 
 		var attachFilePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid + '/' + NodeResourceConfig.actions.files + ((file_contents)?('/'+file_contents):'')+((image_styles)?('/'+image_styles):''),
 			defer = $q.defer(),
 			requestConfig = {
@@ -702,7 +700,6 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'BaseResource',
 	 * 
 	 */
 	var attach_file = function(nid, field_name, attach, field_values) {
-		console.log(nid, field_name, attach, field_values);
 		var attachFilePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid + '/' + NodeResourceConfig.actions.attachFile,
 			defer = $q.defer(),
 			requestConfig = {

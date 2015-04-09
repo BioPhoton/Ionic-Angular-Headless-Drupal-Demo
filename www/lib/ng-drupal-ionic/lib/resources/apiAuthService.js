@@ -76,18 +76,15 @@ ApiAuthModules.run( ['$rootScope', 'UserResourceChannel', 'ApiAuthService', 'Api
 		
 		//on login request confirmed store data and set new token in request headers
 		var onUserLoginConfirmedHandler = function(data) { 
-			console.log('ApiAuthModules onUserLoginConfirmedHandler'); 
 			ApiAuthService.storeTokenData(data.token);
 			ApiAuthService.storeSessionData(data);
 			ApiAuthService.setConnectionState(true);
-			console.log(ApiAuthService.getConnectionState()); 
 			ApiAuthService.setCurrentUser(data.user);
 		};
 		UserResourceChannel.onUserLoginConfirmed($rootScope, onUserLoginConfirmedHandler);
 		
 		//on logout request confirmed delete data and remove token from request headers
 		var onUserLogoutConfirmedHandler = function(data) {
-			console.log('ApiAuthModules onUserLogoutConfirmedHandler'); 
 			//@TODO check if this is needed
 			ApiAuthService.deleteTokenData();
 			ApiAuthService.deleteSessionData();
@@ -149,6 +146,12 @@ ApiAuthModules.service('ApiAuthService', [ '$rootScope', 'drupalApiConfig', 'Api
 		
 		var getLastConnectTime = function() {
 			return lastConnectTime;
+		}
+		
+		var setLastConnectTime = function(newTimeInMs) {
+			var newTimeInMs = parseInt(newTimeInMs);
+			if(newTimeInMs === NaN || newTimeInMs < 0) return;
+			lastConnectTime = newTimeInMs;
 		}
 		
 		var getCurrentUser = function() {
@@ -254,6 +257,7 @@ ApiAuthModules.service('ApiAuthService', [ '$rootScope', 'drupalApiConfig', 'Api
 					            	  setConnectionState(true);
 					              }
 					             
+					              setLastConnectTime(Date.now());
 					              storeSessionData(data);
 				            	  setCurrentUser(data.user);
 					              

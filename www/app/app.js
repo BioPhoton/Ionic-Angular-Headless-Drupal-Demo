@@ -23,21 +23,49 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 ]);
 
 
-drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', 'UserResourceChannel', '$localstorage', '$ionicLoading', 'ApiAuthService', 'AccessControlService', '$state',
-                          function ($rootScope,  $ionicPlatform,   UserResourceChannel,   $localstorage,   $ionicLoading,   ApiAuthService,   AccessControlService,   $state) {
+drupalIonicAngularJSAPIClient.run(['$rootScope', 'drupalApiConfig',  '$urlRouter', '$ionicPlatform', 'UserResourceChannel', '$localstorage', '$ionicLoading', 'ApiAuthService', 'AccessControlService', '$state',
+                          function ($rootScope,   drupalApiConfig,     $urlRouter,    $ionicPlatform,   UserResourceChannel,   $localstorage,   $ionicLoading,   ApiAuthService,   AccessControlService,   $state) {
 	
-		
-	// init Authentication service
-	// ApiAuthService.refreshConnection();
-
+	//redirection logic start
+	
+	 //load localStorage data into scope
 	 $rootScope.firstVisit 		= $localstorage.getItem('firstVisit', false);
-     $rootScope.isRegistered 	= $localstorage.getItem('isRegistered', false);
-	     
-     //UserResourceChannel.onUserLoginConfirmed($rootScope, function() {console.log('onUserLoginConfirmedHandler'); });
+     $rootScope.isRegistered 	= $localstorage.getItem('isRegistered', false);    
      
+     $localstorage.getObject('isRegistered', false);    
+     
+     //http://angular-ui.github.io/ui-router/site/#/api/ui.router.router.$urlRouterProvider#methods_deferintercept
+     $rootScope.$on('$locationChangeSuccess', function(e) {
+    	 console.log(ApiAuthService.getLastConnectTime() ); 
+       	 	if ( ApiAuthService.getLastConnectTime() > ( Date.now() - drupalApiConfig.session_expiration_time ) || ApiAuthService.getLastConnectTime() > 0 ) {
+       	 		//sync the current URL to the router
+    	    	$urlRouter.sync();
+    	    	return;
+    	    }
+    	 
+    	    // Prevent $urlRouter's default handler from firing
+    	    e.preventDefault();
+    	    $rootScope.$broadcast('loading:show');
+    	    // init or refresh Authentication service connection    
+    	    ApiAuthService.refreshConnection().then(function() {
+    	    	console.log('$locationChangeSuccess refreshConnection'); 
+    	    	
+    	    	$rootScope.$broadcast('loading:hide');
+    	       //sync the current URL to the router 
+    	       $urlRouter.sync();
+    	    });
+    	 
+    	  // Configures $urlRouter's listener *after* your custom listener
+    	  //$urlRouter.listen();
+	});
+    
+   
 	//restrict access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-    	 
+    	console.log("$stateChangeStart go from " + fromState.name + " to " + toState.name); 
+    	
+    	console.log(ApiAuthService.getCurrentUser()); 
+    	
     	 // if its the users first visit to the app play the apps tour
 	   	 if ( $rootScope.firstVisit === false && toState.name !== 'tour') { 
 	   		    event.preventDefault();
@@ -46,7 +74,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', 'UserResourceC
 		 		return;
 		 }   
 	   	 
-	    /*//redirects 
+	    //redirects for logged in user
 		if  (toState.name == 'app.login' || toState.name == 'app.register') {
 			console.log('p1' + ApiAuthService.getConnectionState()); 
 			if(ApiAuthService.getConnectionState()) {
@@ -54,22 +82,32 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', 'UserResourceC
 				console.log('p'); 
 				$state.go('app.authed-tabs.profile');
 			}
-	    } */
+	    } 
 		
-		//redirect if no permissions
+		//redirect if user in unauthorized
 		if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
 			event.preventDefault();
 			 console.log('a'); 
 			if ($rootScope.isRegistered) { $state.go('app.login'); } 
 	        else { $state.go('app.register'); } 
 	    }
-    });
+    });  
+    //redirection logic end
+   
     
+    $rootScope.$on('loading:show', function (event, args) {
+    	$ionicLoading.show((args && 'loading_settings' in args) ? args.loading_settings:{});
+    });
+      
+    $rootScope.$on('loading:hide', function (event, args) {
+        $ionicLoading.hide()
+    });
+      
 }]);
 
 drupalIonicAngularJSAPIClient
-	.config( [   '$stateProvider', '$urlRouterProvider', '$httpProvider', 'accessControlConfig', 'drupalApiConfig',
-     function (   $stateProvider,   $urlRouterProvider,   $httpProvider,   accessControlConfig,   drupalApiConfig ) {
+	.config( [   '$ionicLoadingConfig', '$stateProvider', '$urlRouterProvider', 'accessControlConfig', 'drupalApiConfig',
+     function (   $ionicLoadingConfig,   $stateProvider,   $urlRouterProvider,   accessControlConfig,   drupalApiConfig ) {
 		
 		//Configure ng-drupal-ionic
 		//edit drupal config
@@ -79,7 +117,18 @@ drupalIonicAngularJSAPIClient
 		//edit accessControl config
 		accessControlConfig.accessLevels.user.push('administrator');
 		accessControlConfig.accessLevels.customLevel = ['authenticated user', 'administrator'];
-		
+				
+		//config loading intercepter
+		//http://ionicframework.com/docs/api/service/$ionicLoading/
+		$ionicLoadingConfig.template = '<p><ion-spinner></ion-spinner><br/>Loading...</p>';
+	
+		//http://angular-ui.github.io/ui-router/site/#/api/ui.router.router.$urlRouterProvider#methods_deferintercept
+		// Prevent $urlRouter from automatically intercepting URL changes;
+		// this allows you to configure custom behavior in between
+		// location changes and route synchronization:
+		$urlRouterProvider.deferIntercept();
+        
+		//set default URL
 		if(window.localStorage.getItem("isRegistered") === null ) {
 			$urlRouterProvider.otherwise('app/register');
 		}
@@ -100,15 +149,7 @@ drupalIonicAngularJSAPIClient
             abstract: true,
             templateUrl: "app/templates/base_view.html",
             controller: 'AppCtrl',
-           resolve: {
-            	// init connection state
-            	// this fires just on app launge, switching child states will not resolve this again
-        	   currentUser: function(ApiAuthService, drupalApiConfig) {
-        			if(ApiAuthService.getLastConnectTime() < (Date.now() - drupalApiConfig.session_expiration_time) ) {    
-        				return ApiAuthService.refreshConnection();		
-        			} 
-                },
-            },
+          
             data: {
               access: accessControlConfig.accessLevels.public
             }
@@ -224,8 +265,5 @@ drupalIonicAngularJSAPIClient
 	            }	
 		    }
 	      });
-  
-
-  
   
 }]);

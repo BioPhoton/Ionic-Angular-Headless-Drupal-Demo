@@ -1,7 +1,7 @@
 var localstorageServices = angular.module('common.services.localstorage', []);
 
-localstorageServices.service('$localstorage', ['$window',
-                                      function ($window) {
+localstorageServices.factory('$localstorage', ['$window',
+  function ($window) {
     return {
        //
       setItem: function (key, value) {
@@ -23,6 +23,8 @@ localstorageServices.service('$localstorage', ['$window',
       getObject: function (key, emptyValue) {
         emptyValue = (emptyValue !== undefined) ? emptyValue : '{}';
         var result = $window.localStorage[key];
+        //@TODO double check this
+        if(result === undefined || result === "Max"){return emptyValue}
         return JSON.parse($window.localStorage[key] || emptyValue);
       },
       removeObject: function (key) {

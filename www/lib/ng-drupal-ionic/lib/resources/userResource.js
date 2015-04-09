@@ -216,7 +216,6 @@ UserResourceModules.service('UserResourceChannel', ['$rootScope', 'UserResourceC
     // Subscribe to user token confirmed event
     var onUserTokenConfirmed = function($scope, handler) {
     	$scope.$on(UserResourceConfig.user_tokenConfirmed, function(event, args) {
-    		console.log(args); 
     		handler(args.token);
 	   });	
     };
@@ -260,12 +259,10 @@ UserResourceModules.service('UserResourceChannel', ['$rootScope', 'UserResourceC
     
 	// Publish user login confirmed event
     var publishUserLoginConfirmed = function (data) {
-    	console.log(data); 
         $rootScope.$broadcast(UserResourceConfig.user_loginConfirmed, {data: data});
     };
     // Subscribe to user login confirmed event
     var onUserLoginConfirmed = function($scope, handler) {
-    	console.log('onUserLoginConfirmed'); 
     	$scope.$on(UserResourceConfig.user_loginConfirmed, function(event, args) {
 	    handler(args.data);
 	   });	
@@ -344,8 +341,7 @@ UserResourceModules.service('UserResourceChannel', ['$rootScope', 'UserResourceC
     };
     
     // Publish user cancel failed event
-    var publishUserCancelFailed = function (error) {
-    	console.log('error', error, UserResourceConfig.user_cancelFailed); 
+    var publishUserCancelFailed = function (error) { 
         $rootScope.$broadcast(UserResourceConfig.user_cancelFailed, {error: error});
     };
     // Subscribe to user cancel failed event
@@ -497,7 +493,6 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'BaseResource',
 			BaseResource.prepareAndSetGetParam(value, key, type);
 	        type = undefined;
 	    });
-
 		var getParamsString = BaseResource.getParams.join('&');
 		BaseResource.getParams = [];
 		
