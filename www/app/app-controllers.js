@@ -17,10 +17,11 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
 	$scope.$on('$ionicView.enter', function() {
 		 
 	 	// if its the users first visit to the app play the apps tour
-	 	  if ( $rootScope.firstVisit === false) { 
-	 		$state.go('tour'); 	
-	 		return;
-	 	  }   
+	  	
+	   	 if ( $rootScope.firstVisit === false) { 
+		 		$state.go('tour'); 	
+		 		return;
+		 }   
 	 	 
 	 	 /**/
 	 	  //if user never registered 

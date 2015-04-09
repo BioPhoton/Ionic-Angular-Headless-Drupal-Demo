@@ -33,11 +33,12 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage
      $rootScope.isRegistered 	= $localstorage.getItem('isRegistered', false);
 	
     
- 	 
+    
      
      
 	//restrict access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
+  
     	
    /*
     	// if its the users first visit to the app play the apps tour

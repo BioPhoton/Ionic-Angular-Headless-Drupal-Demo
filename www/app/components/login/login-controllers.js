@@ -17,6 +17,9 @@ loginControllers.controller('LoginCtrl', ['$scope', '$localstorage', '$state', '
         .then(
         		
     		function (data) {
+    		  $localstorage.setItem('isRegistered', true);
+              $rootScope.isRegistered = true;
+    			
 	          //reset form data
 	          $scope.loginData = {};
 	          
