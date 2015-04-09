@@ -16,14 +16,14 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
 	
 	$scope.$on('$ionicView.enter', function() {	 	 	 
 		 //redirects 
-		/*if  (toState.name == 'app.login' || toState.name == 'app.register') {
+		if  ($state.current.name == 'app.login' || $state.current.name == 'app.register') {
 			console.log('p1' + ApiAuthService.getConnectionState()); 
 			if(ApiAuthService.getConnectionState()) {
 				event.preventDefault();
 				console.log('p'); 
 				$state.go('app.authed-tabs.profile');
 			}
-	    } */
+	    } 
 		
 	});
 		

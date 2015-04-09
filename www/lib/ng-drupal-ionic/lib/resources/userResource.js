@@ -265,6 +265,7 @@ UserResourceModules.service('UserResourceChannel', ['$rootScope', 'UserResourceC
     };
     // Subscribe to user login confirmed event
     var onUserLoginConfirmed = function($scope, handler) {
+    	console.log('onUserLoginConfirmed'); 
     	$scope.$on(UserResourceConfig.user_loginConfirmed, function(event, args) {
 	    handler(args.data);
 	   });	
@@ -496,7 +497,7 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'BaseResource',
 			BaseResource.prepareAndSetGetParam(value, key, type);
 	        type = undefined;
 	    });
-		console.log(BaseResource);
+
 		var getParamsString = BaseResource.getParams.join('&');
 		BaseResource.getParams = [];
 		

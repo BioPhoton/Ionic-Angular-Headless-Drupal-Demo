@@ -46,7 +46,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', 'UserResourceC
 		 		return;
 		 }   
 	   	 
-	    //redirects 
+	    /*//redirects 
 		if  (toState.name == 'app.login' || toState.name == 'app.register') {
 			console.log('p1' + ApiAuthService.getConnectionState()); 
 			if(ApiAuthService.getConnectionState()) {
@@ -54,7 +54,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', 'UserResourceC
 				console.log('p'); 
 				$state.go('app.authed-tabs.profile');
 			}
-	    } 
+	    } */
 		
 		//redirect if no permissions
 		if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
