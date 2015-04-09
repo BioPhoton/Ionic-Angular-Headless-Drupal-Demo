@@ -25,14 +25,14 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
 	//
     
     // on logou request confirmed do logout redirect
-	UserResourceChannel.onUserLogoutConfirmed($scope, function(data) { console.log('app-controller on logout');  $scope.isLoggedIn = false;  $state.go('app.login'); 	 });
+	UserResourceChannel.onUserLogoutConfirmed($scope, function(data) { $scope.isLoggedIn = false;  $state.go('app.login'); 	 });
     	
 	//
 	// Auth redirects events
 	//
 	
     // on login request confirmed do login redirect
-	UserResourceChannel.onUserLoginConfirmed($scope, function(data) { console.log('app-controller on login');  $scope.isLoggedIn = true;   $state.go('app.authed-tabs.profile'); });
+	UserResourceChannel.onUserLoginConfirmed($scope, function(data) { $scope.isLoggedIn = true;   $state.go('app.authed-tabs.profile'); });
     
     //
     // Show hide network connection bar

@@ -22,7 +22,7 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 	    					 uniqueNodes.push(newNode);
 	    				}	
 	    			}, uniqueNodes);
-				   console.log(uniqueNodes); 
+
 				   return uniqueNodes.concat(mergeNodes);
 			   };
 			   
@@ -32,7 +32,7 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 			   
 
 				NodeResourceChannel.onNodeUpdateConfirmed($scope, function(data) { 
-					console.log('onNodeUpdateConfirmed');
+
 					angular.forEach($scope.nodes, function(node, key) {
     					if(node.nid == updatedNode.nid) {
     						$scope.nodes[updatedNode.nid] = updatedNode;
@@ -41,7 +41,6 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 				});
 				
 				NodeResourceChannel.onNodeCreateConfirmed($scope, function(node) { 
-					console.log('onNodeCreateConfirmed');
 					$scope.doRefresh();
 				});
 				
@@ -91,7 +90,6 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 				    		},
 				    		//error
 				    		function(data) { 
-				    			console.log('error: '+data); 
 				    			//Stop the ion-refresher from spinning
 			 					$scope.$broadcast('scroll.refreshComplete');
 			 				}
@@ -112,7 +110,7 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 				    		},
 				    		//error
 				    		function(data) { 
-				    			console.log(data); 
+	
 				    			$scope.nodeIndex.pageLast++;
 				    			//Stop the infiniteScroll
 							    $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -140,21 +138,19 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 		   //Edit
 		   //
 		   $scope.editNode = function(nid) {	
-			   console.log(nid); 
 				  $state.go('app.authed-tabs.node-edit', {nid:nid});
 		  }
 		   //
 		   //Delete
 		   //
 		   $scope.deleteNode = function(nid, linstIndex) {
-			   console.log(nid, linstIndex); 
 			   NodeResource._delete(nid).then(
 					   //success
 					   function() {
 						   $scope.nodes.splice(linstIndex, 1)
 					   },
 					   //error
-					   function(data) { console.log('error: '+data); }
+					   function(data) { }
 			   );
 		   }
 		   	//
@@ -186,7 +182,7 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 							  //$state.go('app.authed-tabs.node-detail', {nid:data.nid} );
 						   },
 						   //error
-						   function(data) { console.log('error: '+data); }
+						   function(data) { }
 				   );
 			};
 			
