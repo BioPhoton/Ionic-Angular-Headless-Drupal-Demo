@@ -9,7 +9,7 @@ tabsProfileControllers.controller('authedTabProfileCtrl', ['$scope','ApiAuthChan
 	//this is noly active if page is present
 	// on login request confirmed set userdata
 	var onCurrentUserUpdatedHandler = function(data) { 
-		console.log('onCurrentUserUpdatedHandler'); 
+		console.log('authedTabProfileCtrl onCurrentUserUpdatedHandler'); 
 		$scope.user = ApiAuthService.getCurrentUser(); 
 	};
 	ApiAuthChannel.onCurrentUserUpdated($scope, onCurrentUserUpdatedHandler);

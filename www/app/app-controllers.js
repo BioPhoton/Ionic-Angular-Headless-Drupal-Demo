@@ -1,7 +1,7 @@
 var appControllers = angular.module('app.controllers', ['drupal.configurations', 'UserResourceModules', 'ApiAuthModules', 'common.accesss-control'])
 
 appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChannel', 'accessControlConfig', 'drupalApiConfig', 'ApiAuthService', 'AccessControlService', 'UserResource', '$ionicPlatform', '$state',
-                             function ($rootScope,   $scope,   UserResourceChannel,   accessControlConfig,   drupalApiConfig,   ApiAuthService,   AccessControlService,  UserResource,   $ionicPlatform,   $state ) {
+                             function ($rootScope,   $scope,   UserResourceChannel,   accessControlConfig,   drupalApiConfig,   ApiAuthService,   AccessControlService,   UserResource,   $ionicPlatform,   $state ) {
 	
 	$ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -14,43 +14,19 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
       }
     });
 	
-	$scope.$on('$ionicView.enter', function() {
-		 
-	 	// if its the users first visit to the app play the apps tour
-	  	
-	   	 if ( $rootScope.firstVisit === false) { 
-		 		$state.go('tour'); 	
-		 		return;
-		 }   
-	 	 
-	 	 /**/
-	 	  //if user never registered 
-	 	 
-	 	  //if ( $rootScope.isRegistered === false) { 
-	 		 // if( $state.current.name !== 'app.login') {
-	 			 console.log($state.current.name ); 
-	 			// $state.go('app.register');
-	 			//return;
-	 		 // }
-	 		// console.log($state.current.name ); 
-	 		// return;
-	 	 // }  
-		
-		//redirects 
-		if  ($state.current.name == 'app.login' || $state.current.name == 'app.register') {
+	$scope.$on('$ionicView.enter', function() {	 	 	 
+		 //redirects 
+		/*if  (toState.name == 'app.login' || toState.name == 'app.register') {
+			console.log('p1' + ApiAuthService.getConnectionState()); 
 			if(ApiAuthService.getConnectionState()) {
+				event.preventDefault();
+				console.log('p'); 
 				$state.go('app.authed-tabs.profile');
 			}
-	    } 
+	    } */
 		
-		//redirect if no permissions
-		if ( ('data' in $state.current) && ('access' in $state.current.data) && !AccessControlService.authorize($state.current.data.access) ) {
-	        if ($scope.isRegistered) { $state.go('app.login'); } 
-	        else { $state.go('app.register'); } 
-	      }
 	});
-	
-	
+		
 	$scope.pathToCms 	= drupalApiConfig.drupal_instance;
 	
 	$scope.logout = function () { UserResource.logout(); };
@@ -62,14 +38,14 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
 	//
     
     // on logou request confirmed do logout redirect
-	UserResourceChannel.onUserLogoutConfirmed($rootScope, function(data) { console.log('app-controller on logout');  $scope.isLoggedIn = false;  $state.go('app.login'); 	 });
+	UserResourceChannel.onUserLogoutConfirmed($scope, function(data) { console.log('app-controller on logout');  $scope.isLoggedIn = false;  $state.go('app.login'); 	 });
     	
 	//
 	// Auth redirects events
 	//
 	
     // on login request confirmed do login redirect
-	UserResourceChannel.onUserLoginConfirmed($rootScope, function(data) { console.log('app-controller on login');  $scope.isLoggedIn = true;   $state.go('app.authed-tabs.profile'); });
+	UserResourceChannel.onUserLoginConfirmed($scope, function(data) { console.log('app-controller on login');  $scope.isLoggedIn = true;   $state.go('app.authed-tabs.profile'); });
     
     //
     // Show hide network connection bar

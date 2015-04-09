@@ -8,6 +8,7 @@ loginControllers.controller('LoginCtrl', ['$scope', '$localstorage', '$state', '
       username: '',
       password: ''
     };
+    
     $scope.login = function (form) {
       $scope.loginServerErrors = '';
       if (form.$valid) {

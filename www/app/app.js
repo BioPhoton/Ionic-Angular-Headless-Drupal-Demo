@@ -23,42 +23,46 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 ]);
 
 
-drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', '$localstorage', '$ionicLoading', 'ApiAuthService', 'AccessControlService', '$state',
-                          function ($rootScope,  $ionicPlatform,   $localstorage,   $ionicLoading,   ApiAuthService,   AccessControlService,   $state) {
+drupalIonicAngularJSAPIClient.run(['$rootScope','$ionicPlatform', 'UserResourceChannel', '$localstorage', '$ionicLoading', 'ApiAuthService', 'AccessControlService', '$state',
+                          function ($rootScope,  $ionicPlatform,   UserResourceChannel,   $localstorage,   $ionicLoading,   ApiAuthService,   AccessControlService,   $state) {
 	
+		
 	// init Authentication service
 	// ApiAuthService.refreshConnection();
 
 	 $rootScope.firstVisit 		= $localstorage.getItem('firstVisit', false);
      $rootScope.isRegistered 	= $localstorage.getItem('isRegistered', false);
-	
-    
-    
-     
+	     
+     //UserResourceChannel.onUserLoginConfirmed($rootScope, function() {console.log('onUserLoginConfirmedHandler'); });
      
 	//restrict access redirects
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-  
-    	
-   /*
-    	// if its the users first visit to the app play the apps tour
-  	  if ( $rootScope.firstVisit === false && toState.name != 'tour' ) { 
-  		event.preventDefault();
-  		console.log(toState.name); 
-  		$state.go('tour'); 	
-  		return;
-  	  }   
-  	  else if( $rootScope.firstVisit === false && toState.name === 'tour' ) { return; }
-  	 
-  	  //if user never registered 
-  	  if ( $rootScope.isRegistered === false && toState.name != 'app.register' ) { 
-  		event.preventDefault();
-  		console.log(toState.name); 
-  		$state.go('app.register'); 	
-  		return;
-  	  }  
-  	  else if ($rootScope.isRegistered && toState.name === 'app.register') { return; }
-  	*/
+    	 
+    	 // if its the users first visit to the app play the apps tour
+	   	 if ( $rootScope.firstVisit === false && toState.name !== 'tour') { 
+	   		    event.preventDefault();
+	   		    console.log('t'); 
+		 		$state.go('tour'); 	
+		 		return;
+		 }   
+	   	 
+	    //redirects 
+		if  (toState.name == 'app.login' || toState.name == 'app.register') {
+			console.log('p1' + ApiAuthService.getConnectionState()); 
+			if(ApiAuthService.getConnectionState()) {
+				event.preventDefault();
+				console.log('p'); 
+				$state.go('app.authed-tabs.profile');
+			}
+	    } 
+		
+		//redirect if no permissions
+		if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
+			event.preventDefault();
+			 console.log('a'); 
+			if ($rootScope.isRegistered) { $state.go('app.login'); } 
+	        else { $state.go('app.register'); } 
+	    }
     });
     
 }]);
@@ -101,10 +105,7 @@ drupalIonicAngularJSAPIClient
             	// this fires just on app launge, switching child states will not resolve this again
         	   currentUser: function(ApiAuthService, drupalApiConfig) {
         			if(ApiAuthService.getLastConnectTime() < (Date.now() - drupalApiConfig.session_expiration_time) ) {    
-        				return ApiAuthService.refreshConnection().then(
-        						function() {
-        						return	ApiAuthService.getCurrentUser();
-        						});		
+        				return ApiAuthService.refreshConnection();		
         			} 
                 },
             },
