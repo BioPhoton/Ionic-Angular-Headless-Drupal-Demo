@@ -30,8 +30,7 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
     				
 			   };
 			   
-
-				NodeResourceChannel.onNodeUpdateConfirmed($scope, function(data) { 
+			   NodeResourceChannel.onNodeUpdateConfirmed($scope, function(data) { 
 
 					angular.forEach($scope.nodes, function(node, key) {
     					if(node.nid == updatedNode.nid) {
@@ -74,8 +73,6 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 			   $scope.nodeIndex.parameters = {};
 			   $scope.nodeIndex.pagesize = pageSize!=undefined?pageSize:25;
 			   	
-			   
-			   
 			   $scope.doRefresh = function() {
 				  if($scope.nodeIndex.pageFirst > 0) {
 					  $scope.nodeIndex.pageFirst--
@@ -84,7 +81,6 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 				    		//success
 				    		function(newNodes) { 
 				    			$scope.nodes = mergeNodes(newNodes, $scope.nodes); 
-				    			
 				    			//Stop the ion-refresher from spinning
 				 				$scope.$broadcast('scroll.refreshComplete');
 				    		},
@@ -104,17 +100,15 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 				    			if(nodes.length != 0) {
 				    				$scope.nodes = $scope.nodes.concat(nodes);
 				    			}
-				    			 
-				    			//Stop the infiniteScroll
-							     $scope.$broadcast('scroll.infiniteScrollComplete');
+				    			
+				    			//Stop the infiniteScroll spinning
+							    $scope.$broadcast('scroll.infiniteScrollComplete');
 				    		},
 				    		//error
 				    		function(data) { 
-	
-				    			$scope.nodeIndex.pageLast++;
-				    			//Stop the infiniteScroll
+				    			
+				    			//Stop the infiniteScroll spinning
 							    $scope.$broadcast('scroll.infiniteScrollComplete');
-							     
 				    		}
 				   );
 				   

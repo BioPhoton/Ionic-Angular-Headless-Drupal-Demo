@@ -22,8 +22,8 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 
 ]);
 
-drupalIonicAngularJSAPIClient.run(['$rootScope', 'drupalApiConfig',  '$urlRouter', '$ionicPlatform', 'UserResourceChannel', '$localstorage', '$ionicLoading', 'ApiAuthService', 'AccessControlService', '$state',
-                          function ($rootScope,   drupalApiConfig,     $urlRouter,    $ionicPlatform,   UserResourceChannel,   $localstorage,   $ionicLoading,   ApiAuthService,   AccessControlService,   $state) {
+drupalIonicAngularJSAPIClient.run(['$rootScope', 'drupalApiConfig',  '$urlRouter', '$ionicPlatform',  '$localstorage', '$ionicLoading', 'ApiAuthService', 'AccessControlService', '$state',
+                          function ($rootScope,   drupalApiConfig,    $urlRouter,   $ionicPlatform,    $localstorage,   $ionicLoading,   ApiAuthService,   AccessControlService,   $state) {
 	
 	 //redirection logic start
 	
@@ -44,7 +44,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope', 'drupalApiConfig',  '$urlRouter
     	 
     	    // Prevent $urlRouter's default handler from firing
     	    e.preventDefault();
-    	    $rootScope.$broadcast('loading:show');
+    	    $rootScope.$broadcast('loading:show', { loading_settings : {template:"<p><ion-spinner></ion-spinner><br/>Connect with System...</p>"} });
     	    // init or refresh Authentication service connection    
     	    ApiAuthService.refreshConnection().then(function() {
     	       $rootScope.$broadcast('loading:hide');
@@ -72,14 +72,15 @@ drupalIonicAngularJSAPIClient.run(['$rootScope', 'drupalApiConfig',  '$urlRouter
 			if(ApiAuthService.getConnectionState()) {
 				event.preventDefault();
 				$state.go('app.authed-tabs.profile');
+				return;
 			}
 	    } 
 		
 		//redirect if user in unauthorized
 		if ( ('data' in toState) && ('access' in toState.data) && !AccessControlService.authorize(toState.data.access) ) {
 			event.preventDefault();
-			if ($rootScope.isRegistered) { $state.go('app.login'); } 
-	        else { $state.go('app.register'); } 
+			if ($rootScope.isRegistered) { $state.go('app.login'); return;} 
+	        else { $state.go('app.register'); return;} 
 	    }
     });  
     //redirection logic end
@@ -107,14 +108,13 @@ drupalIonicAngularJSAPIClient
 		accessControlConfig.accessLevels.user.push('administrator');
 		accessControlConfig.accessLevels.customLevel = ['authenticated user', 'administrator'];
 				
-		//config loading intercepter
+		//Configure loading intercepter
 		//http://ionicframework.com/docs/api/service/$ionicLoading/
 		$ionicLoadingConfig.template = '<p><ion-spinner></ion-spinner><br/>Loading...</p>';
 	
 		//http://angular-ui.github.io/ui-router/site/#/api/ui.router.router.$urlRouterProvider#methods_deferintercept
 		// Prevent $urlRouter from automatically intercepting URL changes;
-		// this allows you to configure custom behavior in between
-		// location changes and route synchronization:
+		// this allows you to configure custom behavior in between location changes and route synchronization:
 		$urlRouterProvider.deferIntercept();
         
 		//set default URL
