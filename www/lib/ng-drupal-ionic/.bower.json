@@ -41,11 +41,11 @@
   "dependencies": {
     "angular-cookie": "~4.0.6"
   },
-  "_release": "4ba4060f77",
+  "_release": "ffcc1275bd",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "4ba4060f77ad2eefdd268252da7ab52016187679"
+    "commit": "ffcc1275bd192d0ecf1fa5d850ca4b9a3965c6e1"
   },
   "_source": "git://github.com/BioPhoton/ng-drupal-ionic.git",
   "_target": "*",
