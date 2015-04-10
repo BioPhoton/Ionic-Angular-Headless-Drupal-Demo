@@ -69,7 +69,12 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 			   $scope.nodeIndex = {};
 			   $scope.nodeIndex.pageFirst = pageFirst!=undefined?pageFirst:0; 
 			   $scope.nodeIndex.pageLast = $scope.nodeIndex.pageFirst + 1;
-			   $scope.nodeIndex.fields = 'nid, type, title, created';
+			   $scope.nodeIndex.fields = {
+					   nid : true, 
+					   type : true, 
+					   title : true,
+					   created : true
+			   }
 			   $scope.nodeIndex.parameters = {};
 			   $scope.nodeIndex.pagesize = pageSize!=undefined?pageSize:25;
 			   	
@@ -77,9 +82,11 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 				  if($scope.nodeIndex.pageFirst > 0) {
 					  $scope.nodeIndex.pageFirst--
 				  }
-				  NodeResource.index( $scope.nodeIndex.pageFirst,  $scope.nodeIndex.fields,  $scope.nodeIndex.parameters,  $scope.nodeIndex.pagesize).then(
+				  console.log($scope.nodeIndex); 
+				  NodeResource.index( $scope.nodeIndex).then(
 				    		//success
 				    		function(newNodes) { 
+				    			
 				    			$scope.nodes = mergeNodes(newNodes, $scope.nodes); 
 				    			//Stop the ion-refresher from spinning
 				 				$scope.$broadcast('scroll.refreshComplete');
@@ -93,8 +100,8 @@ authedTabsNodeDemoControllers.controller('NodeListCtrl',
 			   };
 			   
 			   $scope.loadMore = function(){
-				   
-				   NodeResource.index( $scope.nodeIndex.pageLast++,  $scope.nodeIndex.fields,  $scope.nodeIndex.parameters,  $scope.nodeIndex.pagesize).then(
+				   $scope.nodeIndex.pageLast++,
+				   NodeResource.index(   $scope.nodeIndex).then(
 				    		//success
 				    		function(nodes) { 
 				    			if(nodes.length != 0) {

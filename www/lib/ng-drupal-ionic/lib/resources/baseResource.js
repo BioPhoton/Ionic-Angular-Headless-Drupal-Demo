@@ -43,13 +43,13 @@ drupalBaseModules.factory('BaseResource', ['BaseResourceConfig',  function(baseR
 		if(values) { 
 			values = (values || values === 0)?values:false;
 			if(values === false) {return false;}
-			else if (Object.getOwnPropertyNames(values).length <= 0) { return false; }
+			else if (Object.getOwnPropertyNames(values).length <= 0 && parseInt(values) === NaN) { return false; }
 		} else { return false; }
 		
-		
+		 
 		//normal param
 		if(!format) {
-			if(values) { getParams.push(key + '=' + values); }
+			if(values || values === 0) { self.getParams.push(key + '=' + values); }
 			return true;
 		}
 		
@@ -73,10 +73,8 @@ drupalBaseModules.factory('BaseResource', ['BaseResourceConfig',  function(baseR
 			var arrayValues = [];
 			angular.forEach(values, function(value, k) {
 				if(value !== false) { this.push(k); }
-			}, arrayValues);
-			if(arrayValues.length)
-			
-			if(values.length) { self.getParams.push(key + '=' + arrayValues.join(',')); }
+			}, arrayValues);	
+			if(arrayValues.length) { self.getParams.push(key + '=' + arrayValues.join(',')); }
 			return true;
 		}
 		//array_keys
