@@ -243,7 +243,6 @@ ApiAuthModules.service('ApiAuthService', [ '$rootScope', 'drupalApiConfig', 'Api
 			refreshToken().then(
 					//initToken success
 					function(token) {	
-						
 						SystemResource.connect().then(
 								//SystemResource.connect success
 					            function (data) {
@@ -271,8 +270,8 @@ ApiAuthModules.service('ApiAuthService', [ '$rootScope', 'drupalApiConfig', 'Api
 							);
 					},
 					//initToken error
-					function() {
-						defer.reject(data);
+					function(error) {
+						defer.reject(error);
 					}
 			);
 			

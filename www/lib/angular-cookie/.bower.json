@@ -36,6 +36,5 @@
   },
   "_source": "git://github.com/ivpusic/angular-cookie.git",
   "_target": "~4.0.6",
-  "_originalSource": "angular-cookie",
-  "_direct": true
+  "_originalSource": "angular-cookie"
 }

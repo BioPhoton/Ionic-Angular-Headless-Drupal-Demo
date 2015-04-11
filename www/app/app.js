@@ -46,11 +46,18 @@ drupalIonicAngularJSAPIClient.run(['$rootScope', 'drupalApiConfig',  '$urlRouter
     	    e.preventDefault();
     	    $rootScope.$broadcast('loading:show', { loading_settings : {template:"<p><ion-spinner></ion-spinner><br/>Connect with System...</p>"} });
     	    // init or refresh Authentication service connection    
-    	    ApiAuthService.refreshConnection().then(function() {
-    	       $rootScope.$broadcast('loading:hide');
-    	       //sync the current URL to the router 
-    	       $urlRouter.sync();
-    	    });
+    	    ApiAuthService.refreshConnection().then(
+    	    	function() {
+    	    		$rootScope.$broadcast('loading:hide');
+    	    		//sync the current URL to the router 
+    	    		$urlRouter.sync();
+    	    	},
+    	    	function() {
+    	    		$rootScope.$broadcast('loading:hide');
+    	    		//sync the current URL to the router 
+    	    		$urlRouter.sync();
+    	    	}
+    	    );
     	 
     	  // Configures $urlRouter's listener *after* your custom listener
     	  $urlRouter.listen();
