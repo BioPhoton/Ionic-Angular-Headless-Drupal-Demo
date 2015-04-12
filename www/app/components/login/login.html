@@ -1,4 +1,8 @@
 <ion-view title="Login">
+  <ion-nav-buttons side="primary">
+       <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+  </ion-nav-buttons>
+      
   <ion-content>
     <form name="loginForm" novalidate="" ng-submit="login(loginForm)">
 		
@@ -18,7 +22,7 @@
           <button class="button button-block button-positive button-spinner" ><span ng-if="!loginIsPending" >Log in</span><span ng-if="loginIsPending">Logging in</span>  <ion-spinner ng-if="loginIsPending"></ion-spinner> </button>
         </div>
         
-        <a class="button button-block button-positive" menu-close ui-sref="app.register">Not got an account? Create one now</a>
+        <a class="button button-block button-positive"  ui-sref="app.register">Not got an account? Create one now</a>
       </ion-list>
     </form>
   </ion-content>

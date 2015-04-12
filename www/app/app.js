@@ -13,9 +13,13 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   
   'app.controllers',
   'tour.controllers',
+  
+  'no-network.controllers',
+  
   'login.controllers',
   'logout.controllers',
   'register.controllers',
+
 
   'authed-tabs.node-demo.controllers',
   'authed-tabs.profile.controllers',
@@ -153,9 +157,12 @@ drupalIonicAngularJSAPIClient
                     
            .state('app.no-network', {
             url: '/no-network',
+            views: {
             	'menuContent': {
             		templateUrl: 'app/components/no-network/no-network.html',
-            	}  
+            		controller : 'NoNetworkCtrl'
+            	} 
+            }
             })
           
           //

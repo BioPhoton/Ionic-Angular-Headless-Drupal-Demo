@@ -1,4 +1,9 @@
 <ion-view hide-back-button="true" title="Create Account">
+
+ <ion-nav-buttons side="primary">
+       <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+ </ion-nav-buttons>
+ 
   <ion-content>
 
     <form name="registerForm" novalidate="" ng-submit="register(registerForm)">
@@ -88,7 +93,7 @@
         	<ion-spinner ng-if="registerIsPending"></ion-spinner> 
         </button>
         
-        <a class="button button-block button-positive" menu-close ng-click="gotToLogin()">Already got an account? Login</a>
+        <a class="button button-block button-positive"  ui-sref="app.login">Already got an account? Login</a>
 
       </ion-list>
 

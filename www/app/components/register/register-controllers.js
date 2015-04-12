@@ -12,10 +12,6 @@ registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicM
       termsAgreed : false,
     };
     
-    $scope.gotToLogin = function () {
-         $state.go('app.login');
-    };
-    
     $scope.registerIsPending = false; 
     $scope.register = function (form) {
       if (form.$valid) {

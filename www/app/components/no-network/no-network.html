@@ -1,6 +1,18 @@
-<ion-view title="Login">
+<ion-view title="No Network-Connection">
   <ion-content>
-	<h1>You do not have network connection</h1>
-	<button>Open network Settings</button>
+
+
+
+<div class="row">
+  <div class="col text-right v-center">	<i style="text-align:right;" class="icon ion-alert"></i></div>
+  <div class="col col-75 "><p>There is currently no network connection. Please try again later.</p></div>
+
+</div>
+
+
+<div class="text-center">
+	<button class="button button-clean" ng-click="checkConnection()">Try again</button>
+</div>
+
   </ion-content>
 </ion-view>
