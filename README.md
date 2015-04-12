@@ -41,10 +41,10 @@ drupalIonicAngularJSAPIClient
 
 ##Session expiration
 //https://api.drupal.org/api/drupal/includes!common.inc/function/drupal_http_request/7
-- 401 Unauthorized — The user is not logged in
-- 403 Forbidden — The user is logged in but isn’t allowed access
-- 419 Authentication Timeout (non standard) — Session has expired
-- 440 Login Timeout (Microsoft only) — Session has expired
+- 401 Unauthorizedâ€Šâ€”â€ŠThe user is not logged in
+- 403 Forbiddenâ€Šâ€”â€ŠThe user is logged in but isnâ€™t allowed access
+- 419 Authentication Timeout (non standard)â€Šâ€”â€ŠSession has expired
+- 440 Login Timeout (Microsoft only)â€Šâ€”â€ŠSession has expired
 
 ##Debugging
 Wrong username or password => require email confirm checked in drupal
@@ -77,10 +77,6 @@ Therefore the cookie saved is $cookie[session_name] = session_id
 This cookie is used to validate the session on drupal when doing a authenticated request
 Angularjs *does not* automatically save cookies and use them when doing requests
 Therefore on login we need to save the cookie and use it when doing requests.
-*Chrome does this automatically, itâ€™s for Safari and Firefox and for iPhones
+*Chrome does this automatically, itÃ¢â‚¬â„¢s for Safari and Firefox and for iPhones
 
 Tokens
-
-
-
-
