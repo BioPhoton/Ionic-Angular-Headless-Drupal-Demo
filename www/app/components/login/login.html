@@ -15,7 +15,7 @@
         </div>
 
         <div class="button-bar" >
-          <button class="button button-block button-positive" >Log in</button>
+          <button class="button button-block button-positive button-spinner" ><span ng-if="!loginIsPending" >Log in</span><span ng-if="loginIsPending">Logging in</span>  <ion-spinner ng-if="loginIsPending"></ion-spinner> </button>
         </div>
         
         <a class="button button-block button-positive" menu-close ui-sref="app.register">Not got an account? Create one now</a>

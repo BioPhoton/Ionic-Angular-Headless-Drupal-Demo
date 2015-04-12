@@ -30,10 +30,7 @@ tourControllers.controller('TourCtrl', ['$rootScope', '$scope', '$state', '$loca
 	      'viewable' : true
 	    },
 	    
-	    {
-	        'template' : 'app/components/tour/slides/fourthSlide.html',
-	        'viewable' : false
-	    },
+	   
 	  ]
   };
   
@@ -54,6 +51,11 @@ tourControllers.controller('TourCtrl', ['$rootScope', '$scope', '$state', '$loca
   };
   
   $scope.showBonus = function() {
+	  $scope.data.slides.push({
+		        'template' : 'app/components/tour/slides/fourthSlide.html',
+		        'viewable' : false
+		    });
+	  /*
     var index = '';
     angular.forEach($scope.data.slides, function(slide, i) {
     	if(slide.template == 'app/components/tour/slides/fourthSlide.html') {index = i; return;}	
@@ -62,7 +64,7 @@ tourControllers.controller('TourCtrl', ['$rootScope', '$scope', '$state', '$loca
     countSlides();
     $scope.data.initialInstruction = false
     $scope.data.secondInstruction = true;
-
+*/
     $ionicSlideBoxDelegate.update();
   };
 

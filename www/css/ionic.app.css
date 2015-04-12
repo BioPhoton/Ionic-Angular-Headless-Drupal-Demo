@@ -7653,6 +7653,32 @@ a.button {
 .item-spinner-right .spinner-accessory {
   right: 3px; }
 
+.button .spinner svg {
+  vertical-align: middle;
+  pointer-events: none; }
+
+.button .spinner:before, .button.spinner:before, .button.spinner-left:before, .button.spinner-right:before {
+  display: inline-block;
+  padding: 0 0 1px 0;
+  vertical-align: inherit;
+  font-size: 24px;
+  line-height: 41px;
+  pointer-events: none; }
+
+.button.spinner-left:before {
+  float: left;
+  padding-right: .2em;
+  padding-left: 0; }
+
+.button.spinner-right:before {
+  float: right;
+  padding-right: 0;
+  padding-left: .2em; }
+
+.button.button-positive.button-spinner .spinner svg {
+  stroke: #fff;
+  fill: #fff; }
+
 /*start forms
 ===========================================================================*/
 form.ng-submitted label.item.has-error {

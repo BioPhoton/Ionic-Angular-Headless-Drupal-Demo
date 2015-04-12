@@ -19,7 +19,6 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 
   'authed-tabs.node-demo.controllers',
   'authed-tabs.profile.controllers',
-
 ]);
 
 drupalIonicAngularJSAPIClient.run(['$rootScope', 'drupalApiConfig',  '$urlRouter', '$ionicPlatform',  '$localstorage', '$ionicLoading', 'ApiAuthService', 'AccessControlService', '$state',
@@ -108,7 +107,7 @@ drupalIonicAngularJSAPIClient
 		
 		//Configure ng-drupal-ionic
 		//edit drupal config
-		drupalApiConfig.drupal_instance = 'http://dev-drupal-headless-ionic.pantheon.io/';
+		drupalApiConfig.drupal_instance = 'http://www.drupalionic.org/backend/';
 		drupalApiConfig.api_endpoint += 'v1/';
 		
 		//edit accessControl config

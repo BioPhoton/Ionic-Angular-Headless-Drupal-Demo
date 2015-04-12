@@ -81,7 +81,13 @@
              ng-messages="registerForm.termsAgreed.$error" 
              ng-messages-include="templates/form-errors.html">
         </div>
-        <button class="button button-block button-positive" ng-click="createAccount()">Create Account</button>
+        
+        <button class="button button-block button-positive button-spinner" ng-click="createAccount()">
+        	<span ng-if="!registerIsPending" >Create Account</span>
+        	<span ng-if="registerIsPending">Createing Account</span>  
+        	<ion-spinner ng-if="registerIsPending"></ion-spinner> 
+        </button>
+        
         <a class="button button-block button-positive" menu-close ng-click="gotToLogin()">Already got an account? Login</a>
 
       </ion-list>

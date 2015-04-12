@@ -12,7 +12,7 @@
     </ion-nav-bar>
     
 	<div class="bar bar-network bar-assertive " ng-show="isOffline">
-		No internet connection
+		App is in offline mode
 	</div>
 	
     <ion-nav-view class="test" name="menuContent"></ion-nav-view>
@@ -24,8 +24,8 @@
     <ion-header-bar class="bar-stable">
       <h1 class="title">Left Menu</h1>
     </ion-header-bar>
-
-    <ion-content drag-content="true">
+	  
+    <ion-content class="has-footer" drag-content="true">
       <ng-include src="'app/templates/menus/base-menu.html'"></ng-include>
       <ng-include data-access-level="{{accessLevels.user}}" src="'app/templates/menus/authenticated-user-menu.html'"></ng-include>
     </ion-content>

@@ -1,7 +1,7 @@
 var loginControllers = angular.module('login.controllers', ['UserResourceModules'])
 
-loginControllers.controller('LoginCtrl', ['$scope', '$localstorage', '$state', '$rootScope', 'UserResource',
-                                 function ($scope,   $localstorage,   $state,   $rootScope,   UserResource) {
+loginControllers.controller('LoginCtrl', ['$scope', '$localstorage', '$state', '$rootScope', 'UserResource', 'UserResourceChannel',
+                                 function ($scope,   $localstorage,   $state,   $rootScope,   UserResource,   UserResourceChannel) {
     $scope.message = "";
     $scope.doingLogin = false;
     $scope.loginData = {
@@ -9,15 +9,18 @@ loginControllers.controller('LoginCtrl', ['$scope', '$localstorage', '$state', '
       password: ''
     };
     
+    $scope.loginIsPending = false;
+    
     $scope.login = function (form) {
       $scope.loginServerErrors = '';
       if (form.$valid) {
 
-        $scope.doingLogin = true;
+        $scope.loginIsPending = true;
         UserResource.login($scope.loginData.username, $scope.loginData.password)
         .then(
         		
     		function (data) {
+    		  $scope.loginIsPending = false;
     		  $localstorage.setItem('isRegistered', true);
               $rootScope.isRegistered = true;
     			
@@ -32,9 +35,11 @@ loginControllers.controller('LoginCtrl', ['$scope', '$localstorage', '$state', '
 	          form.$valid = true;
 	          form.$invalid = false;
 	          
+	          $state.go('app.authed-tabs.profile');
 	        }, 
 	        //error
 	        function (data) {
+	          $scope.loginIsPending = false;
 	          $scope.loginServerErrors = data;
 	        }
 	     );

@@ -1,6 +1,6 @@
 {
   "name": "ng-drupal-services-demo",
-  "app_id": "",
+  "app_id": "2308ee45",
   "gulpStartupTasks": [
     "sass",
     "watch"

@@ -13,23 +13,24 @@ registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicM
     };
     
     $scope.gotToLogin = function () {
-    	// $localstorage.setItem('isRegistered', true);
-        // $rootScope.isRegistered = true;
          $state.go('app.login');
     };
     
+    $scope.registerIsPending = false; 
     $scope.register = function (form) {
       if (form.$valid) {
+    	  $scope.registerIsPending = true; 
     	  UserResource.register($scope.registerData)
                 .then(
                         function (data) {
                           $localstorage.setItem('isRegistered', true);
                           $rootScope.isRegistered = true;
                           //login user
-                          
+                          $scope.registerIsPending = false; 
                           UserResource.login( $scope.registerData.name, $scope.registerData.pass )
                                   .then(
                                           function (data) {
+                                        	$scope.registerIsPending = false; 
                                             //reset form
                                             $scope.registerData = {};
                                             //reste form
@@ -41,6 +42,7 @@ registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicM
                                             form.$invalid = false;
                                           },
                                           function (data) {
+                                        	$scope.registerIsPending = false; 
                                         	//@TODO send error to login view
                                         	$state.go('app.login');
                                             $scope.registerServerErrors = data;
@@ -48,6 +50,7 @@ registerControllers.controller('RegisterCtrl', ['$scope', '$rootScope', '$ionicM
                                   );
                         },
                         function (data) {
+                          $scope.registerIsPending = false; 
                           $scope.registerServerErrors = data.form_errors;
                         }
                 );
