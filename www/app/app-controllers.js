@@ -1,7 +1,7 @@
-var appControllers = angular.module('app.controllers', ['drupal.configurations', 'UserResourceModules', 'ApiAuthModules', 'ngCordova'])
+var appControllers = angular.module('app.controllers', ['drupal.configurations', 'UserResourceModules', 'common.accesss-control'])
 
-appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChannel', 'UserResource', 'accessControlConfig', 'drupalApiConfig', '$ionicPlatform', '$state',
-                             function ($rootScope,   $scope,   UserResourceChannel,   UserResource,   accessControlConfig,   drupalApiConfig,   $ionicPlatform,   $state ) {
+appControllers.controller('AppCtrl', ['$rootScope', '$scope',  'UserResource', 'accessControlConfig', 'drupalApiConfig', '$ionicPlatform', '$state',
+                             function ($rootScope,   $scope,    UserResource,   accessControlConfig,   drupalApiConfig,   $ionicPlatform,   $state ) {
 	
 	$ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard for form inputs)
@@ -24,11 +24,12 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
 	    $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
 	    	$scope.isOffline = true;
 	    })
-
-      
+	    
     });
 
 	$scope.pathToCms 	= drupalApiConfig.drupal_instance;
+	//used in base-menu template
+	$scope.accessLevels = accessControlConfig.accessLevels;
 	
 	$scope.logout = function () { 
 		 $rootScope.$broadcast('loading:show', { loading_settings : {template:"<p><ion-spinner></ion-spinner><br/>Logging out...</p>"} });
@@ -36,6 +37,7 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
 				//success
 				function() {
 					$rootScope.$broadcast('loading:hide');
+					$state.go('app.login');
 				},
 				//error
 				function() {
@@ -44,11 +46,6 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
 		); 
 	
 	};
-	//used in base-menu template
-	$scope.accessLevels = accessControlConfig.accessLevels;
 	
-	// App redirects events
-    // on logou request confirmed do logout redirect
-	UserResourceChannel.onUserLogoutConfirmed($scope, function(data) { $state.go('app.login'); });
    	
 }]);
