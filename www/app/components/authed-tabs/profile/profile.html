@@ -1,18 +1,41 @@
 <ion-view title="Profile">
 
-  <ion-content>
-    <div id="content" ng-show="user">
-      <div id="profile-info">
-        <img id="profile-image"
-             ng-src="{{pathToCms}}sites/default/files/styles/thumbnail/public/pictures/{{user.picture.filename}}">
-        <h3 id="profile-name" contenteditable ng-model="user.name"></h3>
-        <span id="profile-description" ng-model="user.name"></span>
-        <p>
-        {{pathToCms}}sites/default/files/styles/thumbnail/public/pictures/{{user.picture.filename}}
-        </p>
-      </div>
-    
+  <ion-content class="ionic">
+     <div class="hero has-mask slide-up" style="background-image: url('{{pathToCms}}sites/default/files/styles/thumbnail/public/pictures/{{user.picture.filename}}');">
+                <div class="content">
+                    <div class="avatar" style="background-image: url('{{pathToCms}}sites/default/files/styles/thumbnail/public/pictures/{{user.picture.filename}}');"></div>
+                    <h3><a  class="light">{{user.name}}</a></h3>
+                    <h4>{{user.name}}</h4>
+                </div>
+            </div>
+            <div class="button-bar">
+                <button class="button button-dark waves-effect waves-classic icon ion-images"></button>
+                <button class="button button-dark waves-effect waves-classic icon ion-stats-bars"></button>
+                <button class="button button-dark waves-effect waves-classic icon ion-pizza"></button>
+            </div>
+            <h4 class="positive content padding double-padding-x">Following</h4>
+            <div class="list animate-fade-slide-in-right">
+                <a class="item item-avatar waves-effect waves-button waves-dark" >
+                    <span class="avatar" style="background-image: url('{{pathToCms}}sites/default/files/styles/thumbnail/public/pictures/{{user.picture.filename}}');"></span>
+                    <h2>Kobe Bryant</h2>
+                    <p>81 pts #toolongago</p>
+                </a>
+                <a class="item item-avatar waves-effect waves-button waves-dark" >
+                    <span class="avatar" style="background-image: url('../img/white-mamba.jpg');"></span>
+                    <h2>Brian Scalabrine</h2>
+                    <p>#whitemamba</p>
+                </a>
+            </div>
+        </div>
     </div>
+    
+    
+    
+    
+
+    
+    
+    
 
   </ion-content>
 </ion-view>

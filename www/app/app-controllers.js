@@ -30,12 +30,25 @@ appControllers.controller('AppCtrl', ['$rootScope', '$scope', 'UserResourceChann
 
 	$scope.pathToCms 	= drupalApiConfig.drupal_instance;
 	
-	$scope.logout = function () { UserResource.logout(); };
+	$scope.logout = function () { 
+		 $rootScope.$broadcast('loading:show', { loading_settings : {template:"<p><ion-spinner></ion-spinner><br/>Logging out...</p>"} });
+		UserResource.logout().then(
+				//success
+				function() {
+					$rootScope.$broadcast('loading:hide');
+				},
+				//error
+				function() {
+					$rootScope.$broadcast('loading:hide');
+				}
+		); 
+	
+	};
 	//used in base-menu template
 	$scope.accessLevels = accessControlConfig.accessLevels;
 	
 	// App redirects events
     // on logou request confirmed do logout redirect
-	UserResourceChannel.onUserLogoutConfirmed($scope, function(data) { $state.go('app.login'); 	 });
+	UserResourceChannel.onUserLogoutConfirmed($scope, function(data) { $state.go('app.login'); });
    	
 }]);
