@@ -26,7 +26,7 @@
 
 	<ion-list show-delete="listOptions.showDelete" can-swipe="true">
 	
-	<ion-item collection-item-width="'100%'" ng-repeat="node in nodes" class="item-icon-right item-spinner-right" >
+	<ion-item ng-repeat="node in nodes" class="item-icon-right item-spinner-right" >
 		    <h2>{{node.title}} {{node.nid}}</h2>
 		    <p>{{node.type}} - {{node.created * 1000 | date}}</p>
 		    
@@ -60,7 +60,7 @@
 	  	 -->
 	</ion-list>
 	
-	<ion-infinite-scroll icon="ion-load-d" on-infinite="loadMore()" distance="5%"></ion-infinite-scroll>
+	<ion-infinite-scroll on-infinite="loadMore()" distance="5%"></ion-infinite-scroll>
 	    
   </ion-content>
 </ion-view>
