@@ -94,7 +94,7 @@ drupalIonicAngularJSAPIClient.run(['$rootScope', 'drupalApiConfig',  '$urlRouter
 	    }
     });  
     //redirection logic end
-   
+    
     $rootScope.$on('loading:show', function (event, args) {
     	$ionicLoading.show((args && 'loading_settings' in args) ? args.loading_settings:{});
     });
@@ -215,6 +215,7 @@ drupalIonicAngularJSAPIClient
 	        },
 	         resolve: {
 	              userObj: function (ApiAuthService) {
+	            	  console.log(ApiAuthService.getCurrentUser()); 
 	                return ApiAuthService.getCurrentUser();
 	              }
 	            }

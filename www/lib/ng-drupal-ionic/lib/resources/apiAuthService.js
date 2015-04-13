@@ -249,18 +249,29 @@ ApiAuthModules.service('ApiAuthService', [ '$rootScope', 'drupalApiConfig', 'Api
 					            	
 					              var user_id = data.user.uid;
 					              
+					              setLastConnectTime(Date.now());
+					              storeSessionData(data);
+					              
 					              if (user_id == 0) { 
 					            	  setConnectionState(false); 
+					            	  setCurrentUser(data.user);
+					            	  defer.resolve(data.user);
 					              }
 					              else {  
 					            	  setConnectionState(true);
+					            	  //we have to use UserResource.retrieve() to get full data of current user
+						              UserResource.retrieve(data.user.uid).then(
+						            		  function(user) {
+						            			  setCurrentUser(user);
+						            			  defer.resolve(user);
+						            		  },
+						            		  function(data) {
+						            			  console.log(); 
+						            			  defer.reject(data);
+						            		  }
+						              );
 					              }
-					             
-					              setLastConnectTime(Date.now());
-					              storeSessionData(data);
-				            	  setCurrentUser(data.user);
-					              
-					              defer.resolve(data);
+
 					            },
 					            //SystemResource.connect error
 					            function(data) {
@@ -274,8 +285,7 @@ ApiAuthModules.service('ApiAuthService', [ '$rootScope', 'drupalApiConfig', 'Api
 						defer.reject(error);
 					}
 			);
-			
-			//check cookies
+		
 			return defer.promise;
 		};
 		

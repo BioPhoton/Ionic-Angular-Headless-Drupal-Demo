@@ -5,6 +5,7 @@ tabsProfileControllers.controller('authedTabProfileCtrl', ['$scope','ApiAuthChan
 
 	$scope.pathToCms 	= drupalApiConfig.drupal_instance;
 	$scope.user 		= userObj; 
+	console.log(userObj); 
 	
 	//this is noly active if page is present
 	// on login request confirmed set userdata
