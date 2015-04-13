@@ -9,7 +9,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-rc.0
+ * Ionic, v1.0.0-rc.2
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -25,7 +25,7 @@
 // build processes may have already created an ionic obj
 window.ionic = window.ionic || {};
 window.ionic.views = {};
-window.ionic.version = '1.0.0-rc.0';
+window.ionic.version = '1.0.0-rc.2';
 
 (function (ionic) {
 
@@ -1774,16 +1774,19 @@ window.ionic.version = '1.0.0-rc.0';
       drag_lock_to_axis       : false,
       // drag lock only kicks in when distance > drag_lock_min_distance
       // This way, locking occurs only when the distance has become large enough to reliably determine the direction
-      drag_lock_min_distance : 25
+      drag_lock_min_distance : 25,
+      // prevent default if the gesture is going the given direction
+      prevent_default_directions : []
     },
     triggered: false,
     handler: function dragGesture(ev, inst) {
-
       if (ev.srcEvent.type == 'touchstart' || ev.srcEvent.type == 'touchend') {
         this.preventedFirstMove = false;
 
       } else if (!this.preventedFirstMove && ev.srcEvent.type == 'touchmove') {
-        ev.srcEvent.preventDefault();
+        if (inst.options.prevent_default_directions.indexOf(ev.direction) != -1) {
+          ev.srcEvent.preventDefault();
+        }
         this.preventedFirstMove = true;
       }
 
@@ -2061,7 +2064,7 @@ window.ionic.version = '1.0.0-rc.0';
    *   var currentPlatform = ionic.Platform.platform();
    *   var currentPlatformVersion = ionic.Platform.version();
    *
-   *   ionic.Platform.exit(); // stops the app
+   *   ionic.Platform.exitApp(); // stops the app
    * });
    * ```
    */
@@ -2171,7 +2174,11 @@ window.ionic.version = '1.0.0-rc.0';
 
       if (self.isWebView()) {
         self.platforms.push('webview');
-        self.platforms.push('cordova');
+        if(!(!window.cordova && !window.PhoneGap && !window.phonegap)) {
+          self.platforms.push('cordova');
+        } else if(!!window.forge) {
+          self.platforms.push('trigger');
+        }
       } else {
         self.platforms.push('browser');
       }
@@ -2209,7 +2216,7 @@ window.ionic.version = '1.0.0-rc.0';
      * @returns {boolean} Check if we are running within a WebView (such as Cordova).
      */
     isWebView: function() {
-      return !(!window.cordova && !window.PhoneGap && !window.phonegap);
+      return !(!window.cordova && !window.PhoneGap && !window.phonegap && !window.forge);
     },
     /**
      * @ngdoc method
@@ -2351,7 +2358,7 @@ window.ionic.version = '1.0.0-rc.0';
     /**
      * @ngdoc method
      * @name ionic.Platform#showStatusBar
-     * @description Shows or hides the device status bar (in Cordova).
+     * @description Shows or hides the device status bar (in Cordova). Requires `cordova plugin add org.apache.cordova.statusbar`
      * @param {boolean} shouldShow Whether or not to show the status bar.
      */
     showStatusBar: function(val) {
@@ -2378,7 +2385,7 @@ window.ionic.version = '1.0.0-rc.0';
      * @name ionic.Platform#fullScreen
      * @description
      * Sets whether the app is fullscreen or not (in Cordova).
-     * @param {boolean=} showFullScreen Whether or not to set the app to fullscreen. Defaults to true.
+     * @param {boolean=} showFullScreen Whether or not to set the app to fullscreen. Defaults to true. Requires `cordova plugin add org.apache.cordova.statusbar`
      * @param {boolean=} showStatusBar Whether or not to show the device's status bar. Defaults to false.
      */
     fullScreen: function(showFullScreen, showStatusBar) {
@@ -2389,11 +2396,6 @@ window.ionic.version = '1.0.0-rc.0';
       ionic.DomUtil.ready(function() {
         // run this only when or if the DOM is ready
         requestAnimationFrame(function() {
-          // fixing pane height before we adjust this
-          var panes = document.getElementsByClassName('pane');
-          for (var i = 0; i < panes.length; i++) {
-            panes[i].style.height = panes[i].offsetHeight + "px";
-          }
           if (self.isFullScreen) {
             document.body.classList.add('fullscreen');
           } else {
@@ -2700,12 +2702,20 @@ ionic.tap = {
     return !!ele &&
            (ele.tagName == 'TEXTAREA' ||
             ele.contentEditable === 'true' ||
-            (ele.tagName == 'INPUT' && !(/^(radio|checkbox|range|file|submit|reset)$/i).test(ele.type)));
+            (ele.tagName == 'INPUT' && !(/^(radio|checkbox|range|file|submit|reset|color|image|button)$/i).test(ele.type)));
   },
 
   isDateInput: function(ele) {
     return !!ele &&
             (ele.tagName == 'INPUT' && (/^(date|time|datetime-local|month|week)$/i).test(ele.type));
+  },
+
+  isKeyboardElement: function(ele) {
+    if ( !ionic.Platform.isIOS() || ionic.Platform.isIPad() ) {
+      return ionic.tap.isTextInput(ele) && !ionic.tap.isDateInput(ele);
+    } else {
+      return ionic.tap.isTextInput(ele) || ( !!ele && ele.tagName == "SELECT");
+    }
   },
 
   isLabelWithTextInput: function(ele) {
@@ -2719,7 +2729,7 @@ ionic.tap = {
     return ionic.tap.isTextInput(ele) || ionic.tap.isLabelWithTextInput(ele);
   },
 
-  cloneFocusedInput: function(container, scrollIntance) {
+  cloneFocusedInput: function(container) {
     if (ionic.tap.hasCheckedClone) return;
     ionic.tap.hasCheckedClone = true;
 
@@ -2727,7 +2737,7 @@ ionic.tap = {
       var focusInput = container.querySelector(':focus');
       if (ionic.tap.isTextInput(focusInput)) {
         var clonedInput = focusInput.cloneNode(true);
-        
+
         clonedInput.value = focusInput.value;
         clonedInput.classList.add('cloned-text-input');
         clonedInput.readOnly = true;
@@ -2745,7 +2755,7 @@ ionic.tap = {
 
   hasCheckedClone: false,
 
-  removeClonedInputs: function(container, scrollIntance) {
+  removeClonedInputs: function(container) {
     ionic.tap.hasCheckedClone = false;
 
     ionic.requestAnimationFrame(function() {
@@ -2988,7 +2998,7 @@ function tapEnableTouchEvents() {
   clearTimeout(tapMouseResetTimer);
   tapMouseResetTimer = setTimeout(function() {
     tapEnabledTouchEvents = false;
-  }, 2000);
+  }, 600);
 }
 
 function tapIgnoreEvent(e) {
@@ -3047,7 +3057,7 @@ function tapFocusOutActive() {
 
 function tapFocusIn(e) {
   // Because a text input doesn't preventDefault (so the caret still works) there's a chance
-  // that it's mousedown event 300ms later will change the focus to another element after
+  // that its mousedown event 300ms later will change the focus to another element after
   // the keyboard shows up.
 
   if (tapEnabledTouchEvents &&
@@ -3138,7 +3148,7 @@ ionic.DomUtil.ready(function() {
       var self = this;
 
       var hitX = ionic.tap.pointerCoord(e).x;
-      if (hitX > 0 && hitX < 45) {
+      if (hitX > 0 && hitX < 30) {
         return;
       }
 
@@ -3151,7 +3161,7 @@ ionic.DomUtil.ready(function() {
 
         for (var x = 0; x < 6; x++) {
           if (!ele || ele.nodeType !== 1) break;
-          if (eleToActivate && ele.classList.contains('item')) {
+          if (eleToActivate && ele.classList && ele.classList.contains('item')) {
             eleToActivate = ele;
             break;
           }
@@ -3164,7 +3174,7 @@ ionic.DomUtil.ready(function() {
             break;
           }
           // no sense climbing past these
-          if (ele.tagName == 'ION-CONTENT' || ele.classList.contains('pane') || ele.tagName == 'BODY') {
+          if (ele.tagName == 'ION-CONTENT' || (ele.classList && ele.classList.contains('pane')) || ele.tagName == 'BODY') {
             break;
           }
           ele = ele.parentElement;
@@ -3409,7 +3419,7 @@ ionic.DomUtil.ready(function() {
       }
       var parent = scope.$parent;
       scope.$$disconnected = true;
-      scope.$broadcast('$ionic.disconnectScope');
+      scope.$broadcast('$ionic.disconnectScope', scope);
 
       // See Scope.$destroy
       if (parent.$$childHead === scope) {
@@ -3438,7 +3448,7 @@ ionic.DomUtil.ready(function() {
       }
       var parent = scope.$parent;
       scope.$$disconnected = false;
-      scope.$broadcast('$ionic.reconnectScope');
+      scope.$broadcast('$ionic.reconnectScope', scope);
       // See Scope.$new for this logic...
       scope.$$prevSibling = parent.$$childTail;
       if (parent.$$childHead) {
@@ -3613,8 +3623,9 @@ function keyboardNativeShow(e) {
 }
 
 function keyboardBrowserFocusIn(e) {
-  if( !e.target || e.target.readOnly || !ionic.tap.isTextInput(e.target) || ionic.tap.isDateInput(e.target) || !keyboardIsWithinScroll(e.target) ) return;
+  if( !e.target || e.target.readOnly || !ionic.tap.isKeyboardElement(e.target) || !keyboardIsWithinScroll(e.target) ) return;
 
+  //console.log("keyboardBrowserFocusIn");
   document.addEventListener('keydown', keyboardOnKeyDown, false);
 
   document.body.scrollTop = 0;
@@ -3631,7 +3642,7 @@ function keyboardSetShow(e) {
 
   keyboardFocusInTimer = setTimeout(function(){
     if ( keyboardLastShow + 350 > Date.now() ) return;
-    void 0;
+    //console.log('keyboardSetShow');
     keyboardLastShow = Date.now();
     var keyboardHeight;
     var elementBounds = keyboardActiveElement.getBoundingClientRect();
@@ -3668,7 +3679,7 @@ function keyboardShow(element, elementTop, elementBottom, viewportHeight, keyboa
 
   details.contentHeight = viewportHeight - keyboardHeight;
 
-  void 0;
+  //console.log('keyboardShow', keyboardHeight, details.contentHeight);
 
   // figure out if the element is under the keyboard
   details.isElementUnderKeyboard = (details.elementBottom > details.contentHeight);
@@ -6409,6 +6420,351 @@ ionic.scroll = {
 })(ionic);
 
 (function(ionic) {
+  var NOOP = function() {};
+  var depreciated = function(name) {
+    void 0;
+  };
+  ionic.views.ScrollNative = ionic.views.View.inherit({
+
+    initialize: function(options) {
+      var self = this;
+      self.__container = self.el = options.el;
+      self.__content = options.el.firstElementChild;
+      self.isNative = true;
+
+      self.__scrollTop = self.el.scrollTop;
+      self.__scrollLeft = self.el.scrollLeft;
+      self.__clientHeight = self.__content.clientHeight,
+      self.__clientWidth = self.__content.clientWidth,
+      self.__maxScrollTop = Math.max((self.__contentHeight) - self.__clientHeight, 0),
+      self.__maxScrollLeft = Math.max((self.__contentWidth) - self.__clientWidth, 0),
+
+      self.options = {
+
+        freeze: false,
+
+        getContentWidth: function() {
+          return Math.max(self.__content.scrollWidth, self.__content.offsetWidth);
+        },
+
+        getContentHeight: function() {
+          return Math.max(self.__content.scrollHeight, self.__content.offsetHeight + (self.__content.offsetTop * 2));
+        }
+
+      };
+
+      for (var key in options) {
+        self.options[key] = options[key];
+      }
+
+      /**
+       * Sets isScrolling to true, and automatically deactivates if not called again in 80ms.
+       */
+      self.onScroll = function(event) {
+        if (!ionic.scroll.isScrolling) {
+          ionic.scroll.isScrolling = true;
+        }
+
+        clearTimeout(self.scrollTimer);
+        self.scrollTimer = setTimeout(function() {
+          ionic.scroll.isScrolling = false;
+        }, 80);
+      };
+
+      self.freeze = NOOP;
+
+      self.__initEventHandlers();
+    },
+
+    /**  Methods not used in native scrolling */
+    __callback: function() {depreciated('__callback');},
+    zoomTo: function() {depreciated('zoomTo');},
+    zoomBy: function() {depreciated('zoomBy');},
+    activatePullToRefresh: function() {depreciated('activatePullToRefresh');},
+
+    /**
+     * Returns the scroll position and zooming values
+     *
+     * @return {Map} `left` and `top` scroll position and `zoom` level
+     */
+    resize: function(continueScrolling) {
+      var self = this;
+      if (!self.__container || !self.options) return;
+
+      // Update Scroller dimensions for changed content
+      // Add padding to bottom of content
+      self.setDimensions(
+        self.__container.clientWidth,
+        self.__container.clientHeight,
+        self.options.getContentWidth(),
+        self.options.getContentHeight(),
+        continueScrolling
+      );
+    },
+
+    /**
+     * Initialize the scrollview
+     * In native scrolling, this only means we need to gather size information
+     */
+    run: function() {
+      this.resize();
+    },
+
+    /**
+     * Returns the scroll position and zooming values
+     *
+     * @return {Map} `left` and `top` scroll position and `zoom` level
+     */
+    getValues: function() {
+      var self = this;
+      self.update();
+      return {
+        left: self.__scrollLeft,
+        top: self.__scrollTop,
+        zoom: 1
+      };
+    },
+
+    /**
+     * Updates the __scrollLeft and __scrollTop values to el's current value
+     */
+    update: function() {
+      var self = this;
+      self.__scrollLeft = self.el.scrollLeft;
+      self.__scrollTop = self.el.scrollTop;
+    },
+
+    /**
+     * Configures the dimensions of the client (outer) and content (inner) elements.
+     * Requires the available space for the outer element and the outer size of the inner element.
+     * All values which are falsy (null or zero etc.) are ignored and the old value is kept.
+     *
+     * @param clientWidth {Integer} Inner width of outer element
+     * @param clientHeight {Integer} Inner height of outer element
+     * @param contentWidth {Integer} Outer width of inner element
+     * @param contentHeight {Integer} Outer height of inner element
+     */
+    setDimensions: function(clientWidth, clientHeight, contentWidth, contentHeight) {
+      var self = this;
+
+      if (!clientWidth && !clientHeight && !contentWidth && !contentHeight) {
+        // this scrollview isn't rendered, don't bother
+        return;
+      }
+
+      // Only update values which are defined
+      if (clientWidth === +clientWidth) {
+        self.__clientWidth = clientWidth;
+      }
+
+      if (clientHeight === +clientHeight) {
+        self.__clientHeight = clientHeight;
+      }
+
+      if (contentWidth === +contentWidth) {
+        self.__contentWidth = contentWidth;
+      }
+
+      if (contentHeight === +contentHeight) {
+        self.__contentHeight = contentHeight;
+      }
+
+      // Refresh maximums
+      self.__computeScrollMax();
+    },
+
+    /**
+     * Returns the maximum scroll values
+     *
+     * @return {Map} `left` and `top` maximum scroll values
+     */
+    getScrollMax: function() {
+      return {
+        left: this.__maxScrollLeft,
+        top: this.__maxScrollTop
+      };
+    },
+
+    /**
+     * Scrolls by the given amount in px.
+     *
+     * @param left {Number} Horizontal scroll position, keeps current if value is <code>null</code>
+     * @param top {Number} Vertical scroll position, keeps current if value is <code>null</code>
+     * @param animate {Boolean} Whether the scrolling should happen using an animation
+     */
+
+    scrollBy: function(left, top, animate) {
+      var self = this;
+
+      // update scroll vars before refferencing them
+      self.update();
+
+      var startLeft = self.__isAnimating ? self.__scheduledLeft : self.__scrollLeft;
+      var startTop = self.__isAnimating ? self.__scheduledTop : self.__scrollTop;
+
+      self.scrollTo(startLeft + (left || 0), startTop + (top || 0), animate);
+    },
+
+    /**
+     * Scrolls to the given position in px.
+     *
+     * @param left {Number} Horizontal scroll position, keeps current if value is <code>null</code>
+     * @param top {Number} Vertical scroll position, keeps current if value is <code>null</code>
+     * @param animate {Boolean} Whether the scrolling should happen using an animation
+     */
+    scrollTo: function(left, top, animate) {
+      var self = this;
+      if (!animate) {
+        self.el.scrollTop = top;
+        self.el.scrollLeft = left;
+        self.resize();
+        return;
+      }
+      animateScroll(top, left);
+
+      function animateScroll(Y, X) {
+        // scroll animation loop w/ easing
+        // credit https://gist.github.com/dezinezync/5487119
+        var start = Date.now(),
+          duration = 1000, //milliseconds
+          fromY = self.el.scrollTop,
+          fromX = self.el.scrollLeft;
+
+        if (fromY === Y && fromX === X) {
+          self.resize();
+          return; /* Prevent scrolling to the Y point if already there */
+        }
+
+        // decelerating to zero velocity
+        function easeOutCubic(t) {
+          return (--t) * t * t + 1;
+        }
+
+        // scroll loop
+        function animateScrollStep() {
+          var currentTime = Date.now(),
+            time = Math.min(1, ((currentTime - start) / duration)),
+          // where .5 would be 50% of time on a linear scale easedT gives a
+          // fraction based on the easing method
+            easedT = easeOutCubic(time);
+
+          if (fromY != Y) {
+            self.el.scrollTop = parseInt((easedT * (Y - fromY)) + fromY, 10);
+          }
+          if (fromX != X) {
+            self.el.scrollLeft = parseInt((easedT * (X - fromX)) + fromX, 10);
+          }
+
+          if (time < 1) {
+            ionic.requestAnimationFrame(animateScrollStep);
+
+          } else {
+            // done
+            self.resize();
+          }
+        }
+
+        // start scroll loop
+        ionic.requestAnimationFrame(animateScrollStep);
+      }
+    },
+
+
+
+    /*
+     ---------------------------------------------------------------------------
+     PRIVATE API
+     ---------------------------------------------------------------------------
+     */
+
+    /**
+     * If the scroll view isn't sized correctly on start, wait until we have at least some size
+     */
+    __waitForSize: function() {
+      var self = this;
+
+      clearTimeout(self.__sizerTimeout);
+
+      var sizer = function() {
+        self.resize(true);
+      };
+
+      sizer();
+      self.__sizerTimeout = setTimeout(sizer, 500);
+    },
+
+
+    /**
+     * Recomputes scroll minimum values based on client dimensions and content dimensions.
+     */
+    __computeScrollMax: function() {
+      var self = this;
+
+      self.__maxScrollLeft = Math.max((self.__contentWidth) - self.__clientWidth, 0);
+      self.__maxScrollTop = Math.max((self.__contentHeight) - self.__clientHeight, 0);
+
+      if (!self.__didWaitForSize && !self.__maxScrollLeft && !self.__maxScrollTop) {
+        self.__didWaitForSize = true;
+        self.__waitForSize();
+      }
+    },
+
+    __initEventHandlers: function() {
+      var self = this;
+
+      // Event Handler
+      var container = self.__container;
+
+      // should be unnecessary in native scrolling, but keep in case bugs show up
+      self.scrollChildIntoView = NOOP;
+
+      self.resetScrollView = function(e) {
+        //return scrollview to original height once keyboard has hidden
+        if (self.isScrolledIntoView) {
+          self.isScrolledIntoView = false;
+          container.style.height = "";
+          container.style.overflow = "";
+          self.resize();
+          ionic.scroll.isScrolling = false;
+        }
+      };
+
+      container.addEventListener('resetScrollView', self.resetScrollView);
+      container.addEventListener('scroll', self.onScroll);
+
+      //Broadcasted when keyboard is shown on some platforms.
+      //See js/utils/keyboard.js
+      container.addEventListener('scrollChildIntoView', self.scrollChildIntoView);
+      container.addEventListener('resetScrollView', self.resetScrollView);
+    },
+
+    __cleanup: function() {
+      var self = this;
+      var container = self.__container;
+
+      container.removeEventListener('resetScrollView', self.resetScrollView);
+      container.removeEventListener('scroll', self.onScroll);
+
+      container.removeEventListener('scrollChildIntoView', self.scrollChildIntoView);
+      container.removeEventListener('resetScrollView', self.resetScrollView);
+
+      ionic.tap.removeClonedInputs(container, self);
+
+      delete self.__container;
+      delete self.__content;
+      delete self.__indicatorX;
+      delete self.__indicatorY;
+      delete self.options.el;
+
+      self.resize = self.scrollTo = self.onScroll = self.resetScrollView = NOOP;
+      container = null;
+    }
+  });
+
+})(ionic);
+
+
+(function(ionic) {
 'use strict';
 
   var ITEM_CLASS = 'item';
@@ -6544,6 +6900,8 @@ ionic.scroll = {
         // Calculate the new X position, capped at the top of the buttons
         newX = Math.min(-buttonsWidth, -buttonsWidth + (((e.gesture.deltaX + buttonsWidth) * 0.4)));
       }
+
+      this._currentDrag.content.$$ionicOptionsOpen = newX !== 0;
 
       this._currentDrag.content.style[ionic.CSS.TRANSFORM] = 'translate3d(' + newX + 'px, 0, 0)';
       this._currentDrag.content.style[ionic.CSS.TRANSITION] = 'none';
@@ -6802,13 +7160,19 @@ ionic.scroll = {
       self.onRefreshOpening = opts.onRefreshOpening || function() {};
       self.onRefreshHolding = opts.onRefreshHolding || function() {};
 
+      var gestureOpts = {};
+      // don't prevent native scrolling
+      if (ionic.DomUtil.getParentOrSelfWithClass(self.el,'overflow-scroll')) {
+        gestureOpts.prevent_default_directions = ['left','right'];
+      }
+
       window.ionic.onGesture('release', function(e) {
         self._handleEndDrag(e);
-      }, self.el);
+      }, self.el, gestureOpts);
 
       window.ionic.onGesture('drag', function(e) {
         self._handleDrag(e);
-      }, self.el);
+      }, self.el, gestureOpts);
       // Start the drag states
       self._initDrag();
     },
@@ -41132,7 +41496,7 @@ angular.module('ui.router.state')
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-rc.0
+ * Ionic, v1.0.0-rc.2
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -43865,6 +44229,19 @@ IonicModule
          * close the actionsheet, but it should not also go back a page view
          * or close a modal which may be open.
          *
+         * The priorities for the existing back button hooks are as follows:
+         *   Return to previous view = 100
+         *   Close side menu = 150
+         *   Dismiss modal = 200
+         *   Close action sheet = 300
+         *   Dismiss popup = 400
+         *   Dismiss loading overlay = 500
+         * 
+         * Your back button action will override each of the above actions
+         * whose priority is less than the priority you provide. For example,
+         * an action assigned a priority of 101 will override the 'return to
+         * previous view' action, but not any of the other actions.
+         * 
          * @param {function} callback Called when the back button is pressed,
          * if this listener is the highest priority.
          * @param {number} priority Only the highest priority will execute.
@@ -44061,8 +44438,9 @@ function($ionicModal, $ionicPosition, $document, $window) {
     var buttonOffset = $ionicPosition.offset(targetEle);
     var popoverWidth = popoverEle.prop('offsetWidth');
     var popoverHeight = popoverEle.prop('offsetHeight');
-    var bodyWidth = $document[0].body.clientWidth;
-    // clientHeight doesn't work on all platforms for body
+    // Use innerWidth and innerHeight, because clientWidth and clientHeight
+    // doesn't work consistently for body on all platforms
+    var bodyWidth = $window.innerWidth;
     var bodyHeight = $window.innerHeight;
 
     var popoverCSS = {
@@ -47005,6 +47383,9 @@ function($scope, $element, $attrs, $compile, $timeout, $ionicNavBarDelegate, $io
     $element[isTabsTop ? 'addClass' : 'removeClass']('nav-bar-tabs-top');
   };
 
+  self.hasBarSubheader = function(isBarSubheader) {
+    $element[isBarSubheader ? 'addClass' : 'removeClass']('nav-bar-has-subheader');
+  };
 
   // DEPRECATED, as of v1.0.0-beta14 -------
   self.changeTitle = function(val) {
@@ -47135,6 +47516,11 @@ function($scope, $element, $attrs, $compile, $controller, $ionicNavBarDelegate, 
 
     $scope.$on('$ionicHistory.deselect', self.cacheCleanup);
     $scope.$on('$ionicTabs.top', onTabsTop);
+    $scope.$on('$ionicSubheader', onBarSubheader);
+
+    $scope.$on('$ionicTabs.beforeLeave', onTabsLeave);
+    $scope.$on('$ionicTabs.afterLeave', onTabsLeave);
+    $scope.$on('$ionicTabs.leave', onTabsLeave);
 
     ionic.Platform.ready(function() {
       if (ionic.Platform.isWebView() && $ionicConfig.views.swipeBackEnabled()) {
@@ -47271,6 +47657,21 @@ function($scope, $element, $attrs, $compile, $controller, $ionicNavBarDelegate, 
   };
 
 
+  function onTabsLeave(ev, data) {
+    var viewElements = $element.children();
+    var viewElement, viewScope;
+
+    for (var x = 0, l = viewElements.length; x < l; x++) {
+      viewElement = viewElements.eq(x);
+      if (navViewAttr(viewElement) == VIEW_STATUS_ACTIVE) {
+        viewScope = viewElement.scope();
+        viewScope && viewScope.$emit(ev.name.replace('Tabs', 'View'), data);
+        break;
+      }
+    }
+  }
+
+
   self.cacheCleanup = function() {
     var viewElements = $element.children();
     for (var x = 0, l = viewElements.length; x < l; x++) {
@@ -47294,7 +47695,6 @@ function($scope, $element, $attrs, $compile, $controller, $ionicNavBarDelegate, 
         viewScope && viewScope.$broadcast('$ionicView.clearCache');
       }
     }
-
   };
 
 
@@ -47511,6 +47911,10 @@ function($scope, $element, $attrs, $compile, $controller, $ionicNavBarDelegate, 
     associatedNavBarCtrl && associatedNavBarCtrl.hasTabsTop(isTabsTop);
   }
 
+  function onBarSubheader(ev, isBarSubheader) {
+    var associatedNavBarCtrl = getAssociatedNavBarCtrl();
+    associatedNavBarCtrl && associatedNavBarCtrl.hasBarSubheader(isBarSubheader);
+  }
 
   function getAssociatedNavBarCtrl() {
     if (navBarDelegate) {
@@ -47765,8 +48169,8 @@ IonicModule
       scrollParent = $element.parent().parent()[0];
       scrollChild = $element.parent()[0];
 
-      if (!scrollParent.classList.contains('ionic-scroll') ||
-          !scrollChild.classList.contains('scroll')) {
+      if (!scrollParent || !scrollParent.classList.contains('ionic-scroll') ||
+        !scrollChild || !scrollChild.classList.contains('scroll')) {
         throw new Error('Refresher must be immediate child of ion-content or ion-scroll');
       }
 
@@ -47869,10 +48273,19 @@ function($scope,
   self.__timeout = $timeout;
 
   self._scrollViewOptions = scrollViewOptions; //for testing
+  self.isNative = function() {
+    return !!scrollViewOptions.nativeScrolling;
+  };
 
   var element = self.element = scrollViewOptions.el;
   var $element = self.$element = jqLite(element);
-  var scrollView = self.scrollView = new ionic.views.Scroll(scrollViewOptions);
+  var scrollView;
+  if (self.isNative()) {
+    scrollView = self.scrollView = new ionic.views.ScrollNative(scrollViewOptions);
+  } else {
+    scrollView = self.scrollView = new ionic.views.Scroll(scrollViewOptions);
+  }
+
 
   //Attach self to element as a controller so other directives can require this controller
   //through `require: '$ionicScroll'
@@ -47901,8 +48314,7 @@ function($scope,
   }
 
   var resize = angular.bind(scrollView, scrollView.resize);
-  ionic.on('resize', resize, $window);
-
+  angular.element($window).on('resize', resize);
 
   var scrollFunc = function(e) {
     var detail = (e.originalEvent || e).detail || {};
@@ -47918,15 +48330,13 @@ function($scope,
   $scope.$on('$destroy', function() {
     deregisterInstance();
     scrollView && scrollView.__cleanup && scrollView.__cleanup();
-    ionic.off('resize', resize, $window);
-    $window.removeEventListener('resize', resize);
+    angular.element($window).off('resize', resize);
     $element.off('scroll', scrollFunc);
     scrollView = self.scrollView = scrollViewOptions = self._scrollViewOptions = scrollViewOptions.el = self._scrollViewOptions.el = $element = self.$element = element = null;
   });
 
   $timeout(function() {
     scrollView && scrollView.run && scrollView.run();
-    $element.triggerHandler('scroll.init');
   });
 
   self.getScrollView = function() {
@@ -48317,10 +48727,7 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $io
   self.exposeAside = function(shouldExposeAside) {
     if (!(self.left && self.left.isEnabled) && !(self.right && self.right.isEnabled)) return;
     self.close();
-    //Trigger a resize if it changed
-    if (isAsideExposed !== shouldExposeAside) {
-      ionic.trigger('resize', null, window);
-    }
+
     isAsideExposed = shouldExposeAside;
     if (self.left && self.left.isEnabled) {
       // set the left marget width if it should be exposed
@@ -48940,6 +49347,7 @@ IonicModule
 function($scope, $element, $ionicHistory) {
   var self = this;
   var selectedTab = null;
+  var previousSelectedTab = null;
   var selectedTabIndex;
   self.tabs = [];
 
@@ -48948,6 +49356,9 @@ function($scope, $element, $ionicHistory) {
   };
   self.selectedTab = function() {
     return selectedTab;
+  };
+  self.previousSelectedTab = function() {
+    return previousSelectedTab;
   };
 
   self.add = function(tab) {
@@ -48977,6 +49388,7 @@ function($scope, $element, $ionicHistory) {
 
   self.deselect = function(tab) {
     if (tab.$tabSelected) {
+      previousSelectedTab = selectedTab;
       selectedTab = selectedTabIndex = null;
       tab.$tabSelected = false;
       (tab.onDeselect || noop)();
@@ -49374,7 +49786,7 @@ function CollectionRepeatDirective($ionicCollectionManager, $parse, $window, $$r
     priority: 1000,
     transclude: 'element',
     $$tlb: true,
-    require: '^$ionicScroll',
+    require: '^^$ionicScroll',
     link: postLink
   };
 
@@ -49401,6 +49813,7 @@ function CollectionRepeatDirective($ionicCollectionManager, $parse, $window, $$r
     var heightData = {};
     var widthData = {};
     var computedStyleDimensions = {};
+    var data = [];
     var repeatManager;
 
     // attr.collectionBufferSize is deprecated
@@ -49414,61 +49827,41 @@ function CollectionRepeatDirective($ionicCollectionManager, $parse, $window, $$r
     // attr.collectionItemWidth is deprecated
     var widthExpr = attr.itemWidth || attr.collectionItemWidth;
 
-    //Height and width have four 'modes':
-    //1) Computed Mode
-    //  - Nothing is supplied, so we getComputedStyle() on one element in the list and use
-    //    that width and height value for the width and height of every item. This is re-computed
-    //    every resize.
-    //2) Constant Mode, Static Integer
-    //  - The user provides a constant number for width or height, in pixels. We parse it,
-    //    store it on the `value` field, and it never changes
-    //3) Constant Mode, Percent
-    //  - The user provides a percent string for width or height. The getter for percent is
-    //    stored on the `getValue()` field, and is re-evaluated once every resize. The result
-    //    is stored on the `value` field.
-    //4) Dynamic Mode
-    //  - The user provides a dynamic expression for the width or height.  This is re-evaluated
-    //    for every item, stored on the `.getValue()` field.
-    if (!heightExpr && !widthExpr) {
-      heightData.computed = widthData.computed = true;
-    } else {
-      if (heightExpr) {
-        parseDimensionAttr(heightExpr, heightData);
-      } else {
-        heightData.computed = true;
+    var afterItemsContainer = initAfterItemsContainer();
+
+    var changeValidator = makeChangeValidator();
+    initDimensions();
+
+    // Dimensions are refreshed on resize or data change.
+    scrollCtrl.$element.on('scroll.resize', refreshDimensions);
+
+    angular.element($window).on('resize', onResize);
+    var unlistenToExposeAside = $rootScope.$on('$ionicExposeAside', onResize);
+    $timeout(refreshDimensions, 0, false);
+
+    function onResize() {
+      if (changeValidator.resizeRequiresRefresh(scrollView.__clientWidth, scrollView.__clientHeight)) {
+        refreshDimensions();
       }
-      if (!widthExpr) widthExpr = '"100%"';
-      parseDimensionAttr(widthExpr, widthData);
     }
 
-    var afterItemsContainer = angular.element(
-      scrollView.__content.querySelector('.collection-repeat-after-container')
-    );
-    if (!afterItemsContainer.length) {
-      var elementIsAfterRepeater = false;
-      var afterNodes = [].filter.call(scrollView.__content.childNodes, function(node) { if (ionic.DomUtil.contains(node, containerNode)) {
-          elementIsAfterRepeater = true;
-          return false;
-        }
-        return elementIsAfterRepeater;
+    scope.$watchCollection(listGetter, function(newValue) {
+      data = newValue || (newValue = []);
+      if (!angular.isArray(newValue)) {
+        throw new Error("collection-repeat expected an array for '" + listExpr + "', " +
+          "but got a " + typeof value);
+      }
+      // Wait for this digest to end before refreshing everything.
+      scope.$$postDigest(function() {
+        getRepeatManager().setData(data);
+        if (changeValidator.dataChangeRequiresRefresh(data)) refreshDimensions();
       });
-      afterItemsContainer = angular.element('<span class="collection-repeat-after-container">');
-      if (scrollView.options.scrollingX) {
-        afterItemsContainer.addClass('horizontal');
-      }
-      afterItemsContainer.append(afterNodes);
-      scrollView.__content.appendChild(afterItemsContainer[0]);
-    }
-
-    $$rAF(refreshDimensions);
-    scrollCtrl.$element.one('scroll.init', refreshDimensions);
-
-    var onWindowResize = ionic.animationFrameThrottle(validateResize);
-    angular.element($window).on('resize', onWindowResize);
+    });
 
     scope.$on('$destroy', function() {
-      angular.element($window).off('resize', onWindowResize);
-      scrollCtrl.$element && scrollCtrl.$element.off('scroll.init', refreshDimensions);
+      angular.element($window).off('resize', onResize);
+      unlistenToExposeAside();
+      scrollCtrl.$element && scrollCtrl.$element.off('scroll.resize', refreshDimensions);
 
       computedStyleNode && computedStyleNode.parentNode &&
         computedStyleNode.parentNode.removeChild(computedStyleNode);
@@ -49478,6 +49871,35 @@ function CollectionRepeatDirective($ionicCollectionManager, $parse, $window, $$r
       repeatManager && repeatManager.destroy();
       repeatManager = null;
     });
+
+    function makeChangeValidator() {
+      var self;
+      return (self = {
+        dataLength: 0,
+        width: 0,
+        height: 0,
+        // A resize triggers a refresh only if we have data, the scrollView has size,
+        // and the size has changed.
+        resizeRequiresRefresh: function(newWidth, newHeight) {
+          var requiresRefresh = self.dataLength && newWidth && newHeight &&
+            (newWidth !== self.width || newHeight !== self.height);
+
+          self.width = newWidth;
+          self.height = newHeight;
+
+          return !!requiresRefresh;
+        },
+        // A change in data only triggers a refresh if the data has length, or if the data's
+        // length is less than before.
+        dataChangeRequiresRefresh: function(newData) {
+          var requiresRefresh = newData.length > 0 || newData.length < self.dataLength;
+
+          self.dataLength = newData.length;
+
+          return !!requiresRefresh;
+        }
+      });
+    }
 
     function getRepeatManager() {
       return repeatManager || (repeatManager = new $ionicCollectionManager({
@@ -49494,36 +49916,67 @@ function CollectionRepeatDirective($ionicCollectionManager, $parse, $window, $$r
       }));
     }
 
-    scope.$watchCollection(listGetter, function(newValue) {
-      newValue || (newValue = []);
-
-      if (!angular.isArray(newValue)) {
-        throw new Error("collection-repeat expected an array for '" + listExpr + "', " +
-          "but got a " + typeof value);
+    function initAfterItemsContainer() {
+      var container = angular.element(
+        scrollView.__content.querySelector('.collection-repeat-after-container')
+      );
+      // Put everything in the view after the repeater into a container.
+      if (!container.length) {
+        var elementIsAfterRepeater = false;
+        var afterNodes = [].filter.call(scrollView.__content.childNodes, function(node) {
+          if (ionic.DomUtil.contains(node, containerNode)) {
+            elementIsAfterRepeater = true;
+            return false;
+          }
+          return elementIsAfterRepeater;
+        });
+        container = angular.element('<span class="collection-repeat-after-container">');
+        if (scrollView.options.scrollingX) {
+          container.addClass('horizontal');
+        }
+        container.append(afterNodes);
+        scrollView.__content.appendChild(container[0]);
       }
+      return container;
+    }
 
-      // Wait for this digest to end before refreshing everything.
-      $timeout(function() {
-        getRepeatManager().refreshData(newValue);
-        if (newValue.length) refreshDimensions();
-      }, 0, false);
-    });
-
-    // Make sure this resize actually changed the size of the screen
-    function validateResize() {
-      var h = scrollView.__clientHeight, w = scrollView.__clientWidth;
-      if (w && h && (validateResize.height !== h || validateResize.width !== w)) {
-        validateResize.height = h;
-        validateResize.width = w;
-        refreshDimensions();
+    function initDimensions() {
+      //Height and width have four 'modes':
+      //1) Computed Mode
+      //  - Nothing is supplied, so we getComputedStyle() on one element in the list and use
+      //    that width and height value for the width and height of every item. This is re-computed
+      //    every resize.
+      //2) Constant Mode, Static Integer
+      //  - The user provides a constant number for width or height, in pixels. We parse it,
+      //    store it on the `value` field, and it never changes
+      //3) Constant Mode, Percent
+      //  - The user provides a percent string for width or height. The getter for percent is
+      //    stored on the `getValue()` field, and is re-evaluated once every resize. The result
+      //    is stored on the `value` field.
+      //4) Dynamic Mode
+      //  - The user provides a dynamic expression for the width or height.  This is re-evaluated
+      //    for every item, stored on the `.getValue()` field.
+      if (!heightExpr && !widthExpr) {
+        heightData.computed = widthData.computed = true;
+      } else {
+        if (heightExpr) {
+          parseDimensionAttr(heightExpr, heightData);
+        } else {
+          heightData.computed = true;
+        }
+        if (!widthExpr) widthExpr = '"100%"';
+        parseDimensionAttr(widthExpr, widthData);
       }
     }
+
     function refreshDimensions() {
-      if (heightData.computed || widthData.computed) {
+      var hasData = data.length > 0;
+
+      if (hasData && (heightData.computed || widthData.computed)) {
         computeStyleDimensions();
       }
 
-      if (heightData.computed) {
+      if (hasData && heightData.computed) {
         heightData.value = computedStyleDimensions.height;
         if (!heightData.value) {
           throw new Error('collection-repeat tried to compute the height of repeated elements "' +
@@ -49534,7 +49987,8 @@ function CollectionRepeatDirective($ionicCollectionManager, $parse, $window, $$r
         // If it's a constant with a getter (eg percent), we just refresh .value after resize
         heightData.value = heightData.getValue();
       }
-      if (widthData.computed) {
+
+      if (hasData && widthData.computed) {
         widthData.value = computedStyleDimensions.width;
         if (!widthData.value) {
           throw new Error('collection-repeat tried to compute the width of repeated elements "' +
@@ -49567,8 +50021,8 @@ function CollectionRepeatDirective($ionicCollectionManager, $parse, $window, $$r
         parsedValue = $parse(attrValue);
       }
 
-      var withoutQuotes = attrValue.replace(/(\'|\"|px|%)/g, '').trim();
-      var isConstant = withoutQuotes.length && !/([a-zA-Z]|\$|:|\?)/.test(withoutQuotes);
+      var constantAttrValue = attrValue.replace(/(\'|\"|px|%)/g, '').trim();
+      var isConstant = constantAttrValue.length && !/([a-zA-Z]|\$|:|\?)/.test(constantAttrValue);
       dimensionData.attrValue = attrValue;
 
       // If it's a constant, it's either a percent or just a constant pixel number.
@@ -49698,6 +50152,10 @@ function RepeatManagerFactory($rootScope, $window, $$rAF) {
     var nextItemId = 0;
     var estimatedItemsAcross;
 
+    var scrollViewSetDimensions = isVertical ?
+      function() { scrollView.setDimensions(null, null, null, view.getContentSize(), true); } :
+      function() { scrollView.setDimensions(null, null, view.getContentSize(), null, true); };
+
     // view is a mix of list/grid methods + static/dynamic methods.
     // See bottom for implementations. Available methods:
     //
@@ -49746,8 +50204,26 @@ function RepeatManagerFactory($rootScope, $window, $$rAF) {
         repeaterBeforeSize += current[isVertical ? 'offsetTop' : 'offsetLeft'];
       } while( ionic.DomUtil.contains(scrollView.__content, current = current.offsetParent) );
 
+      var containerPrevNode = containerNode.previousElementSibling;
+      var beforeStyle = containerPrevNode ?  $window.getComputedStyle(containerPrevNode) : {};
+      var beforeMargin = parseInt(beforeStyle[isVertical ? 'marginBottom' : 'marginRight'] || 0);
+
+      // Because we position the collection container with position: relative, it doesn't take
+      // into account where to position itself relative to the previous element's marginBottom.
+      // To compensate, we translate the container up by the previous element's margin.
+      containerNode.style[ionic.CSS.TRANSFORM] = TRANSLATE_TEMPLATE_STR
+        .replace(PRIMARY, -beforeMargin)
+        .replace(SECONDARY, 0);
+      repeaterBeforeSize -= beforeMargin;
+
+      if (!scrollView.__clientHeight || !scrollView.__clientWidth) {
+        scrollView.__clientWidth = scrollView.__container.clientWidth;
+        scrollView.__clientHeight = scrollView.__container.clientHeight;
+      }
+
       (view.onRefreshLayout || angular.noop)();
       view.refreshDirection();
+      scrollViewSetDimensions();
 
       // Create the pool of items for reuse, setting the size to (estimatedItemsOnScreen) * 2,
       // plus the size of the renderBuffer.
@@ -49760,19 +50236,20 @@ function RepeatManagerFactory($rootScope, $window, $$rAF) {
 
       isLayoutReady = true;
       if (isLayoutReady && isDataReady) {
-        forceRerender();
+        // If the resize or latest data change caused the scrollValue to
+        // now be out of bounds, resize the scrollView.
+        if (scrollView.__scrollLeft > scrollView.__maxScrollLeft ||
+            scrollView.__scrollTop > scrollView.__maxScrollTop) {
+          scrollView.resize();
+        }
+        forceRerender(true);
       }
     };
 
-    this.refreshData = function(newData) {
+    this.setData = function(newData) {
       data = newData;
       (view.onRefreshData || angular.noop)();
-
       isDataReady = true;
-      if (isLayoutReady && isDataReady) {
-        scrollView.resize();
-        forceRerender();
-      }
     };
 
     this.destroy = function() {
@@ -49816,7 +50293,6 @@ function RepeatManagerFactory($rootScope, $window, $$rAF) {
           delete itemsShownMap[i];
           itemsLeaving.push(item);
           item.isShown = false;
-          item.scope.$broadcast('$collectionRepeatChange');
         }
       }
 
@@ -49874,6 +50350,7 @@ function RepeatManagerFactory($rootScope, $window, $$rAF) {
 
       while (itemsLeaving.length) {
         item = itemsLeaving.pop();
+        item.scope.$broadcast('$collectionRepeatLeave');
         ionic.Utils.disconnectScope(item.scope);
         itemsPool.push(item);
         item.node.style[ionic.CSS.TRANSFORM] = 'translate3d(-9999px,-9999px,0)';
@@ -49911,26 +50388,18 @@ function RepeatManagerFactory($rootScope, $window, $$rAF) {
 
     function digestEnteringItems() {
       var item;
-      var scope;
-      var len;
       if (digestEnteringItems.running) return;
       digestEnteringItems.running = true;
 
       $$rAF(function process() {
-        if( (len = itemsEntering.length) ) {
-          var rootScopePhase = $rootScope.$$phase;
-          var count = Math.floor(len / 1.25) || 1;
-          while (count && itemsEntering.length) {
-            item = itemsEntering.pop();
-            if (item.isShown) {
-              count--;
-              if (!rootScopePhase) item.scope.$digest();
-            }
+        var rootScopePhase = $rootScope.$$phase;
+        while (itemsEntering.length) {
+          item = itemsEntering.pop();
+          if (item.isShown) {
+            if (!rootScopePhase) item.scope.$digest();
           }
-          $$rAF(process);
-        } else {
-          digestEnteringItems.running = false;
         }
+        digestEnteringItems.running = false;
       });
     }
 
@@ -50050,13 +50519,6 @@ function RepeatManagerFactory($rootScope, $window, $$rAF) {
 
     function DynamicViewType() {
       var self = this;
-      var scrollViewSetDimensions = isVertical ?
-        function() {
-          scrollView.setDimensions(null, null, null, self.getContentSize(), true);
-        } :
-        function() {
-          scrollView.setDimensions(null, null, self.getContentSize(), null, true);
-        };
       var debouncedScrollViewSetDimensions = ionic.debounce(scrollViewSetDimensions, 25, true);
       var calculateDimensions = isGridView ? calculateDimensionsGrid : calculateDimensionsList;
       var dimensionsIndex;
@@ -50321,37 +50783,55 @@ function($timeout, $controller, $ionicBind, $ionicConfig) {
 
         if ($attr.scroll === "false") {
           //do nothing
-        } else if (attr.overflowScroll === "true" || !$ionicConfig.scrolling.jsScrolling()) {
-          // use native scrolling
-          $element.addClass('overflow-scroll');
         } else {
-          var scrollViewOptions = {
-            el: $element[0],
-            delegateHandle: attr.delegateHandle,
-            locking: (attr.locking || 'true') === 'true',
-            bouncing: $scope.$eval($scope.hasBouncing),
-            startX: $scope.$eval($scope.startX) || 0,
-            startY: $scope.$eval($scope.startY) || 0,
-            scrollbarX: $scope.$eval($scope.scrollbarX) !== false,
-            scrollbarY: $scope.$eval($scope.scrollbarY) !== false,
-            scrollingX: $scope.direction.indexOf('x') >= 0,
-            scrollingY: $scope.direction.indexOf('y') >= 0,
-            scrollEventInterval: parseInt($scope.scrollEventInterval, 10) || 10,
-            scrollingComplete: function() {
-              $scope.$onScrollComplete({
-                scrollTop: this.__scrollTop,
-                scrollLeft: this.__scrollLeft
-              });
-            }
-          };
+          var scrollViewOptions = {};
+
+          if (attr.overflowScroll === "true" || !$ionicConfig.scrolling.jsScrolling()) {
+            // use native scrolling
+            $element.addClass('overflow-scroll');
+
+            scrollViewOptions = {
+              el: $element[0],
+              delegateHandle: attr.delegateHandle,
+              startX: $scope.$eval($scope.startX) || 0,
+              startY: $scope.$eval($scope.startY) || 0,
+              nativeScrolling:true
+            };
+
+          } else {
+            // Use JS scrolling
+            scrollViewOptions = {
+              el: $element[0],
+              delegateHandle: attr.delegateHandle,
+              locking: (attr.locking || 'true') === 'true',
+              bouncing: $scope.$eval($scope.hasBouncing),
+              startX: $scope.$eval($scope.startX) || 0,
+              startY: $scope.$eval($scope.startY) || 0,
+              scrollbarX: $scope.$eval($scope.scrollbarX) !== false,
+              scrollbarY: $scope.$eval($scope.scrollbarY) !== false,
+              scrollingX: $scope.direction.indexOf('x') >= 0,
+              scrollingY: $scope.direction.indexOf('y') >= 0,
+              scrollEventInterval: parseInt($scope.scrollEventInterval, 10) || 10,
+              scrollingComplete: function() {
+                $scope.$onScrollComplete({
+                  scrollTop: this.__scrollTop,
+                  scrollLeft: this.__scrollLeft
+                });
+              }
+            };
+          }
+
+          // init scroll controller with appropriate options
           $controller('$ionicScroll', {
             $scope: $scope,
             scrollViewOptions: scrollViewOptions
           });
 
           $scope.$on('$destroy', function() {
-            scrollViewOptions.scrollingComplete = noop;
-            delete scrollViewOptions.el;
+            if (scrollViewOptions) {
+              scrollViewOptions.scrollingComplete = noop;
+              delete scrollViewOptions.el;
+            }
             innerElement = null;
             $element = null;
             attr.$$element = null;
@@ -50853,6 +51333,7 @@ function headerFooterBarDirective(isHeader) {
               var isSubheader = value.indexOf('bar-subheader') !== -1;
               $scope.$hasHeader = isShown && !isSubheader;
               $scope.$hasSubheader = isShown && isSubheader;
+              $scope.$emit('$ionicSubheader', $scope.$hasSubheader);
             });
             $scope.$on('$destroy', function() {
               delete $scope.$hasHeader;
@@ -50967,10 +51448,14 @@ IonicModule
     link: function($scope, $element, $attrs, ctrls) {
       var infiniteScrollCtrl = ctrls[1];
       var scrollCtrl = infiniteScrollCtrl.scrollCtrl = ctrls[0];
-      var jsScrolling = infiniteScrollCtrl.jsScrolling = !!scrollCtrl;
+      var jsScrolling = infiniteScrollCtrl.jsScrolling = !scrollCtrl.isNative();
+
       // if this view is not beneath a scrollCtrl, it can't be injected, proceed w/ native scrolling
       if (jsScrolling) {
         infiniteScrollCtrl.scrollView = scrollCtrl.scrollView;
+        $scope.scrollingType = 'js-scrolling';
+        //bind to JS scroll events
+        scrollCtrl.$element.on('scroll', infiniteScrollCtrl.checkBounds);
       } else {
         // grabbing the scrollable element, to determine dimensions, and current scroll pos
         var scrollEl = ionic.DomUtil.getParentOrSelfWithClass($element[0].parentNode,'overflow-scroll');
@@ -50979,14 +51464,10 @@ IonicModule
         if (!scrollEl) {
           throw 'Infinite scroll must be used inside a scrollable div';
         }
-      }
-      //bind to appropriate scroll event
-      if (jsScrolling) {
-        $scope.scrollingType = 'js-scrolling';
-        scrollCtrl.$element.on('scroll', infiniteScrollCtrl.checkBounds);
-      } else {
+        //bind to native scroll events
         infiniteScrollCtrl.scrollEl.addEventListener('scroll', infiniteScrollCtrl.checkBounds);
       }
+
       // Optionally check bounds on start after scrollView is fully rendered
       var doImmediateCheck = isDefined($attrs.immediateCheck) ? $scope.$eval($attrs.immediateCheck) : true;
       if (doImmediateCheck) {
@@ -51026,7 +51507,7 @@ var ITEM_TPL_CONTENT =
 * ```
 */
 IonicModule
-.directive('ionItem', function() {
+.directive('ionItem', ['$$rAF', function($$rAF) {
       var nextId = 0;
   return {
     restrict: 'E',
@@ -51064,15 +51545,22 @@ IonicModule
 
         var content = $element[0].querySelector('.item-content');
         if (content) {
-          $scope.$on('$collectionRepeatChange', function() {
-            content && (content.style[ionic.CSS.TRANSFORM] = 'translate3d(0,0,0)');
+          $scope.$on('$collectionRepeatLeave', function() {
+            if (content && content.$$ionicOptionsOpen) {
+              content.style[ionic.CSS.TRANSFORM] = '';
+              content.style[ionic.CSS.TRANSITION] = 'none';
+              $$rAF(function() {
+                content.style[ionic.CSS.TRANSITION] = '';
+              });
+              content.$$ionicOptionsOpen = false;
+            }
           });
         }
       };
 
     }
   };
-});
+}]);
 
 var ITEM_TPL_DELETE_BUTTON =
   '<div class="item-left-edit item-delete enable-pointer-events">' +
@@ -51109,7 +51597,7 @@ IonicModule
 .directive('ionDeleteButton', function() {
   return {
     restrict: 'E',
-    require: ['^ionItem', '^?ionList'],
+    require: ['^^ionItem', '^?ionList'],
     //Run before anything else, so we can move it before other directives process
     //its location (eg ngIf relies on the location of the directive in the dom)
     priority: Number.MAX_VALUE,
@@ -51124,8 +51612,13 @@ IonicModule
         container.append($element);
         itemCtrl.$element.append(container).addClass('item-left-editable');
 
-        if (listCtrl && listCtrl.showDelete()) {
-          container.addClass('visible active');
+        init();
+        $scope.$on('$ionic.reconnectScope', init);
+        function init() {
+          listCtrl = listCtrl || $element.controller('ionList');
+          if (listCtrl && listCtrl.showDelete()) {
+            container.addClass('visible active');
+          }
         }
       };
     }
@@ -51700,8 +52193,9 @@ IonicModule
     replace: true,
     controller: [function() {}],
     template: '<div class="modal-backdrop">' +
+                '<div class="modal-backdrop-bg"></div>' +
                 '<div class="modal-wrapper" ng-transclude></div>' +
-                '</div>'
+              '</div>'
   };
 }]);
 
@@ -52552,6 +53046,7 @@ IonicModule
  * of the refresher.
  * @param {expression=} on-pulling Called when the user starts to pull down
  * on the refresher.
+ * @param {string=} pulling-text The text to display while the user is pulling down.
  * @param {string=} pulling-icon The icon to display while the user is pulling down.
  * Default: 'ion-android-arrow-down'.
  * @param {string=} spinner The {@link ionic.directive:ionSpinner} icon to display
@@ -52591,10 +53086,11 @@ IonicModule
       // JS Scrolling uses the scroll controller
       var scrollCtrl = ctrls[0],
           refresherCtrl = ctrls[1];
-
-      if (!!scrollCtrl) {
+      if (!scrollCtrl || scrollCtrl.isNative()) {
+        // Kick off native scrolling
+        refresherCtrl.init();
+      } else {
         $element[0].classList.add('js-scrolling');
-
         scrollCtrl._setRefresher(
           $scope,
           $element[0],
@@ -52606,10 +53102,6 @@ IonicModule
             scrollCtrl.scrollView.finishPullToRefresh();
           });
         });
-
-      } else {
-        // Kick off native scrolling
-        refresherCtrl.init();
       }
 
     }
@@ -52951,7 +53443,6 @@ function($timeout, $ionicGesture, $window) {
               $element[0].style.width = '';
               content.offsetX = 0;
             }
-            ionic.trigger('resize', null, window);
           }),
           setMarginRight: ionic.animationFrameThrottle(function(amount) {
             if (amount) {
@@ -52980,6 +53471,9 @@ function($timeout, $ionicGesture, $window) {
 
         // add gesture handlers
         var gestureOpts = { stop_browser_behavior: false };
+        if (ionic.DomUtil.getParentOrSelfWithClass($element[0],'overflow-scroll')) {
+          gestureOpts.prevent_default_directions = ['left','right'];
+        }
         var contentTapGesture = $ionicGesture.on('tap', onContentTap, $element, gestureOpts);
         var dragRightGesture = $ionicGesture.on('dragright', onDragX, $element, gestureOpts);
         var dragLeftGesture = $ionicGesture.on('dragleft', onDragX, $element, gestureOpts);
@@ -53610,6 +54104,7 @@ function($compile, $ionicConfig, $ionicBind, $ionicViewSwitcher) {
         var tabsCtrl = ctrls[0];
         var tabCtrl = ctrls[1];
         var isTabContentAttached = false;
+        $scope.$tabSelected = false;
 
         $ionicBind($scope, $attr, {
           onSelect: '&',
@@ -53864,9 +54359,9 @@ function($ionicTabsDelegate, $ionicConfig, $ionicHistory) {
 
         function emitLifecycleEvent(ev, data) {
           ev.stopPropagation();
-          var selectedTab = tabsCtrl.selectedTab();
-          if (selectedTab) {
-            selectedTab.$emit(ev.name.replace('NavView', 'View'), data);
+          var previousSelectedTab = tabsCtrl.previousSelectedTab();
+          if (previousSelectedTab) {
+            previousSelectedTab.$broadcast(ev.name.replace('NavView', 'Tabs'), data);
           }
         }
 
