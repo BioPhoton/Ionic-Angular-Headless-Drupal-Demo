@@ -234,25 +234,25 @@ CommentResourceModules.service('CommentResourceChannel', ['$rootScope', 'Comment
 	   //Retrieve event
 	   publishCommentRetrieveConfirmed		: publishCommentRetrieveConfirmed,
 	   onCommentRetrieveConfirmed			: onCommentRetrieveConfirmed,
-	   publishCommentRetrieveFailed			: publishCommentRetrieveFailed,
-	   onCommentRetrieveFailed 				: onCommentRetrieveFailed,
+	   publishCommentRetrieveFailed		: publishCommentRetrieveFailed,
+	   onCommentRetrieveFailed 			: onCommentRetrieveFailed,
 	  // Create action
 	   publishCommentCreateConfirmed		: publishCommentCreateConfirmed,
-	   onCommentCreateConfirmed				: onCommentCreateConfirmed,
+	   onCommentCreateConfirmed			: onCommentCreateConfirmed,
 	   publishCommentCreateFailed			: publishCommentCreateFailed,
 	   onCommentCreateFailed 				: onCommentCreateFailed,
 	   // Update action
 	   publishCommentUpdateConfirmed		: publishCommentUpdateConfirmed,
-	   onCommentUpdateConfirmed				: onCommentUpdateConfirmed,
+	   onCommentUpdateConfirmed			: onCommentUpdateConfirmed,
 	   publishCommentUpdateFailed			: publishCommentUpdateFailed,
 	   onCommentUpdateFailed 				: onCommentUpdateFailed,
 	   // Delete action
 	   publishCommentDeleteConfirmed		: publishCommentDeleteConfirmed,
-	   onCommentDeleteConfirmed				: onCommentDeleteConfirmed,
+	   onCommentDeleteConfirmed			: onCommentDeleteConfirmed,
 	   publishCommentDeleteFailed			: publishCommentDeleteFailed,
 	   onCommentDeleteFailed 				: onCommentDeleteFailed,
 	   // Index action
-	   publishCommentIndexConfirmed			: publishCommentIndexConfirmed,
+	   publishCommentIndexConfirmed		: publishCommentIndexConfirmed,
 	   onCommentIndexConfirmed				: onCommentIndexConfirmed,
 	   publishCommentIndexFailed			: publishCommentIndexFailed,
 	   onCommentIndexFailed 				: onCommentIndexFailed,
@@ -264,8 +264,8 @@ CommentResourceModules.service('CommentResourceChannel', ['$rootScope', 'Comment
 	   // CountNew action
 	   publishCommentCountNewConfirmed		: publishCommentCountNewConfirmed,
 	   onCommentCountNewConfirmed			: onCommentCountNewConfirmed,
-	   publishCommentCountNewFailed			: publishCommentCountNewFailed,
-	   onCommentCountNewFailed 				: onCommentCountNewFailed,
+	   publishCommentCountNewFailed		: publishCommentCountNewFailed,
+	   onCommentCountNewFailed 			: onCommentCountNewFailed,
 
  	};
 }]);

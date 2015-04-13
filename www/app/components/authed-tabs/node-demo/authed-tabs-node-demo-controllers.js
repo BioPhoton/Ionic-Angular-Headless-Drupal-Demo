@@ -279,7 +279,7 @@ authedTabsNodeDemoControllers.controller('NodeEditCtrl', function($scope, $state
 		 NodeResource.update($scope.nid, $scope.dirtyPage).then(
 				   //success
 				   function(data) {
-					   //$state.go('app.authed-tabs.node-list');
+					   $state.go('app.authed-tabs.node-list');
 				   },
 				   //error
 				   function(data) { 
