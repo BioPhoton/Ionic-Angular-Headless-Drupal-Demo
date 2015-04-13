@@ -15,7 +15,7 @@
 
   <ion-content>
    
-    <ion-refresher on-refresh="doRefresh()"></ion-refresher>
+  <ion-refresher on-refresh="doRefresh()"></ion-refresher>
 
 <style>
 .item {
@@ -27,8 +27,8 @@
 	<ion-list show-delete="listOptions.showDelete" can-swipe="true">
 	
 	<ion-item collection-item-width="'100%'" ng-repeat="node in nodes" class="item-icon-right item-spinner-right" >
-		    <h2>{{node.title}} {{loadingDetail}}</h2>
-		    <p>{{node.type}} - {{node.created | date}}</p>
+		    <h2>{{node.title}} {{node.nid}}</h2>
+		    <p>{{node.type}} - {{node.created * 1000 | date}}</p>
 		    
 		    <ion-spinner ng-show="loadingDetail == node.nid"></ion-spinner>
 		    <i ng-show="loadingDetail != node.nid" class="icon " ng-class="loadingDetail != node.nid?'ion-ios-arrow-right':'ion-load-d icon-spin'" ng-click="openNode(node.nid)" ></i>  

@@ -39,12 +39,13 @@ drupalBaseModules.factory('BaseResource', ['BaseResourceConfig',  function(baseR
 			if(key === false) {return false;}
 		} else { return false; }
 		
+		
+		values = (values || values === 0)?values:false;
+		
 		//validate values
-		if(values) { 
-			values = (values || values === 0)?values:false;
-			if(values === false) {return false;}
-			else if (Object.getOwnPropertyNames(values).length <= 0 && parseInt(values) === NaN) { return false; }
-		} else { return false; }
+		if(values === false) {return false;}
+		else if (Object.getOwnPropertyNames(values).length <= 0 && parseInt(values) === NaN) { return false; }
+		
 		
 		 
 		//normal param
@@ -57,6 +58,7 @@ drupalBaseModules.factory('BaseResource', ['BaseResourceConfig',  function(baseR
 		if(!formats[format]) { 
 			return false; 
 		}
+		
 		
 		//json
 		//example: exposed_filter=value

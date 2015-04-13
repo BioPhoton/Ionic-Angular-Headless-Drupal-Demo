@@ -215,7 +215,6 @@ drupalIonicAngularJSAPIClient
 	        },
 	         resolve: {
 	              userObj: function (ApiAuthService) {
-	            	  console.log(ApiAuthService.getCurrentUser()); 
 	                return ApiAuthService.getCurrentUser();
 	              }
 	            }
@@ -230,11 +229,11 @@ drupalIonicAngularJSAPIClient
 	          }
 	        },
 	        resolve : {
-	        	pageFirst : function () {return 0;},
-	        	pageSize :function () {return 5;},
+	        	pageFirst : function () {return 1;},
+	        	pageSize :function () {return 10;},
 	        	
 	        	newNodes : function (NodeResource,pageFirst,pageSize) {
-	        		return NodeResource.index( pageFirst,null,null,pageSize);
+	        		return NodeResource.index({page:pageFirst,pageSize: pageSize});
 	        	}
 	        }
 	      })

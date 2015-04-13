@@ -117,10 +117,13 @@ NodeResourceModules.service('NodeResourceChannel', ['$rootScope', 'NodeResourceC
     
 	// Publish node update confirmed event
     var publishNodeUpdateConfirmed = function (node) {
+    	console.log(NodeResourceConfig.node_updateConfirmed); 
         $rootScope.$broadcast(NodeResourceConfig.node_updateConfirmed, {node: node});
     };
     // Subscribe to node update confirmed event
     var onNodeUpdateConfirmed = function($scope, handler) {
+    	console.log(NodeResourceConfig.node_updateConfirmed);
+    	console.log('ASDF');
     	$scope.$on(NodeResourceConfig.node_updateConfirmed, function(event, args) {
 	    handler(args.node);
 	   });	
@@ -474,6 +477,7 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'BaseResource',
 
 		$http(requestConfig)
 		.success(function(data, status, headers, config){
+			console.log('resource publishNodeUpdateConfirmed'); 
 			NodeResourceChannel.publishNodeUpdateConfirmed(data);
 			defer.resolve(data);
 		})

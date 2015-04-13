@@ -7636,6 +7636,10 @@ a.button {
   -ms-flex-align: center;
   align-items: center; }
 
+.spinner.spinner-small svg {
+  width: 20px;
+  height: 20px; }
+
 .item-spinner-left .spinner, .item-spinner-right .spinner {
   display: -webkit-box;
   display: -webkit-flex;
