@@ -485,6 +485,8 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'BaseResource',
 	// define a new internal private method for this object
     function prepareIndexGetParams(options) {
 
+    	if(!options)  { return; }
+    	
     	var type = undefined;
 		//prepare and set optional params
 		angular.forEach(options, function(value , key) {
@@ -711,8 +713,10 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'BaseResource',
 	var index = function( options ) {
 		
 		var indexPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath;
-		indexPath += (Object.getOwnPropertyNames(options).length > 0)?'?':'';
-		indexPath += prepareIndexGetParams(options); 
+		if(options) {
+			indexPath += (Object.getOwnPropertyNames(options).length > 0)?'?':'';
+			indexPath += prepareIndexGetParams(options); 
+		}
 		
 		var defer = $q.defer(),
 		requestConfig = {

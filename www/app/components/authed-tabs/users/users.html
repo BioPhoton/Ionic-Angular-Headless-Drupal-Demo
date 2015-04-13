@@ -1,16 +1,16 @@
 <ion-view title="Users">
-  <ion-content class="ionic">
-             
-      
-            
+  
       <swipe-cards>
       <swipe-card on-card-swipe="cardSwiped()" id="start-card">
         Swipe down for a new card
       </swipe-card>
+      
+      {{userList}}
+      
       <swipe-card ng-repeat="user in userList" on-destroy="cardDestroyed($index)" on-card-swipe="cardSwiped($index)">
         <div ng-controller="CardCtrl">
           <div class="title">
-            {{user.title}}
+            {{user.name}}
           </div>
           <div class="image">
             <img ng-src="{{user.image}}">
@@ -22,7 +22,5 @@
         </div>
       </swipe-card>
     </swipe-cards>
-            
-             
-  </ion-content>
+
 </ion-view>
