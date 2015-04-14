@@ -15,7 +15,7 @@
         </div>
 
         <label class="item item-input"
-               ng-class="{ 'has-error' : registerForm.name.$invalid && registerForm.name.$dirty}">
+               ng-class="{ 'has-error' : registerForm.name.$invalid && registerForm.$submitted}">
           <input type="text" 
                  ng-model="registerData.name" 
                  placeholder="Username" 
@@ -27,14 +27,14 @@
         </label>
 
         <div class="form-errors" 
-             ng-show="registerForm.name.$invalid && registerForm.name.$dirty"
+             ng-show="registerForm.name.$invalid && registerForm.$submitted"
              ng-messages="registerForm.name.$error" 
-             ng-messages-include="templates/form-errors.html"
              >
+            <div class="form-error" ng-message="required">This field is required.</div>
         </div>
 
         <label class="item item-input"
-               ng-class="{ 'has-error' : registerForm.mail.$invalid && registerForm.mail.$dirty}">
+               ng-class="{ 'has-error' : registerForm.mail.$invalid && registerForm.$submitted}">
           <input type="email" 
                  placeholder="Email Address" 
                  name="mail"  
@@ -44,15 +44,13 @@
         </label>
 
         <div class="form-errors" 
-             ng-show="registerForm.mail.$invalid && registerForm.mail.$dirty"
-             ng-messages="registerForm.mail.$error"
-             ng-messages-include="templates/form-errors.html"
-             >
+             ng-show="registerForm.mail.$invalid && registerForm.$submitted"
+             ng-messages="registerForm.mail.$error">
           <div class="form-error" ng-message="mail">Not a valid mail address.</div>
         </div>
 
         <label class="item item-input"
-               ng-class="{ 'has-error' : registerForm.pass.$invalid && registerForm.pass.$dirty}">
+               ng-class="{ 'has-error' : registerForm.pass.$invalid && registerForm.$submitted}">
           <input type="password"
                  placeholder="Password" 
                  name="pass" 
@@ -62,10 +60,10 @@
         </label>
 
         <div class="form-errors"
-             ng-show="registerForm.pass.$invalid && registerForm.pass.$dirty"
+             ng-show="registerForm.pass.$invalid && registerForm.$submitted"
              ng-messages="registerForm.pass.$error" 
-             ng-messages-include="templates/form-errors.html"
              >
+             <div class="form-error" ng-message="required">This field is required.</div>
         </div>
         <button class="button button-block button-positive" ng-click="showTermsModal()">Click to read terms and conditions</button>
         <li class="item item-toggle">
@@ -98,9 +96,5 @@
       </ion-list>
 
     </form>
-    <!-- general messages -->
-    <script id="templates/form-errors.html" type="text/ng-template">
-      <div class="form-error" ng-message="required">This field is required.</div>
-    </script>
   </ion-content>
 </ion-view>

@@ -49,14 +49,6 @@ tourControllers.controller('TourCtrl', ['$rootScope', '$scope', '$state', '$loca
   $scope.previous = function() {
     $ionicSlideBoxDelegate.previous();
   };
-  
-  $scope.showBonus = function() {
-	$scope.data.slides.push({
-		        'template' : 'app/components/tour/slides/fourthSlide.html',
-		        'viewable' : true
-	});
-    $ionicSlideBoxDelegate.update();
-  };
 
   // Called each time the slide changes
   $scope.slideChanged = function(index) {
