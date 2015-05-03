@@ -388,7 +388,7 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'BaseResource',
 	/*
 	 * create
 	 * 
-	 * Retrieve a node
+	 * Creates a node
 	 * Method: POST
 	 * Url: http://drupal_instance/api_endpoint/node
 	 * Headers: Content-Type:application/json
@@ -437,12 +437,12 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'BaseResource',
 	/*
 	 * update
 	 * 
-	 * Update a user
+	 * Update a node
 	 * Method: PUT
 	 * Url: http://drupal_instance/api_endpoint/node/{NID}
 	 * Headers: Content-Type:application/json
 	 * 
-	 * @param 	{Integer} uid The nid of the node to update, required:true, source:path
+	 * @param 	{Integer} nid The nid of the node to update, required:true, source:path
 	 * @param 	{Array} data The node data to update, required:true, source:post body
 	 * 
 	 * @return 	{Promise}
@@ -556,8 +556,11 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'BaseResource',
 	var index = function(options) {
 	
 		var indexPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath;
-		indexPath +=  (Object.getOwnPropertyNames(options).length > 0)?'?':'';
-		indexPath += prepareIndexGetParams(options);
+		
+		if(options) {
+			indexPath +=  (Object.getOwnPropertyNames(options).length > 0)?'?':'';
+			indexPath += prepareIndexGetParams(options);
+		}
 		
 		var defer = $q.defer(),
 		requestConfig = {
@@ -650,6 +653,7 @@ NodeResourceModules.service('NodeResource', [ 'drupalApiConfig', 'BaseResource',
 	 * @return 	{Promise}
 	 * 
 	 */
+	//@TODO group count and offset in options param
 	var comments = function(nid, count, offset) {
 		
 		var attachFilePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + NodeResourceConfig.resourcePath + '/' + nid +'/' + NodeResourceConfig.actions.comments + '/' + ((count != undefined ||  offset != undefined)?'?':'')+ ((count != undefined)?('count='+count+','):'') + ((offset != undefined)?('offset=' + offset):''),

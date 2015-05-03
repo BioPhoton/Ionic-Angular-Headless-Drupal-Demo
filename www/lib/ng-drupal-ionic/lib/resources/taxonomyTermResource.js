@@ -356,7 +356,7 @@ TaxonomyTermResourceModules.service('TaxonomyTermResource', [ '$rootScope','drup
 			TaxonomyTermResourceChannel.publishTaxonomyTermCreateConfirmed(data);
 			defer.resolve(data);
 		})
-		.error(function(err){
+		.error(function(data){
 			TaxonomyTermResourceChannel.publishTaxonomyTermCreateFailed(data);
 			defer.reject(data);
 		});

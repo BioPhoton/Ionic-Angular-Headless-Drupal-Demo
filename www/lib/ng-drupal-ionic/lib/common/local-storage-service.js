@@ -1,4 +1,4 @@
-var localstorageServices = angular.module('common.services.localstorage', []);
+var localstorageServices = angular.module('common.localstorage', []);
 
 localstorageServices.factory('$localstorage', ['$window',
   function ($window) {

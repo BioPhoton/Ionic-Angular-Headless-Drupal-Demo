@@ -134,8 +134,11 @@ ViewsResourceModules.factory('ViewsResource', [   'ViewsResourceConfig', 'BaseRe
 		var self = this;
 		
 		var retrievePath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + ViewsResourceConfig.resourcePath + '/' + view_name; 
-		retrievePath +=  (Object.getOwnPropertyNames(options).length > 0)?'?':'';
-		retrievePath += prepareRetrieveGetParams(options);
+		
+		if(options) {
+			retrievePath +=  (Object.getOwnPropertyNames(options).length > 0)?'?':'';
+			retrievePath += prepareRetrieveGetParams(options);
+		}
 		
 		requestConfig = {
  			method: 'GET',

@@ -715,9 +715,9 @@ UserResourceModules.service('UserResource', [ 'drupalApiConfig', 'BaseResource',
 		var indexPath = drupalApiConfig.drupal_instance + drupalApiConfig.api_endpoint + UserResourceConfig.resourcePath;
 		if(options) {
 			indexPath += (Object.getOwnPropertyNames(options).length > 0)?'?':'';
-			indexPath += prepareIndexGetParams(options); 
+			indexPath += prepareIndexGetParams(options);
 		}
-		
+		 
 		var defer = $q.defer(),
 		requestConfig = {
 			method :'GET',
