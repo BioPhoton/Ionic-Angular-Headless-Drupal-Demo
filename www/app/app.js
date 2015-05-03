@@ -8,7 +8,7 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'drupalIonicAngularJSAPIClient.configuration',
 
   'common.accesss-control',
-  'common.services.localstorage',
+  'common.localstorage',
   'ApiAuthModules',
   
   'app.controllers',
@@ -19,7 +19,6 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
   'login.controllers',
   'logout.controllers',
   'register.controllers',
-
 
   'authed-tabs.node-demo.controllers',
   'authed-tabs.users.controllers',
