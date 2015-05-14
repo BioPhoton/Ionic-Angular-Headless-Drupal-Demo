@@ -1,6 +1,9 @@
 # Drupal-Ionic-AngularJS-API-Client
 This repo is all about making clientside authed rest-calls easy to use.
 
+# Demo
+http://www.drupalionic.org/app_demo/www/index.html
+
 # Features
 ## Show tour on first visit only
 ## Redirects for new and registered users
@@ -13,7 +16,7 @@ This repo is all about making clientside authed rest-calls easy to use.
 - token (local storage or server)
 - connect 
 - start routing
-???
+
 
 #install
 npm install cordova gulp ionic
