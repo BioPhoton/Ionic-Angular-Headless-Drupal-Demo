@@ -1,7 +1,7 @@
 # Drupal-Ionic-AngularJS-API-Client
 Headless / Decoupled Drupal with AngularJs and the Ionic Framework / SDK
 
-This repo shows usecases of the [ng-drupal7-services](http://google.com) project.
+This repo shows usecases of the [ng-drupal7-services](https://github.com/BioPhoton/ng-drupal7-services) project.
 
 # Demo
 http://www.drupalionic.org/app_demo/www/index.html
