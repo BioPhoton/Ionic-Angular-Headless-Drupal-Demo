@@ -1,9 +1,9 @@
 # Drupal-Ionic-AngularJS-API-Client
 Headless / Decoupled Drupal with AngularJs and the Ionic Framework / SDK
 
-This repo shows usecases of the [ng-drupal7-services](https://github.com/BioPhoton/ng-drupal7-services) project.
+This project shows usecases of the [ng-drupal7-services](https://github.com/BioPhoton/ng-drupal7-services) project.
 
-# Demo
+# Live Demo
 http://www.drupalionic.org/app_demo/www/index.html
 
 # Features
@@ -15,6 +15,7 @@ http://www.drupalionic.org/app_demo/www/index.html
 
 #install
 npm install cordova gulp ionic
+
 ##Dependencies
 $ bower install ngCordova -save
 $ bower install angular-cookie -save
@@ -23,27 +24,3 @@ $ bower install https://github.com/BioPhoton/ng-drupal7-services.git -save
 
 ##Plugins
 $ cordova plugin add org.apache.cordova.network-information
-
-
-##Drupal
-#Modules
-install services 3
-services views
-
-#Config export for services module
-
-#account settungs
-uncheck require email confirm
-
-
-ApiClient config
-```
-drupalIonicAngularJSAPIClient
-	.config( function (  drupalApiConfig ) {
-		drupalApiConfig.api_endpoint += 'v1/';
-});
-```
-
-##Debugging
-
-Projectname => Ensure this value has maximum 32 characters
