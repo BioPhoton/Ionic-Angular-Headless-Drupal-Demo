@@ -20,7 +20,7 @@ npm install cordova gulp ionic
 $ bower install ngCordova -save
 $ bower install angular-cookie -save
 $ bower install angular-messages -save
-$ bower install https://github.com/BioPhoton/ng-drupal7-services.git -save
+$ bower install https://github.com/BioPhoton/ng-drupal-7-services/tree/1.0.2 -save
 
 ##Plugins
 $ cordova plugin add org.apache.cordova.network-information
