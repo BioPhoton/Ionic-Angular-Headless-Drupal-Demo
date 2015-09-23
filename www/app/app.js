@@ -111,7 +111,7 @@ drupalIonicAngularJSAPIClient
 		
 		//Configure ng-drupal-ionic
 		//edit drupal config
-		drupalApiConfig.drupal_instance = 'http://www.drupalionic.org/backend/';
+		drupalApiConfig.drupal_instance = 'http://www.drupalionic.org/drupal_demo/';
 		drupalApiConfig.api_endpoint += 'v1/';
 		
 		//edit accessControl config
