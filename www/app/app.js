@@ -22,7 +22,6 @@ var drupalIonicAngularJSAPIClient = angular.module('drupalIonicAngularJSAPIClien
 
 
   'authed-tabs.node-demo.controllers',
-  'authed-tabs.users.controllers',
   'authed-tabs.profile.controllers',
 ]);
 
@@ -156,7 +155,7 @@ drupalIonicAngularJSAPIClient
            
           })
                     
-           .state('app.no-network', {
+          .state('app.no-network', {
             url: '/no-network',
             views: {
             	'menuContent': {
@@ -164,7 +163,7 @@ drupalIonicAngularJSAPIClient
             		controller : 'NoNetworkCtrl'
             	} 
             }
-            })
+          })
           
           //
           //stats for anonymouse user
@@ -218,25 +217,6 @@ drupalIonicAngularJSAPIClient
 	              userObj: function (ApiAuthService) {
 	                return ApiAuthService.getCurrentUser();
 	              }
-	            }
-	      })
-	      
-	       .state('app.authed-tabs.users', {
-	        url : "/users",
-	        cache : false,
-	        views : {
-	          'users-tab' : {
-	            templateUrl : "app/components/authed-tabs/users/users.html",
-	            controller  : 'authedTabUsersCtrl'
-	          }
-	        },
-	         resolve: {
-	        	    pageFirst : function () {return 1;},
-		        	pageSize :function () {return 10;},
-		        	
-		        	newUsers : function (UserResource,pageFirst,pageSize) {
-		        		return UserResource.index({page : pageFirst, pageSize : pageSize});
-		        	}
 	            }
 	      })
 	     
