@@ -21,7 +21,11 @@ npm install cordova gulp ionic
 $ bower install ngCordova -save
 $ bower install angular-cookie -save
 $ bower install angular-messages -save
+
 ipCookies
+
+$ bower install https://github.com/BioPhoton/ng-drupal-7-services/tree/1.0.2 -save
+
 ##Plugins
 $ cordova plugin add org.apache.cordova.network-information
 
@@ -41,10 +45,10 @@ drupalIonicAngularJSAPIClient
 
 ##Session expiration
 //https://api.drupal.org/api/drupal/includes!common.inc/function/drupal_http_request/7
-- 401 Unauthorizedâ€Šâ€”â€ŠThe user is not logged in
-- 403 Forbiddenâ€Šâ€”â€ŠThe user is logged in but isnâ€™t allowed access
-- 419 Authentication Timeout (non standard)â€Šâ€”â€ŠSession has expired
-- 440 Login Timeout (Microsoft only)â€Šâ€”â€ŠSession has expired
+- 401 UnauthorizedÃ¢â‚¬Å Ã¢â‚¬â€�Ã¢â‚¬Å The user is not logged in
+- 403 ForbiddenÃ¢â‚¬Å Ã¢â‚¬â€�Ã¢â‚¬Å The user is logged in but isnÃ¢â‚¬â„¢t allowed access
+- 419 Authentication Timeout (non standard)Ã¢â‚¬Å Ã¢â‚¬â€�Ã¢â‚¬Å Session has expired
+- 440 Login Timeout (Microsoft only)Ã¢â‚¬Å Ã¢â‚¬â€�Ã¢â‚¬Å Session has expired
 
 ##Debugging
 Wrong username or password => require email confirm checked in drupal
@@ -77,6 +81,6 @@ Therefore the cookie saved is $cookie[session_name] = session_id
 This cookie is used to validate the session on drupal when doing a authenticated request
 Angularjs *does not* automatically save cookies and use them when doing requests
 Therefore on login we need to save the cookie and use it when doing requests.
-*Chrome does this automatically, itÃ¢â‚¬â„¢s for Safari and Firefox and for iPhones
+*Chrome does this automatically, itÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s for Safari and Firefox and for iPhones
 
 Tokens
