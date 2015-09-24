@@ -1,6 +1,6 @@
 # Drupal-Ionic-AngularJS-API-Client
 This repo is all about making clientside authed rest-calls easy to use.
-
+(working version in branch 1.0.1)
 # Features
 ## Show tour on first visit only
 ## Redirects for new and registered users
