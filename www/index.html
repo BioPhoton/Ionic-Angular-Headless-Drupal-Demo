@@ -5,67 +5,37 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
 
+
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
-    <link href="lib/ionic-material/src/css/elements/hero.css" rel="stylesheet">
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
-    <!-- angularjs modules js -->
-    <script src="lib/angular-cookie/angular-cookie.min.js"></script>
-    <script src="lib/angular-messages/angular-messages.min.js"></script> 
-  
+   
+    <!-- bower components -->
+    <script src="/lib/ngstorage/ngStorage.js"></script>
+
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
 
+	<!-- app components -->
+	<script src="app/app.controller.js"></script>	
+	<script src="app/components/tour/tour.controller.js"></script>	
+		
     <!-- your app's js -->
+    <script src="app/app.routes.js"></script>
     <script src="app/app.js"></script>
-    <script src="app/app-controllers.js"></script>
-    <script src="app/config.js"></script>
     
-     <!-- ionic directives -->
-     <script src="lib/ionic-ion-swipe-cards/ionic.swipecards.js"></script>
     
-    <!-- common js -->
-    <script src="app/common/directives/common-directives.js"></script>
-    <!-- ng-drupal-ionic -->
-    <!-- ng-drupal-ionic commons-->
-    <script src="lib/ng-drupal-ionic/lib/common/drupalApiConfig.js"></script>    
-    <script src="lib/ng-drupal-ionic/lib/common/local-storage-service.js"></script>
-    <script src="lib/ng-drupal-ionic/lib/common/access-control.js"></script>
-    <!-- ng-drupal-ionic resources-->
-    <script src="lib/ng-drupal-ionic/lib/resources/baseResource.js"></script>
-    <script src="lib/ng-drupal-ionic/lib/resources/systemResource.js"></script> 
-    <script src="lib/ng-drupal-ionic/lib/resources/userResource.js"></script>
-    <script src="lib/ng-drupal-ionic/lib/resources/nodeResource.js"></script>
-    <script src="lib/ng-drupal-ionic/lib/resources/taxonomyTermResource.js"></script>
-    <script src="lib/ng-drupal-ionic/lib/resources/taxonomyVocabularyResource.js"></script>
-    <script src="lib/ng-drupal-ionic/lib/resources/commentResource.js"></script>
-    <script src="lib/ng-drupal-ionic/lib/resources/fileResource.js"></script>
-    <script src="lib/ng-drupal-ionic/lib/resources/viewsResource.js"></script>
-    <script src="lib/ng-drupal-ionic/lib/resources/apiAuthService.js"></script>
-    
-    <!-- anonymouse user js -->
-    <script src="app/components/tour/tour-controllers.js"></script>
-    <script src="app/components/no-network/no-network-controllers.js"></script>
-    <script src="app/components/login/login-controllers.js"></script>
-    <script src="app/components/logout/logout-controllers.js"></script>
-    <script src="app/components/register/register-controllers.js"></script>
-    
-    <!-- authenticated user js -->
-    <script src="app/components/authed-tabs/node-demo/authed-tabs-node-demo-controllers.js"></script>
-    <script src="app/components/authed-tabs/profile/tabs-profile-controllers.js"></script>
-
   </head>
+  <body ng-app="drupalionicDemo">
 
-  <body ng-app="drupalIonicAngularJSAPIClient">
-  
     <ion-nav-bar class="nav-title-slide-ios7 bar-light">
         <ion-nav-back-button class="button-icon ion-arrow-left-c">
         </ion-nav-back-button>
     </ion-nav-bar>
     
-  <ion-nav-view></ion-nav-view>
-</body>
+  	<ion-nav-view></ion-nav-view>
+   
+  </body>
 </html>

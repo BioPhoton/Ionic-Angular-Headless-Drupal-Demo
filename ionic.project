@@ -1,6 +1,6 @@
 {
-  "name": "ng-drupal-services-demo",
-  "app_id": "2308ee45",
+  "name": "Ionic-Headless-Drupal-Demo",
+  "app_id": "",
   "gulpStartupTasks": [
     "sass",
     "watch"
