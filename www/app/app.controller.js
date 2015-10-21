@@ -6,15 +6,15 @@ angular
     .module('drupalionicDemo.app.controller', [])
     .controller('AppController', AppController);
 
-	AppController.$inject = ['$scope'];
+	AppController.$inject = ['$state'];
 
 	/** @ngInject */ 
-	function AppController($scope ) 
+	function AppController($state ) 
 	{ 
 		// jshint validthis: true 
 		var vm = this;
 	    
-		vm.t = 'SDF';
+		vm.$state = $state;
 		
 		
 		///////////////////////

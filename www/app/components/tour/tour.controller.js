@@ -3,29 +3,26 @@
 
 
 angular
-    .module('drupalionicDemo.tour.controller', [])
+    .module('drupalionicDemo.tour.controller', ['ngStorage'])
     .controller('TourController', TourController);
 
-	TourController.$inject = ['$scope'];
+	TourController.$inject = ['$scope', '$localStorage'];
 
 	/** @ngInject */ 
-	function TourController($scope) 
+	function TourController($scope, $localStorage) 
 	{ 
 		// jshint validthis: true 
 		var vm = this;
 		
-		vm.start = 'SDF';
-		//$scope.start = 'scope';
+		vm.start = start;
 		
 		///////////////////////
 	    	
 		
 		function start() {
-	    	alert('ASDF'); 
-		      $localstorage.setItem('firstVisit', true);
-		      $rootScope.firstVisit = true;
-		      $state.go('app.register');
-		    }
+			$localStorage.firstVisit = true;
+			$scope.app.$state.go('app.register');
+	    }
 		
 		
 	};

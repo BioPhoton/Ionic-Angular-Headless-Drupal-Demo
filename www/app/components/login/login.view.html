@@ -1,0 +1,41 @@
+<ion-view title="Login">
+  <ion-nav-buttons side="primary">
+       <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+  </ion-nav-buttons>
+      
+  <ion-content>
+    <form name="loginForm" novalidate="" ng-submit="login(loginForm)">
+		
+      <ion-list>
+        <label class="item item-input" ng-class="{ 'has-error' : loginForm.username.$invalid && loginForm.$submitted, 'valid' : loginForm.password.$valid && loginForm.$submitted}">
+          <input ng-init="loginData.username = 'basic-user'" type="text" placeholder="Username" name="username" ng-model="loginData.username" autocorrect="off" autocapitalize="off" spellcheck="false" required>
+        </label>
+           <div class="form-errors"
+             ng-show="loginForm.username.$invalid && loginForm.$submitted"
+             ng-messages="registerForm.username.$error" 
+             >
+             <div class="form-error" ng-message="required">This field is required.</div>
+        	</div>
+        <label class="item item-input" ng-class="{ 'has-error' : loginForm.password.$invalid && loginForm.$submitted, 'valid' : loginForm.password.$valid && loginForm.$submitted}">
+          <input ng-init="loginData.password = 'basic-user'" type="password" placeholder="Password" name="password" ng-model="loginData.password" required>
+        </label>
+           <div class="form-errors"
+             ng-show="loginForm.password.$invalid && loginForm.$submitted"
+             ng-messages="registerForm.password.$error" 
+             >
+             <div class="form-error" ng-message="required">This field is required.</div>
+       	 	</div>
+
+        <div class="form-errors" ng-show="loginForm.$submitted">
+          <div class="form-error" ng-bind-html="error" ng-repeat="error in loginServerErrors" ></div>
+        </div>
+
+        <div class="button-bar" >
+          <button class="button button-block button-positive button-spinner" ><span ng-if="!loginIsPending" >Log in</span><span ng-if="loginIsPending">Logging in</span>  <ion-spinner ng-if="loginIsPending"></ion-spinner> </button>
+        </div>
+        
+        <a class="button button-block button-positive"  ui-sref="app.register">Not got an account? Create one now</a>
+      </ion-list>
+    </form>
+  </ion-content>
+</ion-view>

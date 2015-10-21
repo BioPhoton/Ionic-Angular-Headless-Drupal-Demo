@@ -7,13 +7,13 @@
 	  </ion-nav-buttons>
 	  
 	  <ion-nav-buttons side="right"> 
-	    <button class="button button-positive button-clear no-animation" ng-click="next()" ng-if="data.slideIndex < data.numViewableSlides - 1">
-	    Next
+	    <button id="skip" class="button button-positive no-animation" ng-click="tour.start()">
+	    	Skip Tour
 	    </button>
 	  </ion-nav-buttons>
 	  
   </ion-nav-bar>
-	   <ion-slide-box class="has-footer" ng-class="has-message" show-pager="true"  on-slide-changed="slideChanged(index)">
+	   <ion-slide-box class="has-header" ng-class="has-message" show-pager="true"  on-slide-changed="slideChanged(index)">
 		   <ion-slide>
 		     	<h1>First Slide!</h1>
 				<p class="padding">Some text here</p>
@@ -27,11 +27,5 @@
 				<p class="padding">Some text also here</p>
 		   </ion-slide>
 	   </ion-slide-box>
-	  	
-
-	  	 <button class="button button-positive"  ng-click="tour.start()" >
-		 	Skip Tour
-		 </button>
-
 
 </ion-view>

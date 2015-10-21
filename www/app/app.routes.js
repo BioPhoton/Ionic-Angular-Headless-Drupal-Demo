@@ -1,7 +1,10 @@
 ;(function() {
     'use strict';
 
-    angular.module('drupalionicDemo.routes', ['drupalionicDemo.app.controller', 'drupalionicDemo.tour.controller']) 
+    angular.module('drupalionicDemo.routes', ['drupalionicDemo.app.controller', 
+                                              'drupalionicDemo.tour.controller', 
+                                              'drupalionicDemo.register.controller', 
+                                              'drupalionicDemo.login.controller']) 
     .config(configFunction);
 
     configFunction.$inject = ['$stateProvider', '$urlRouterProvider'];
@@ -17,8 +20,7 @@
             url: "/app",
             abstract: true,
             templateUrl		: "app/app.view.html",
-            controller		: 'AppController',
-            controllerAs 	: 'app'
+            controller		: 'AppController as app'
           })
 	    
 	    .state('app.tour', {
@@ -29,7 +31,29 @@
                      controller		: 'TourController as tour',
             	}
             } 
-       });
+       })
+       
+       .state('app.login', {
+            url: '/login',
+            views : {
+            	'menuContent' : {
+            		 templateUrl	: 'app/components/login/login.view.html',
+                     controller		: 'LoginController as login',
+            	}
+            } 
+       })
+       
+       .state('app.register', {
+            url: '/register',
+            views : {
+            	'menuContent' : {
+            		 templateUrl	: 'app/components/register/register.view.html',
+                     controller		: 'RegisterController as register',
+            	}
+            } 
+       })
+       
+       ;
 	    
 	};
 	
