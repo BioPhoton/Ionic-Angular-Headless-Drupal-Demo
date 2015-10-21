@@ -13,7 +13,6 @@
 	    
 	    $stateProvider
 	    
-	    //holds the navigation and toggled state of menu
 	    .state('app', {
             url: "/app",
             abstract: true,
@@ -27,8 +26,7 @@
             views : {
             	'menuContent' : {
             		 templateUrl	: 'app/components/tour/tour.view.html',
-                     controller		: 'TourController',
-                     controllerAs 	: 'tour'
+                     controller		: 'TourController as tour',
             	}
             } 
        });

@@ -15,28 +15,6 @@ This repo is all about making clientside authed rest-calls easy to use.
 - start routing
 ???
 
-#install
-npm install cordova gulp ionic
-##Dependencies
-$ bower install ngCordova -save
-$ bower install angular-cookie -save
-$ bower install angular-messages -save
-
-ipCookies
-
-$ bower install https://github.com/BioPhoton/ng-drupal-7-services/tree/1.0.2 -save
-
-##Plugins
-$ cordova plugin add org.apache.cordova.network-information
-
-
-##Drupal config
-
-drupalIonicAngularJSAPIClient
-	.config( function (  drupalApiConfig ) {
-		drupalApiConfig.api_endpoint += 'v1/';
-});
-
-###account settings
-
-###services
+#Setup
+$ npm install
+$ bower update
