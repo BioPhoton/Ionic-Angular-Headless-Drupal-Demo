@@ -1,31 +1,30 @@
 <ion-view id="toutView" title="Tour Slides">
 
   <ion-nav-bar class="bar-stable">
+   	  <ion-nav-buttons side="primary">
+         <button class="button button-icon button-clear ion-navicon" menu-toggle="left"> </button>
+      </ion-nav-buttons>
 	  
-	  <ion-nav-buttons side="left">
-	  	<button class="button button-positive button-clear no-animation" ng-click="previous()" ng-if="data.slideIndex > 0">Previous Slide</button>
-	  </ion-nav-buttons>
-	  
-	  <ion-nav-buttons side="right"> 
+	  <ion-nav-buttons side="secondary"> 
 	    <button id="skip" class="button button-positive no-animation" ng-click="tour.start()">
 	    	Skip Tour
 	    </button>
 	  </ion-nav-buttons>
-	  
   </ion-nav-bar>
-	   <ion-slide-box class="has-header" ng-class="has-message" show-pager="true"  on-slide-changed="slideChanged(index)">
-		   <ion-slide>
-		     	<h1>First Slide!</h1>
-				<p class="padding">Some text here</p>
-		   </ion-slide>
-		   <ion-slide>
-		     	<h1>Second Slide!</h1>
-				<p class="padding">Some other text here</p>
-		   </ion-slide>
-		   <ion-slide>
-		     	<h1>Third Slide!</h1>
-				<p class="padding">Some text also here</p>
-		   </ion-slide>
-	   </ion-slide-box>
+  
+   <ion-slide-box class="has-header" ng-class="has-message" show-pager="true"  on-slide-changed="slideChanged(index)">
+	   <ion-slide>
+	     	<h1>First Slide!</h1>
+			<p class="padding">Some text here</p>
+	   </ion-slide>
+	   <ion-slide>
+	     	<h1>Second Slide!</h1>
+			<p class="padding">Some other text here</p>
+	   </ion-slide>
+	   <ion-slide>
+	     	<h1>Third Slide!</h1>
+			<p class="padding">Some text also here</p>
+	   </ion-slide>
+   </ion-slide-box>
 
 </ion-view>

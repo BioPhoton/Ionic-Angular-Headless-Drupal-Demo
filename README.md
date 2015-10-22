@@ -13,6 +13,12 @@ $ ionic serve
 $ ionic platform add android
 $ ionic platform add ios
 
+#Drupal Setting
+
+For a direct login after a user registers over the register form we need to enable this in the admins  Configuration -> People -> Account settings section.
+
+
+
 
 
 

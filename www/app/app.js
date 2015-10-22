@@ -1,7 +1,7 @@
 ;(function() {
     'use strict';
 
-    angular.module('drupalionicDemo', ['ionic', 'drupalionicDemo.routes'])
+    angular.module('drupalionicDemo', ['ionic', 'drupalionicDemo.config', 'drupalionicDemo.routes'])
     .run(runFunction);
 
     runFunction.$inject = ['$ionicPlatform'];

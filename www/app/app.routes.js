@@ -1,19 +1,42 @@
 ;(function() {
     'use strict';
 
-    angular.module('drupalionicDemo.routes', ['drupalionicDemo.app.controller', 
+    angular.module('drupalionicDemo.routes', ['ngStorage',
+                                              'ngDrupal7Services-3_x.commons.configurations',
+                                              'ngDrupal7Services-3_x.commons.authentication',
+                                              'drupalionicDemo.app.controller', 
                                               'drupalionicDemo.tour.controller', 
                                               'drupalionicDemo.register.controller', 
-                                              'drupalionicDemo.login.controller']) 
-    .config(configFunction);
+                                              'drupalionicDemo.login.controller',
+                                              'drupalionicDemo.profile.controller']) 
+    .config(configFunction)
+    .run(runFunction);
 
-    configFunction.$inject = ['$stateProvider', '$urlRouterProvider'];
+    configFunction.$inject = ['$stateProvider', '$urlRouterProvider', 'AuthenticationServiceConstant', '$localStorageProvider'];
     
 	/** @ngInject */
-	function configFunction($stateProvider, $urlRouterProvider) { 
+	function configFunction($stateProvider, $urlRouterProvider, AuthenticationServiceConstant, $localStorageProvider) { 
+		
+		//http://angular-ui.github.io/ui-router/site/#/api/ui.router.router.$urlRouterProvider#methods_deferintercept
+		// Prevent $urlRouter from automatically intercepting URL changes;
+		// this allows you to configure custom behavior in between location changes and route synchronization
+		//
+		//We use this in the in the modules .run function
+		$urlRouterProvider.deferIntercept();
+		
 		//routing configurations
-		$urlRouterProvider.otherwise('/app/tour');
-	    
+	
+		//set default URL
+		if(!$localStorageProvider.get('isRegistered') ) {
+			$urlRouterProvider.otherwise('app/register');
+		}
+		else {
+			$urlRouterProvider.otherwise('app/login');
+		}
+		
+		
+		
+		//set states
 	    $stateProvider
 	    
 	    .state('app', {
@@ -53,8 +76,115 @@
             } 
        })
        
+       .state('app.profile', {
+            url: '/profile',
+            views : {
+            	'menuContent' : {
+            		 templateUrl	: 'app/components/profile/profile.view.html',
+                     controller		: 'ProfileController as profile'
+            	}
+            },
+            data : {
+            	'access' : AuthenticationServiceConstant.accessLevels.user
+            }
+       })
+       
        ;
 	    
 	};
 	
+	
+	runFunction.$inject = ['$rootScope', 'AuthenticationService', '$state', '$localStorage', 'DrupalApiConstant', '$urlRouter', '$ionicLoading'];
+	                       
+	
+	/** @ngInject */ 
+	function runFunction($rootScope, AuthenticationService, $state, $localStorage, DrupalApiConstant, $urlRouter, $ionicLoading) 
+	{ 
+		
+	    $rootScope.$on('loading:show', loadingShowCallback);
+    
+	    $rootScope.$on('loading:hide', loadingHideCallback );
+
+	    //http://angular-ui.github.io/ui-router/site/#/api/ui.router.router.$urlRouterProvider#methods_deferintercept
+		//location change logic => before any view is rendered
+	    $rootScope.$on('$locationChangeStart', locationChangeStartCallback)
+
+		//state change logic
+		$rootScope.$on("$stateChangeStart", stateChangeStartCallback);
+	    
+	    ////////////
+	    
+	    // show ionicLoading overlay with args of event
+	    function loadingShowCallback(event, args) {
+	    	$ionicLoading.show((args && 'loading_settings' in args) ? args.loading_settings:{});
+	    }
+	    
+	    // hide ionicLoading overlay
+	    function loadingHideCallback(event, args) {
+	        $ionicLoading.hide()
+	    }
+	    
+	    //we need this to have out current auth state before any other thing in router happens
+	    function locationChangeStartCallback(e) {
+	 	   
+		    	if ( AuthenticationService.getLastConnectTime() > 0) {
+		       	 		//sync the current URL to the router
+		    	    	$urlRouter.sync();
+		    	    	return;
+		    	 }
+	    	 
+	    	    // Prevent $urlRouter's default handler from firing
+	    	    e.preventDefault();
+	    	    $rootScope.$broadcast('loading:show', { loading_settings : {template:"<p><ion-spinner></ion-spinner><br/>Connect with System...</p>"} });
+	    	    // init or refresh Authentication service connection    
+	    	    AuthenticationService
+	    	    .refreshConnection()
+		    	    .then(
+		    	    	function() {
+		    	    		$rootScope.$broadcast('loading:hide');
+		    	    		//sync the current URL to the router 
+		    	    		$urlRouter.sync();
+		    	    	}
+		    	    )
+		    	    .catch(
+		    	    	function() {
+		    	    		$rootScope.$broadcast('loading:hide');
+		    	    		//sync the current URL to the router 
+		    	    		$urlRouter.sync();
+		    	    	}
+		    	    );
+	    	 
+	    	 // Configures $urlRouter's listener *after* your custom listener
+		     $urlRouter.listen();
+		};
+		
+		function stateChangeStartCallback(event, toState, toParams, fromState, fromParams) {
+	    	
+			// if its the users first visit to the app show the apps tour
+		   	 if (  !$localStorage.firstVisit && toState.name !== 'app.tour') { 
+			   		event.preventDefault();
+				 	$state.go('app.tour'); 	
+				 	return;
+			 }   
+		   
+		    //redirects for logged in user away from login or register and show its profile instead
+			if  (toState.name == 'app.login' || toState.name == 'app.register') {
+				if(AuthenticationService.getConnectionState()) {
+					event.preventDefault();
+					$state.go('app.profile');
+					return;
+				}
+		    } 
+			
+			//redirect if user is unauthorized
+			if ( ('data' in toState) && ('access' in toState.data) && !AuthenticationService.isAuthorized(toState.data.access) ) {
+				event.preventDefault();
+				if ($localStorage.isRegistered) { $state.go('app.login'); return;} 
+		        else { $state.go('app.register'); return;} 
+		    }
+	    }
+
+	}
+
+
 })();

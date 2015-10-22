@@ -3,13 +3,13 @@
 
 
 angular
-    .module('drupalionicDemo.register.controller', ['ngDrupal7Services-3_x.resources.user', 'ngStorage'])
+    .module('drupalionicDemo.register.controller', ['ngDrupal7Services-3_x.resources.user', 'ngDrupal7Services-3_x.commons.authentication', 'ngStorage'])
     .controller('RegisterController', RegisterController);
 
-	RegisterController.$inject = ['$scope', 'UserResource', '$localStorage'];
+	RegisterController.$inject = ['$scope', 'UserResource', 'AuthenticationService', '$localStorage'];
 
 	/** @ngInject */ 
-	function RegisterController($scope, UserResource, $localStorage) 
+	function RegisterController($scope, UserResource, AuthenticationService, $localStorage) 
 	{ 
 		// jshint validthis: true 
 		var vm = this;
@@ -22,20 +22,21 @@ angular
 			    
 	    vm.registerIsPending = false; 
 	    
-	    vm.register = register;
+	    vm.doRegister = doRegister;
 	    	
 	    /////////////
 	    	
-	    register function (form) {
+	    function doRegister(form) {
 	    	
 	      if (form.$valid) {
 	    	  vm.registerIsPending = true; 
-	    	  UserResource.register(vm.registerData)
+	    	 UserResource.register(vm.registerData)
 	    	  		//register
 	                .then(
 	                    function (data) {
 	                      $localStorage.isRegistered = true;
-	                      return UserResource.login( vm.registerData.name, vm.registerData.pass );
+	                      
+	                      return AuthenticationService.login({ username: vm.registerData.name, password : vm.registerData.pass});
 	                    }
 	                )
 	                //login
@@ -51,11 +52,10 @@ angular
 	                           form.$dirty = false;
 	                           form.$valid = true;
 	                           form.$invalid = false;
+	                           
+	                       	   $scope.app.$state.go('app.login');
 	                      },
 	                      function (data) {
-	                           	vm.registerIsPending = false; 
-
-	                           	$scope.app.$state.go('app.login');
 	                           	vm.registerServerErrors = data;
 	                      }
 	                )

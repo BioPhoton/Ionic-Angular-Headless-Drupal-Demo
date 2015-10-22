@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "ngstorage": "~0.3.9",
-    "ng-drupal-7-services": "https://github.com/BioPhoton/ng-drupal-7-services.git#2.0.0"
+    "ng-drupal-7-services": "https://github.com/BioPhoton/ng-drupal-7-services.git#dev"
   },
   "resolutions": {
     "angular": "1.4.7"
