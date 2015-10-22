@@ -1,17 +1,17 @@
 <ion-view title="Profile" id="profile-view">
 
   <ion-content class="ionic">
-             <div class="profile-wrapper text-center">
+             <div id="profile-wrapper" class="text-center">
                 <div class="content">
-                    <div id="profile-image" class="avatar" style="background-image: url('{{profile.pathToCms}}sites/default/files/styles/thumbnail/public/pictures/{{profile.user.picture.filename}}');"></div>
-                    <h3><a  class="light">{{profile.user.name}}</a></h3>
-                    <h4>{{profile.user.name}}</h4>
+                
+                    <div id="profile-image" class="avatar-default">
+                    	<div class="avatar"  style="background-image: url('{{profile.pathToCms}}sites/default/files/styles/thumbnail/public/pictures/{{profile.user.picture.filename}}');">
+                    	
+                    	</div>
+                    </div>
+                    
+                    <h3 class="light">{{profile.user.name}}</h3>
                 </div>
-            </div>
-            <div class="button-bar">
-                <button toggle-by-access-level="fasf" class="button button-dark waves-effect waves-classic icon ion-images"></button>
-                <button class="button button-dark waves-effect waves-classic icon ion-stats-bars"></button>
-                <button class="button button-dark waves-effect waves-classic icon ion-pizza"></button>
             </div>
   </ion-content>
   
