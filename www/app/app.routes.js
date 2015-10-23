@@ -8,14 +8,17 @@
                                               'drupalionicDemo.tour.controller', 
                                               'drupalionicDemo.register.controller', 
                                               'drupalionicDemo.login.controller',
-                                              'drupalionicDemo.profile.controller']) 
+                                              'drupalionicDemo.profile.controller',
+                                              'drupalionicDemo.articleFeed.controller',
+                                              'drupalionicDemo.articleFeed.articleDetail.controller',
+                                              'drupalionicDemo.articleFeed.service']) 
     .config(configFunction)
     .run(runFunction);
 
-    configFunction.$inject = ['$stateProvider', '$urlRouterProvider', 'AuthenticationServiceConstant', '$localStorageProvider'];
+    configFunction.$inject = ['$stateProvider','$urlRouterProvider','$localStorageProvider','AuthenticationServiceConstant'];
     
 	/** @ngInject */
-	function configFunction($stateProvider, $urlRouterProvider, AuthenticationServiceConstant, $localStorageProvider) { 
+	function configFunction(   $stateProvider,  $urlRouterProvider,  $localStorageProvider,  AuthenticationServiceConstant) { 
 		
 		//http://angular-ui.github.io/ui-router/site/#/api/ui.router.router.$urlRouterProvider#methods_deferintercept
 		// Prevent $urlRouter from automatically intercepting URL changes;
@@ -87,6 +90,36 @@
             data : {
             	'access' : AuthenticationServiceConstant.accessLevels.user
             }
+       })
+       
+       .state('app.articleFeed', {
+            url: '/article-feed',
+            views : {
+            	'menuContent' : {
+            		 templateUrl	: 'app/components/articleFeed/articleFeed.view.html',
+                     controller		: 'ArticleFeedController as articleFeed'
+            	}
+            },
+            resolve : {
+	        	actualArticles : function (ArticleFeedService) {
+	        		return ArticleFeedService.getAll();
+	        	}
+	        }
+       })
+       
+       .state('app.articleDetail', {
+            url: '/article-feed/:nid?title',
+            views : {
+            	'menuContent' : {
+            		 templateUrl	: 'app/components/articleFeed/articleDetail/articleDetail.view.html',
+                     controller		: 'ArticleDetailController as articleDetail'
+            	}
+            },
+            resolve : {
+            	articleDetail : function (ArticleFeedService, $stateParams) {
+		    		return ArticleFeedService.get( {nid:$stateParams.nid} );
+	            }	
+	        }
        })
        
        ;

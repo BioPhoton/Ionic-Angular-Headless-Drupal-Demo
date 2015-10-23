@@ -4,13 +4,12 @@
              <div id="profile-wrapper" class="text-center">
                 <div class="content">
                 
-                    <div id="profile-image" class="avatar-default">
-                    	<div class="avatar"  style="background-image: url('{{profile.pathToCms}}sites/default/files/styles/thumbnail/public/pictures/{{profile.user.picture.filename}}');">
-                    	
+                    <div id="profile-image">
+	                    <ion-spinner class="overlay-spinner spinner-positive " ng-if="profile.isLloading"></ion-spinner>
+	                    <div ng-if="!profile.isLloading" class="avatar" style="background-image:url( {{ profile.pictureUrl || 'assets/images/default-avatar.png' }} )" />
                     	</div>
                     </div>
-                    
-                    <h3 class="light">{{profile.user.name}}</h3>
+                    <h3 class="light">{{profile.name}}</h3>
                 </div>
             </div>
   </ion-content>

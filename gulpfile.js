@@ -29,6 +29,17 @@ gulp.task('sass', function(done) {
     .on('end', done);
 });
 
+/*Move font files form resources into assets/fonts directory so that our css @font-face's will resolve their files*/
+gulp.task('move-images', function() {
+	//fontawesome
+	var imgFrom = 'files/images/default-avatar.png';
+		imgTo = 'www/assets/images';
+	gulp.src(imgFrom)
+     	.pipe(gulp.dest(imgTo))
+     	.on('end', function(){  gutil.log(gutil.colors.green('moved image from '+imgFrom+' to '+imgTo)); });
+  
+});
+
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
 });

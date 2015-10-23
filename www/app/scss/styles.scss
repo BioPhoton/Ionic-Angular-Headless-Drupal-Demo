@@ -41,6 +41,18 @@
     
 }
 
+.overlay-spinner {
+	position: absolute;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    padding-top: 50%;
+    
+    svg {
+    	margin-top:-25%;
+    }
+}
+
 
 
 .item-spinner-left .spinner, .item-spinner-right .spinner {
