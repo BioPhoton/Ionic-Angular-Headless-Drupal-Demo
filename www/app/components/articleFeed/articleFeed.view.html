@@ -1,0 +1,21 @@
+<ion-view title="Acticle Feed">
+
+  <ion-content>
+   
+  	<ion-refresher on-refresh="articleFeed.doRefresh()"></ion-refresher>
+
+	<ion-list>
+		<ion-item ng-repeat="article in articleFeed.articles | filter:filterByNids track by $index " class="item-icon-right item-thumbnail-left item-spinner-right" ng-click="articleFeed.openDetail(article)">
+		    
+		    <img ng-src="{{article.field_image.und[0].imgPath}}" />
+		    <h2>{{article.title}} {{article.nid}}</h2>
+		    <p>{{article.created * 1000 | date:'dd.MM.yyyy hh:mm:ss'}}</p>
+		    <ion-spinner ng-show="articleFeed.loadingDetail == article.nid"></ion-spinner>
+		    <i ng-show="articleFeed.loadingDetail != article.nid" class="icon ion-ios-arrow-right"  ng-click="articleFeed.openDetail(article.nid)"></i>
+	  	</ion-item>
+	</ion-list>
+	
+	<ion-infinite-scroll on-infinite="articleFeed.loadMore()" distance="5%"></ion-infinite-scroll>
+	    
+  </ion-content>
+</ion-view>

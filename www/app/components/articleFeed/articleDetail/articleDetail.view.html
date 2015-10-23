@@ -1,0 +1,54 @@
+<ion-view title="Detail">
+   <ion-nav-bar>
+  <ion-nav-back-button class="button-clear">
+    <i class="ion-arrow-left-c"></i> Back
+  </ion-nav-back-button>
+</ion-nav-bar>
+  <ion-content>
+<div class="list card">
+  <div class="item"  ng-class="articleDetail.pathToUserImg !== false?'item-avatar':''">
+    <img ng-if="articleDetail.pathToUserImg" ng-src="{{articleDetail.pathToUserImg}}">
+    <h2>{{articleDetail.title}}</h2>
+    <p>Created on {{articleDetail.created * 1000 | date }}</p>
+  </div>
+
+  <div class="item item-body">
+    <img ng-if="articleDetail.pathToImg" class="full-image" ng-src="{{articleDetail.pathToImg}}">
+    <p>
+     {{articleDetail.body.und[0].value}}
+    </p>
+    
+    <p>
+      <a ng-click="articleDetail.loadComments(articleDetail.comment)">{{articleDetail.comment}} Comment{{articleDetail.comment > 1?'s':''}} <ion-spinner ng-if="articleDetail.loadingComments"  class="spinner-small" ></ion-spinner></a>
+    </p>
+  </div>
+
+  <div ng-repeat="comment in articleDetail.comments" class="card">
+	  	<div class="item item-divider">
+	   {{articleDetail.comment.subject}}
+	  	</div>
+	  	<div class="item item-text-wrap">
+	    {{articleDetail.comment.comment_body.und[0].value}}
+	 	 </div>
+	  	<!-- 
+	  	<div class="item item-divider">
+	    	<button class="button button-clean" ng-click="articleDetail.createComment(comment.nid, comment.cid)">Reply</button>
+	  	</div>
+	  	 -->
+  </div>
+	<!-- 
+	  <div class="item tabs tabs-secondary tabs-icon-left">
+	    <a class="tab-item" href="#">
+	      <i class="icon ion-chatbox"></i>
+	      Comment
+	    </a>
+	  </div>
+	-->
+
+</div>
+
+
+
+</ion-content>
+
+</ion-view>
