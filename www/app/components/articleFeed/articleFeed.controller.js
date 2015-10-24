@@ -21,7 +21,7 @@
 		vm.loadMore = loadMore;
 		vm.openDetail = openDetail;
 
-		//hide loading spinner on routechange
+		//hide loading spinner on route change
 		$scope.$on("$stateChangeSuccess", function() {
 			vm.loadingDetail = false;
 		});
@@ -97,8 +97,8 @@
 				      sourceType: Camera.PictureSourceType.CAMERA,
 				      allowEdit: true,
 				      encodingType: Camera.EncodingType.JPEG,
-				      targetWidth: 100,
-				      targetHeight: 100,
+				      targetWidth: 500,
+				      targetHeight: 500,
 				      saveToPhotoAlbum: false,
 				      correctOrientation:true
 				    };
@@ -108,6 +108,7 @@
 				navigator.camera.getPicture(
 							  function(result) {
 						        vm.newArticle.field_image.base64 = result;
+						        $scope.$apply();
 						      }, 
 						      function(err) {},
 						      options

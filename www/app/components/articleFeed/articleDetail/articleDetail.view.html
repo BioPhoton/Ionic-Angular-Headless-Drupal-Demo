@@ -1,9 +1,16 @@
-<ion-view title="Detail">
-   <ion-nav-bar>
-  <ion-nav-back-button class="button-clear">
-    <i class="ion-arrow-left-c"></i> Back
-  </ion-nav-back-button>
-</ion-nav-bar>
+<ion-view title="{{articleDetail.viewTitle || 'Detail'}}">
+
+<ion-nav-bar class="bar-dark">
+
+	<ion-nav-back-button class="button-clear">
+   			 <i class="ion-arrow-left-c"></i>
+  	</ion-nav-back-button>
+
+	  
+  </ion-nav-bar>
+
+
+
   <ion-content>
 <div class="list card">
   <div class="item"  ng-class="articleDetail.pathToUserImg !== false?'item-avatar':''">
@@ -17,34 +24,7 @@
     <p>
      {{articleDetail.body.und[0].value}}
     </p>
-    
-    <p>
-      <a ng-click="articleDetail.loadComments(articleDetail.comment)">{{articleDetail.comment}} Comment{{articleDetail.comment > 1?'s':''}} <ion-spinner ng-if="articleDetail.loadingComments"  class="spinner-small" ></ion-spinner></a>
-    </p>
   </div>
-
-  <div ng-repeat="comment in articleDetail.comments" class="card">
-	  	<div class="item item-divider">
-	   {{articleDetail.comment.subject}}
-	  	</div>
-	  	<div class="item item-text-wrap">
-	    {{articleDetail.comment.comment_body.und[0].value}}
-	 	 </div>
-	  	<!-- 
-	  	<div class="item item-divider">
-	    	<button class="button button-clean" ng-click="articleDetail.createComment(comment.nid, comment.cid)">Reply</button>
-	  	</div>
-	  	 -->
-  </div>
-	<!-- 
-	  <div class="item tabs tabs-secondary tabs-icon-left">
-	    <a class="tab-item" href="#">
-	      <i class="icon ion-chatbox"></i>
-	      Comment
-	    </a>
-	  </div>
-	-->
-
 </div>
 
 

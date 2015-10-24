@@ -11,6 +11,8 @@
 		 console.log(articleDetail); 
 		 
 		 var vm = this;
+		 console.log($stateParams);
+		 vm.viewTitle = $stateParams.title;
 		 vm = angular.extend(vm, articleDetail) ;
 		 vm.pathToImg = false;
 		 
