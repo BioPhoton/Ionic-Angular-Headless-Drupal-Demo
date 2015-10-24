@@ -7,7 +7,7 @@
 <ion-content>
         
 <form name="editPageForm" novalidate="" ng-submit="updatePage(editPageForm)"> 
-    <ion-list>
+    <ion-list >
         <label class="item item-input" ng-class="{ 'has-error' : editPageForm.title.$invalid && editPageForm.title.$dirty}">
 		<input type="text" name="title" ng-model="dirtyPage.title" placeholder="Node title" >
 		</label>

@@ -101,8 +101,9 @@
             	}
             },
             resolve : {
-	        	actualArticles : function (ArticleFeedService) {
-	        		return ArticleFeedService.getAll();
+	        	actualArticles : function (ArticleFeedService, $rootScope) {
+	        		$rootScope.$broadcast('loading:show', { loading_settings : {template:"<p><ion-spinner></ion-spinner><br/>Loading initial articles...</p>"} });
+	        		return ArticleFeedService.getAll().finally(function(){$rootScope.$broadcast('loading:hide');});
 	        	}
 	        }
        })

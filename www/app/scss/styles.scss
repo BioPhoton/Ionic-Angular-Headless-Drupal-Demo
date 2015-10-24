@@ -1,3 +1,5 @@
+//layout helpers
+
 .text-center {
 	text-align:center;
 }
@@ -41,6 +43,8 @@
     
 }
 
+
+//elem helpers
 .overlay-spinner {
 	position: absolute;
     left: 0;
@@ -164,38 +168,4 @@ label.item.valid-lr {
   margin: 5px 0;
   padding: 2px 0 2px 16px;
   color: red;
-}
-
-/*network connection state
-===========================================================================*/
-.bar.bar-network {
-  display: block;
-  height: 18px;
-  line-height: 18px;
-  bottom: 0px;
-  text-transform: uppercase;
-  font-size:11px;
-  text-align: center;
-  padding : 0px;
-  -webkit-transition: 200ms all;
-}
-
-.has-header {
-  -webkit-transition: 200ms top;
-}
-.has-bar-network .scroll  {
-padding-bottom:18px;
-}
-
-//make loading bar slide up/down
-.bar-network.ng-enter,
-.bar-network.ng-leave.ng-leave-active {
-  height: 0; 
-  border-width: 0px;
-}
-
-.bar-network.ng-enter.ng-enter-active,
-.bar-network.ng-leave {
-  height: 24px;
-  border-width: 1px;
 }

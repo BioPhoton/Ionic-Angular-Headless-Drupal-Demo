@@ -1,12 +1,13 @@
 ;(function() {
 	
 	 angular
-	 .module('drupalionicDemo.articleFeed.service', ['ngDrupal7Services-3_x.resources.views', 'ngDrupal7Services-3_x.commons.helperService', 'ngDrupal7Services-3_x.commons.configurations'])
+	 .module('drupalionicDemo.articleFeed.service', ['ngDrupal7Services-3_x.commons.configurations','ngDrupal7Services-3_x.commons.helperService', 
+	                                                 'ngDrupal7Services-3_x.resources.views.resource', 'ngDrupal7Services-3_x.resources.node.resource', 'ngDrupal7Services-3_x.resources.file.resource', 'ngDrupal7Services-3_x.commons.authentication.service'])
 	.factory('ArticleFeedService', ArticleFeedService);
 	 
-	ArticleFeedService.inject = ['$q','$filter','DrupalHelperService','ViewsResource','DrupalApiConstant' ]
+	ArticleFeedService.inject = ['$q','$filter','DrupalApiConstant','DrupalHelperService','ViewsResource','FileResource','NodeResource','AuthenticationService' ]
     
-	function ArticleFeedService ( $q,  $filter,  DrupalHelperService,  ViewsResource,  DrupalApiConstant) {
+	function ArticleFeedService ( $q,  $filter,  DrupalApiConstant,  DrupalHelperService,  ViewsResource,  FileResource,  NodeResource,  AuthenticationService  ) {
 
 		 var initialised = false,
 		 			
@@ -25,20 +26,20 @@
 			
 			//stored article
 			var articles = [];
-			
-			
-			
+
+			//articleFeed service object
 			var articleFeedService = {
-				    	init		: init,
-				    	getAll 		: getAll,
-				    	get 		: get,
-				    	loadRecent 	: loadRecent,
-				    	loadMore 	: loadMore
+				    	init			: init,
+				    	getAll 			: getAll,
+				    	get 			: get,
+				    	loadRecent 		: loadRecent,
+				    	loadMore 		: loadMore,
+				    	saveArtilce		: saveArtilce,
+				    	deleteArticle 	: deleteArticle
 				    };
 			 
 			 return articleFeedService;
-			
-		 
+
 		 /////////////////////////////////////////////////////////////
 		 
 		 function init() {
@@ -66,9 +67,12 @@
 			};
 		 
 		 
+		   //prepare article after fetched from server
 		   function prepareArticle(article) {
 				angular.forEach(article.field_image.und, function(value, key) {	
+					
 					article.field_image.und[key].imgPath = DrupalHelperService.getPathToImgByStyle(DrupalApiConstant.imageStyles.medium) + article.field_image.und[key].uri.split('//')[1];
+					article.nid = parseInt(article.nid);
 				});
 				
 				article.nid = parseInt(article.nid);
@@ -77,7 +81,7 @@
 			};
 			
 			//returns all articles
-			//@TODO implement exposed filters for request and cache
+			//@TODO implement exposed filters for request and cache like in get
 			function getAll() {
 				var defer = $q.defer(),
 					allFilteredSpots = undefined;
@@ -163,11 +167,10 @@
 			   return defer.promise;
 			}
 			
+			//retrieves articles from view and handle pagination
 			function retreiveArticles(viewsOptions) {	
-				console.log('retreiveArticles'); 
 				paginationOptions.pageLast = (paginationOptions.pageLast === undefined)?0:paginationOptions.pageLast;
-				
-				
+
 				var defer = $q.defer();
 				ViewsResource
 					.retrieve(viewsOptions)
@@ -196,6 +199,66 @@
 				return defer.promise;
 				
 			}
+			
+			//saves article and optional image
+			//returns promise
+			function saveArtilce(article) {
+				
+				var preparedArticle = angular.merge({}, article),
+					defer = $q.defel;
+				
+				return trySaveOptionalImage()
+					.then(
+							function(result) {
+								preparedArticle.field_image = DrupalHelperService.structureField({fid: result.data.fid});
+							},
+							function(error){
+								//resolve without image
+								return $q.resolve(true);
+							}
+					)
+					.finally(
+							function() {
+								return NodeResource.create(preparedArticle);
+							}
+					);
+				
+				///////////
+					
+					
+				//returns promise 
+				// - resolve after saved image to server 
+				// - rejects if saving image fails or no image given
+				function trySaveOptionalImage() {
+					console.log(preparedArticle.field_image);
+					//if data is given
+					if(preparedArticle.field_image.base64) {
+						
+						var imgData = preparedArticle.field_image.base64;
+						delete preparedArticle.field_image.base64;
+						
+						var newImage = {};
+	
+						newImage.file 		= imgData;
+						newImage.filename 	= 'drupal.jpg';
+						newImage.filesize 	= newImage.file.length;
+						newImage.filepath 	= 'field/image/';
+						newImage.filemime 	= "image/jpeg",
+						newImage.image_file_name = 'drupal.jpg';
+				
+						return FileResource.create(newImage);
+					}
+					
+					//else fail
+					return $q.reject(false);
+				
+				}
+
+			}
+			
+			function deleteArticle(article) {
+				return NodeResource.delete(article);
+			};
 			
 			
 

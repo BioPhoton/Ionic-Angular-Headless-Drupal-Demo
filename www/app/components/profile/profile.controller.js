@@ -4,22 +4,30 @@
 	angular.module('drupalionicDemo.profile.controller', ['ngDrupal7Services-3_x.resources.user', 'ngDrupal7Services-3_x.commons.helperService', 'ngDrupal7Services-3_x.commons.authentication.service'])
 		   .controller('ProfileController', ProfileController);
 	
-		ProfileController.$inject = ['UserResource', 'AuthenticationService', 'DrupalHelperService'];
+	ProfileController.$inject = ['$scope','UserResource', 'AuthenticationService', 'DrupalHelperService'];
 
-	function ProfileController(UserResource, AuthenticationService, DrupalHelperService) {
+	function ProfileController(   $scope,  UserResource,   AuthenticationService,   DrupalHelperService) {
 		
 		var vm = this;
-			vm.isLloading = true;
+			vm.isLoading = true;
 			vm.pictureUrl = false;
-		getUserProfile();
+		
+		$scope.$on('$ionicView.enter', function() {
+			getUserProfile();
+		  })
 		
 		////////////////
 		
 		function getUserProfile() {
+		
 			var currentUser = AuthenticationService.getCurrentUser() ;
 			
 			if(currentUser.uid != 0) {
-				vm.isLloading = true;
+				
+				vm.isLoading = true;
+				vm.pictureUrl = false;
+				vm.name = '';
+				
 				UserResource
 					.retrieve({ uid: currentUser.uid })
 						.success(function(data) {
@@ -33,7 +41,7 @@
 						})
 						.finally(
 								function() {
-									vm.isLloading = false;
+									vm.isLoading = false;
 								}
 						);
 			}

@@ -19,7 +19,7 @@
 		 
 		 //vm.comments = [];
 		 
-		 vm.pathToImg = DrupalHelperService.getPathToImgByStyle('large') + articleDetail.field_image.und[0].uri.split('//')[1];
+		 vm.pathToImg = (articleDetail.field_image.und)?DrupalHelperService.getPathToImgByStyle('large') + articleDetail.field_image.und[0].uri.split('//')[1]:false;
 	
 		 /*if(vm.article.uid) {
 			 UserResource.retrieve(vm.article.uid).then(

@@ -1,0 +1,70 @@
+<div class="modal">
+
+    <!-- Modal header bar -->
+    <ion-header-bar class="bar-secondary">
+      <h1 class="title">Create Article</h1>
+      <button class="button button-clear button-positive" ng-click="articleFeed.closeCreateModal()">Cancel</button>
+    </ion-header-bar>
+
+    <!-- Modal content area -->
+    <ion-content>
+
+      <form>
+        <div class="list">
+	       	<label class="item item-input">
+				<input type="text" ng-model="articleFeed.newArticle.title" placeholder="Title" >
+			</label>
+		
+			<label class="item item-input">
+				<textarea rows="6" placeholder="Sumary" type="text" ng-model="articleFeed.newArticle.body.und[0].summary"></textarea>
+			</label>
+		
+			<label class="item item-input">
+				<textarea rows="6" placeholder="Body" type="text"  ng-model="articleFeed.newArticle.body.und[0].value"></textarea>
+			</label>
+			
+			<div>
+
+			<div class="row">
+ 				<div class="col-50">
+ 					<img class="articles-image" ng-src="{{articleFeed.newArticle.field_image.und[0].imgPath}}" ng-if="articleFeed.newArticle.field_image.und[0].imgPath && articleFeed.newArticle.field_image.base64 == false" />
+					<div class="articles-image" style=" background-image:url(data:image/jpeg;base64,{{articleFeed.newArticle.field_image.base64}})" ng-if="!articleFeed.newArticle.field_image.und[0].imgPath" ></div>
+				</div>
+				<div class="col-50">
+					<!-- logic for disabling delete button is separated into two html blocks -->
+					<button type="submit" class="button button-block button-assertive" 
+							ng-class="{ true:'disabled' }[articleFeed.newArticle.field_image.base64]" 
+							ng-if="articleFeed.newArticle.field_image.und[0].imgPath" 
+							ng-click="articleFeed.newArticle.field_image.und[0].imgPath = false">
+							Delete
+					</button>
+					<button type="submit" class="button button-block button-assertive" 
+							ng-class="{ true:'disabled' }[!articleFeed.newArticle.field_image.base64 || articleFeed.savingArticle]" 
+							ng-if="!articleFeed.newArticle.field_image.und[0].imgPath" 
+							ng-click="articleFeed.newArticle.field_image.base64 = false">
+							Delete
+					</button>
+					
+					<button type="submit" ng-click="articleFeed.takeImage()" class="button button-block button-positive" ng-class="{ true:'disabled' }[articleFeed.savingArticle]">
+						<span ng-if="articleFeed.newArticle.field_image.base64">Retake</span>
+						<span ng-if="!articleFeed.newArticle.field_image.base64">Take</span>
+					</button>
+				</div>
+			</div>
+
+			</div>
+		
+	        <div class="padding">
+	          <button ng-if="articleFeed.articleModalMode == 'create'"  type="submit" ng-click="articleFeed.saveArtilce(articleFeed.newArticle)" ng-class="{ true:'disabled' }[articleFeed.savingArticle]"  class="button button-block button-positive button-spinner">
+	          	Save <ion-spinner ng-if="articleFeed.savingArticle"></ion-spinner>
+	          </button>
+	          <button ng-if="articleFeed.articleModalMode == 'edit'" type="submit" ng-click="articleFeed.saveArtilce(articleFeed.newArticle)" ng-class="{ true:'disabled' }[articleFeed.savingArticle]"  class="button button-block button-positive button-spinner">
+	          	Update <ion-spinner ng-if="articleFeed.savingArticle"></ion-spinner>
+	          </button>
+	        </div>
+        
+      </form>
+
+    </ion-content>
+
+</div>

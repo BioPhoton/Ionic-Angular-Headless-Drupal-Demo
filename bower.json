@@ -5,8 +5,9 @@
     "ionic": "driftyco/ionic-bower#1.1.0"
   },
   "dependencies": {
-    "ngstorage": "~0.3.9",
-    "ng-drupal-7-services": "https://github.com/BioPhoton/ng-drupal-7-services.git#dev"
+    "ng-cordova": "~0.0.3",
+    "ng-drupal-7-services": "https://github.com/BioPhoton/ng-drupal-7-services.git#dev",
+    "ngstorage": "~0.3.9"
   },
   "resolutions": {
     "angular": "1.4.7"
