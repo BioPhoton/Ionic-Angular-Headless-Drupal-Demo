@@ -31,29 +31,19 @@
 					<div class="articles-image" style=" background-image:url(data:image/jpeg;base64,{{articleFeed.newArticle.field_image.base64}})" ng-if="!articleFeed.newArticle.field_image.und[0].imgPath" ></div>
 				</div>
 				<div class="col-50">
-					<!-- logic for disabling delete button is separated into two html blocks -->
-					<button type="submit" class="button button-block button-assertive" 
-							ng-class="{ true:'disabled' }[articleFeed.newArticle.field_image.base64]" 
-							ng-if="articleFeed.newArticle.field_image.und[0].imgPath" 
-							ng-click="articleFeed.newArticle.field_image.und[0].imgPath = false">
-							Delete
-					</button>
-					<button type="submit" class="button button-block button-assertive" 
+					<button type="submit" class="button button-block button-assertive icon-left ion-trash-a"  
 							ng-class="{ true:'disabled' }[!articleFeed.newArticle.field_image.base64 || articleFeed.savingArticle]" 
-							ng-if="!articleFeed.newArticle.field_image.und[0].imgPath" 
 							ng-click="articleFeed.newArticle.field_image.base64 = false">
 							Delete
 					</button>
 					
-					<button type="submit" ng-click="articleFeed.takeImage()" class="button button-block button-positive" ng-class="{ true:'disabled' }[articleFeed.savingArticle]">
+					<button type="submit" ng-click="articleFeed.takeImage()" class="button button-block button-positive icon-left ion-camera" ng-class="{ true:'disabled' }[articleFeed.savingArticle]">
 						<span ng-if="articleFeed.newArticle.field_image.base64">Retake</span>
 						<span ng-if="!articleFeed.newArticle.field_image.base64">Take</span>
 					</button>
 				</div>
 			</div>
 			
-			(to test this in browser install <a href="https://chrome.google.com/webstore/detail/cordova-mocks/iigcccneenmnplhhfhaeahiofeeeifpn" trtget="_blank">Cordova Mocks</a>)
-
 			</div>
 		
 	        <div class="padding">

@@ -30,7 +30,7 @@
             	}
 
 
-                AuthenticationChannel.subAuthenticationCurrentUserUpdated($scope, currentUserUpdatedHandler);
+                AuthenticationChannel.subCurrentUserUpdated($scope, currentUserUpdatedHandler);
 
                 attrs.$observe('toggleByOwnUid', function(uid) {
                     updateCSS(uid);

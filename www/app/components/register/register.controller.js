@@ -3,7 +3,7 @@
 
 
 angular
-    .module('drupalionicDemo.register.controller', ['ngDrupal7Services-3_x.resources.user', 'ngDrupal7Services-3_x.commons.authentication', 'ngStorage'])
+    .module('drupalionicDemo.register.controller', ['commons.validation.setValidAfterTouch', 'ngDrupal7Services-3_x.resources.user', 'ngDrupal7Services-3_x.commons.authentication', 'ngStorage'])
     .controller('RegisterController', RegisterController);
 
 	RegisterController.$inject = ['$scope', 'UserResource', 'AuthenticationService', '$localStorage'];
@@ -29,7 +29,7 @@ angular
 	    function doRegister(form) {
 	    	
 	      if (form.$valid) {
-	    	  vm.registerIsPending = true; 
+	    	 vm.registerIsPending = true; 
 	    	 UserResource.register(vm.registerData)
 	    	  		//register
 	                .then(
@@ -47,24 +47,31 @@ angular
 	                           vm.registerData = {};
 	                           
 	                           //reste form
-	                           form.$error = {};
-	                           form.$pristine = true;
-	                           form.$dirty = false;
-	                           form.$valid = true;
-	                           form.$invalid = false;
+	                           form.$setPristine();
+		                       form.$setUntouched();
 	                           
 	                       	   $scope.app.$state.go('app.login');
-	                      },
-	                      function (data) {
-	                           	vm.registerServerErrors = data;
 	                      }
 	                )
 	                .catch(
-	                    function (data) {
-	                      vm.registerIsPending = false; 
-	                      vm.registerServerErrors = data.form_errors;
+	                    function (errorResult) {
+	                    
+	                      vm.registerServerErrors = errorResult.data.form_errors;
+	                    	
+	                      if(errorResult.data.form_errors.name) {
+	                    	  form.name.$setValidity('name-taken', false);
+	                      }
+	                      if(errorResult.data.form_errors.mail) {
+	                    	  form.mail.$setValidity('email-taken', false);
+	                      }
+	                      
 	                    }
-	                );
+	                )
+	    	 		.finally(
+	    	 			function() {
+	    	 				  vm.registerIsPending = false; 
+	    	 			}
+	    	 		);
 	      		}
 	      
 	    };

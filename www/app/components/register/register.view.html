@@ -10,47 +10,47 @@
 
       <div class="list list-inset">
 
-       	<div class="form-errors" ng-show="registerForm.$submitted">
-          <div ng-bind-html="error" class="form-error" ng-repeat="error in registerServerErrors" ></div>
-        </div>
-
         <label class="item item-input"
-               ng-class="{ 'has-error' : registerForm.name.$invalid && registerForm.$submitted}">
+        		ng-class="{ 'has-error':  registerForm.name.$touched &&  registerForm.name.$invalid ||  registerForm.name.$invalid && registerForm.$submitted}">
+               
           <input type="text" 
                  ng-model="register.registerData.name" 
                  placeholder="Username" 
                  name="name" 
+                 name-taken
                  autocorrect="off" 
                  autocapitalize="off" 
                  required
                  spellcheck="false">
+                 
         </label>
-
-        <div class="form-errors" 
-             ng-show="registerForm.name.$invalid && registerForm.$submitted"
-             ng-messages="registerForm.name.$error" 
-             >
-            <div class="form-error" ng-message="required">This field is required.</div>
-        </div>
+        
+				
+		<ng-messages class="form-errors"  ng-if="registerForm.name.$invalid && registerForm.name.$touched || registerForm.$submitted" for="registerForm.name.$error">
+           <div class="form-error" ng-message="required">This field is required.</div>
+           <div class="form-error" ng-message="name-taken">User already taken</div>
+        </ng-messages>
 
         <label class="item item-input"
-               ng-class="{ 'has-error' : registerForm.mail.$invalid && registerForm.$submitted}">
+               ng-class="{ 'has-error':  registerForm.mail.$touched &&  registerForm.mail.$invalid ||  registerForm.mail.$invalid && registerForm.$submitted}">
           <input type="email" 
                  placeholder="Email Address" 
-                 name="mail"  
+                 name="mail" 
+                 email-taken 
                  ng-model="register.registerData.mail"
                  required
                  >
         </label>
-
-        <div class="form-errors" 
-             ng-show="registerForm.mail.$invalid && registerForm.$submitted"
-             ng-messages="registerForm.mail.$error">
-          <div class="form-error" ng-message="mail">Not a valid mail address.</div>
-        </div>
+        
+       <ng-messages class="form-errors"  ng-if="registerForm.mail.$invalid && registerForm.mail.$touched || registerForm.$submitted" for="registerForm.mail.$error">
+          <div class="form-error" ng-message="required">This field is required.</div>
+          <div class="form-error" ng-message="email">This is not valid email address.</div>
+         
+          <div class="form-error" ng-message="email-taken">Email already tqken</div>
+        </ng-messages>
 
         <label class="item item-input"
-               ng-class="{ 'has-error' : registerForm.pass.$invalid && registerForm.$submitted}">
+              ng-class="{ 'has-error':  registerForm.pass.$touched &&  registerForm.pass.$invalid ||  registerForm.pass.$invalid && registerForm.$submitted}">
           <input type="password"
                  placeholder="Password" 
                  name="pass" 
@@ -59,12 +59,9 @@
                  >
         </label>
 
-        <div class="form-errors"
-             ng-show="registerForm.pass.$invalid && registerForm.$submitted"
-             ng-messages="registerForm.pass.$error" 
-             >
-             <div class="form-error" ng-message="required">This field is required.</div>
-        </div>
+        <ng-messages class="form-errors"  ng-if="registerForm.pass.$invalid && registerForm.pass.$touched || registerForm.$submitted" for="registerForm.pass.$error">
+         <div ng-message="required">This field is required.</div>
+        </ng-messages>
       
         <button class="button button-block button-positive button-spinner" ng-click="createAccount()">
         	<span ng-if="!register.registerIsPending" >Create Account</span>
@@ -72,9 +69,9 @@
         	<ion-spinner ng-if="register.registerIsPending"></ion-spinner> 
         </button>
         
-        <a class="button button-block button-positive"  ui-sref="app.login">Login</a>
+        <button class="button button-block button-positive"  ui-sref="app.login">Login</button>
 
-      </ion-list>
+      </div>
 
     </form>
   </ion-content>
