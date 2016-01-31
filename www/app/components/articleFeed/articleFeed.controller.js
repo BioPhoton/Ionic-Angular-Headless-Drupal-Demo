@@ -1,7 +1,7 @@
 ;
 (function () {
 
-  angular.module('drupalionicDemo.articleFeed.controller', ['ng-cordova', 'commons.directives.toggleByOwnUid', 'drupalionicDemo.articleFeed.service'])
+  angular.module('drupalionicDemo.articleFeed.controller', ['commons.directives.toggleByOwnUid', 'drupalionicDemo.articleFeed.service'])
     .controller('ArticleFeedController', ArticleFeedController);
 
   ArticleFeedController.$inject = ['$q', '$scope', '$state', '$filter', '$ionicListDelegate', '$ionicModal', 'DrupalHelperService', 'ArticleFeedService', 'AuthenticationService', 'actualArticles']
