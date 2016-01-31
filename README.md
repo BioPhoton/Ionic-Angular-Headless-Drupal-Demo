@@ -4,7 +4,7 @@
 
 This demo covers Authentication, CRUD operations on Nodes and Image upload from device camera.
 You can see a live demo of this repo here or over Ionic View directli on your phone with this id *ccd889ce*.  
-Also a good point to check out it [Drupal-API-Explorer](https://github.com/BioPhoton/ng-drupal-services-tests-with-ng) which covers every part of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services)
+Also worth checking [Drupal-API-Explorer](https://github.com/BioPhoton/ng-drupal-services-tests-with-ng) which covers every part of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services)
 
 Following scenarios are covered:
 - Detecting first visit ever and skip tour on second fisit
