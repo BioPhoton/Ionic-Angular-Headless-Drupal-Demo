@@ -4,7 +4,7 @@
 
 This demo covers Authentication, CRUD operations on Nodes and Image upload from device camera.
 You can see a live demo of this repo here or over Ionic View directli on your phone with this id *ccd889ce*.  
-Also a good point to check out it [Drupal-API-Explorer](https://github.com/BioPhoton/ng-drupal-services-tests-with-ng) which covers every part of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services)
+Also worth checking [Drupal-API-Explorer](https://github.com/BioPhoton/ng-drupal-services-tests-with-ng) which covers every part of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services)
 
 Following scenarios are covered:
 - Detecting first visit ever and skip tour on second fisit
@@ -65,7 +65,8 @@ $ npm install -g ionic cordova bower
 To build your project for platforms or debugging over console setup codrova platforms and plugins.
 These are defined in the package.json file
 ```bash
-$ ionic state restore
+$ ionic state restore  
+$ ionic resources
 ```
 This will create the platforms folder and loads codrova android and ios platform.
 It also creates the plugins folder and loads the plugins defined in package.json
@@ -92,7 +93,7 @@ app ID: *ccd889ce*
 
 Following extra cordova libraries are installed:
 ```bash
-$ cordova plugin add org.apache.cordova.camera
+$ cordova plugin add org.apache.cordova.camera --save
 ```
 
 #Setup Drupal

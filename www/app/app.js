@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('drupalionicDemo', ['ionic', 'd7-services', 'drupalionicDemo.config', 'drupalionicDemo.routes'])
+  angular.module('drupalionicDemo', ['ionic', 'ngCordova', 'd7-services', 'drupalionicDemo.config', 'drupalionicDemo.routes'])
     .run(runFunction);
 
   runFunction.$inject = ['$ionicPlatform'];
