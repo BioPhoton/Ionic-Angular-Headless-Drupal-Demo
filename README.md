@@ -3,7 +3,7 @@
 ####Deom of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services) Services in combination with the [Ionic SDK](https://github.com/driftyco/ionic)
 
 This demo covers Authentication, CRUD operations on Nodes and Image upload from device camera.
-You can see a live demo of this repo here or over Ionic View directli on your phone with this id *ccd889ce*.  
+You can see a live demo of this repo here or over Ionic View directli on your phone with this id **ccd889ce**.  
 Also worth checking [Drupal-API-Explorer](https://github.com/BioPhoton/ng-drupal-services-tests-with-ng) which covers every part of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services)
 
 Following scenarios are covered:
@@ -86,7 +86,7 @@ $ ionic run ios --device
 
 To easily share project progress we use [ionic view](http://view.ionic.io/) view to accomplish this.
 You can view it over the ionic app_id located in ionic.project in the root folder.  
-app ID: *ccd889ce*
+app ID: **ccd889ce**
 
 
 ###Cordova Plugins
