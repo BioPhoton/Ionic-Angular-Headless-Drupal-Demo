@@ -65,7 +65,8 @@ $ npm install -g ionic cordova bower
 To build your project for platforms or debugging over console setup codrova platforms and plugins.
 These are defined in the package.json file
 ```bash
-$ ionic state restore
+$ ionic state restore  
+$ ionic resources
 ```
 This will create the platforms folder and loads codrova android and ios platform.
 It also creates the plugins folder and loads the plugins defined in package.json
@@ -92,7 +93,7 @@ app ID: *ccd889ce*
 
 Following extra cordova libraries are installed:
 ```bash
-$ cordova plugin add org.apache.cordova.camera
+$ cordova plugin add org.apache.cordova.camera --save
 ```
 
 #Setup Drupal

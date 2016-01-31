@@ -1,5 +1,5 @@
 {
-  "name": "ionic-headless-drupal-demo",
+  "name": "Ionic-Headless-Drupal-Demo",
   "version": "0.2.1",
   "description": "Ionic-Headless-Drupal-Demo: An Ionic project that demonstrates the client side use of Drupals services 3.x module",
   "dependencies": {
@@ -16,8 +16,9 @@
     "shelljs": "^0.3.0"
   },
   "cordovaPlugins": [
-    "com.ionic.keyboard",
-    "cordova-plugin-camera"
+    "cordova-plugin-camera",
+    "cordova-plugin-whitelist",
+    "com.ionic.keyboard"
   ],
   "cordovaPlatforms": [
     "android"
