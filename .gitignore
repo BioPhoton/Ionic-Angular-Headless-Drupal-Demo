@@ -4,7 +4,10 @@
 node_modules/
 platforms/
 plugins/
+.io-config.json
+ionic.project
 
 # eclipse
 .project
 .settings
+/.idea/

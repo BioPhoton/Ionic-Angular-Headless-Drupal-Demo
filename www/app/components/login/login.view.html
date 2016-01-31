@@ -1,44 +1,51 @@
 <ion-view title="Login">
   <ion-nav-buttons side="left">
-       <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+    <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
   </ion-nav-buttons>
-      
+
   <ion-content>
     <form name="loginForm" novalidate="" ng-submit="login.doLogin(loginForm)">
-		
+
       <div class="list list-inset">
-      
-        <label class="item item-input" ng-class="{ 'has-error' : loginForm.username.$invalid && loginForm.$submitted, 'valid' : loginForm.password.$valid && loginForm.$submitted}">
-          <input ng-init="login.loginData.username = 'basic-user'" type="text" placeholder="Username" name="username" ng-model="login.loginData.username" autocorrect="off" autocapitalize="off" spellcheck="false" required>
+
+        <label class="item item-input"
+               ng-class="{ 'has-error' : loginForm.username.$invalid && loginForm.$submitted, 'valid' : loginForm.password.$valid && loginForm.$submitted}">
+          <input ng-init="login.loginData.username = 'basic-user'" type="text" placeholder="Username" name="username"
+                 ng-model="login.loginData.username" autocorrect="off" autocapitalize="off" spellcheck="false" required>
         </label>
-           <div class="form-errors"
+
+        <div class="form-errors"
              ng-show="loginForm.username.$invalid && loginForm.$submitted"
-             ng-messages="registerForm.username.$error" 
-             >
-             <div class="form-error" ng-message="required">This field is required.</div>
-        	</div>
-        <label class="item item-input" ng-class="{ 'has-error' : loginForm.password.$invalid && loginForm.$submitted, 'valid' : loginForm.password.$valid && loginForm.$submitted}">
-          <input ng-init="login.loginData.password = 'basic-user'" type="password" placeholder="Password" name="password" ng-model="login.loginData.password" required>
+             ng-messages="registerForm.username.$error"
+          >
+          <div class="form-error" ng-message="required">This field is required.</div>
+        </div>
+        <label class="item item-input"
+               ng-class="{ 'has-error' : loginForm.password.$invalid && loginForm.$submitted, 'valid' : loginForm.password.$valid && loginForm.$submitted}">
+          <input ng-init="login.loginData.password = 'basic-user'" type="password" placeholder="Password"
+                 name="password" ng-model="login.loginData.password" required>
         </label>
-           <div class="form-errors"
+
+        <div class="form-errors"
              ng-show="loginForm.password.$invalid && loginForm.$submitted"
-             ng-messages="registerForm.password.$error" 
-             >
-             <div class="form-error" ng-message="required">This field is required.</div>
-       	 	</div>
+             ng-messages="registerForm.password.$error"
+          >
+          <div class="form-error" ng-message="required">This field is required.</div>
+        </div>
 
         <div class="form-errors" ng-show="loginForm.$submitted">
-          <div class="form-error" ng-bind-html="error" ng-repeat="error in loginServerErrors" ></div>
+          <div class="form-error" ng-bind-html="error" ng-repeat="error in loginServerErrors"></div>
         </div>
 
-        <div class="button-bar" >
-          <button class="button button-block button-positive button-spinner" >
-          	<span ng-if="!login.loginIsPending" >Log in</span><span ng-if="login.loginIsPending">Logging in</span>  <ion-spinner ng-if="login.loginIsPending"></ion-spinner> 
+        <div class="button-bar">
+          <button class="button button-block button-positive button-spinner">
+            <span ng-if="!login.loginIsPending">Log in</span><span ng-if="login.loginIsPending">Logging in</span>
+            <ion-spinner ng-if="login.loginIsPending"></ion-spinner>
           </button>
         </div>
-        
-        <a class="button button-block button-positive"  ui-sref="app.register">Register</a>
-      </ion-list>
+
+        <a class="button button-block button-positive" ui-sref="app.register">Register</a>
+        </ion-list>
     </form>
   </ion-content>
 </ion-view>

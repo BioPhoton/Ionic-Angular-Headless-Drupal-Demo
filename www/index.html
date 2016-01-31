@@ -9,95 +9,47 @@
     <!-- compiled css output -->
     <link href="assets/css/ionic.app.css" rel="stylesheet">
 
+
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
-    
-    
-  
+
+
+
     <!-- bower components -->
     <script src="lib/ng-cordova/dist/ng-cordova.js"></script>
     <script src="lib/ngstorage/ngStorage.js"></script>
     <script src="lib/angular-cookies/angular-cookies.js"></script>
-    
-   
-    <!-- d7-services @TODO use bundle.min.js -->
-    <script src="lib/ng-drupal-7-services/src/commons/directives/directives.toggleByAccessLevel.js"></script>
-    <script src="lib/ng-drupal-7-services/src/commons/commons.drupalApiConfig.js"></script>
-    
-    <script src="lib/ng-drupal-7-services/src/commons/commons.helperService.js"></script>
-    <script src="lib/ng-drupal-7-services/src/commons/commons.validationConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/commons/commons.baseChannel.js"></script>
-    <script src="lib/ng-drupal-7-services/src/commons/commons.baseResource.js"></script>
-    
 
-    
-    <script src="lib/ng-drupal-7-services/src/commons/http/http.configurations.js"></script>
-    <script src="lib/ng-drupal-7-services/src/commons/http/http.requestAcceptIntercepter.js"></script>
-    
-    <script src="lib/ng-drupal-7-services/src/commons/authentication/authentication.httpIntercepter.js"></script>
-    <script src="lib/ng-drupal-7-services/src/commons/authentication/authentication.channelConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/commons/authentication/authentication.channel.js"></script>
-    <script src="lib/ng-drupal-7-services/src/commons/authentication/authentication.serviceConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/commons/authentication/authentication.service.js"></script>
-    <script src="lib/ng-drupal-7-services/src/commons/authentication/authentication.bundle.js"></script>
-         
-    <script src="lib/ng-drupal-7-services/src/resources/system/system.resourceConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/system/system.resource.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/system/system.channelConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/system/system.channel.js"></script>
-    
-    <script src="lib/ng-drupal-7-services/src/resources/user/user.resourceConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/user/user.resource.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/user/user.channelConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/user/user.channel.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/user/user.bundle.js"></script>
-    
-    <script src="lib/ng-drupal-7-services/src/resources/node/node.resourceConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/node/node.resource.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/node/node.channelConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/node/node.channel.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/node/node.bundle.js"></script>
-    
-    <script src="lib/ng-drupal-7-services/src/resources/file/file.resourceConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/file/file.resource.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/file/file.channelConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/file/file.channel.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/file/file.bundle.js"></script>
-    
-    <script src="lib/ng-drupal-7-services/src/resources/views/views.resourceConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/views/views.resource.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/views/views.channelConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/views/views.channel.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/views/views.operatorsConstant.js"></script>
-    <script src="lib/ng-drupal-7-services/src/resources/views/views.bundle.js"></script>
-    
+
+    <!-- d7-services -->
+    <script src="lib/ng-drupal-7-services/dist/ng-drupal-7-services.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-	
+
 
 
 	<!-- app components -->
-	<script src="app/app.controller.js"></script>	
+	<script src="app/app.controller.js"></script>
 	<script src="app/components/tour/tour.controller.js"></script>
-	<script src="app/components/register/register.controller.js"></script>	
-	<script src="app/components/login/login.controller.js"></script>	
+	<script src="app/components/register/register.controller.js"></script>
+	<script src="app/components/login/login.controller.js"></script>
 	<script src="app/components/profile/profile.controller.js"></script>
-	<script src="app/components/profile/profile.service.js"></script>	
-	
-	<script src="app/components/articleFeed/articleFeed.service.js"></script>	
+	<script src="app/components/profile/profile.service.js"></script>
+
+	<script src="app/components/articleFeed/articleFeed.service.js"></script>
 	<script src="app/components/articleFeed/articleFeed.controller.js"></script>
 	<script src="app/components/articleFeed/articleDetail/articleDetail.controller.js"></script>
-	
-	<script src="app/commons/directives.toggleByOwnUid.js"></script>	
-	<script src="app/commons/validation/validation.setValidAfterTouch.js"></script>	
-		
+
+	<script src="app/commons/directives.toggleByOwnUid.js"></script>
+	<script src="app/commons/validation/validation.setValidAfterTouch.js"></script>
+
     <!-- your app's js -->
-    <script src="app/app.config.js"></script>	
+    <script src="app/app.config.js"></script>
     <script src="app/app.routes.js"></script>
     <script src="app/app.js"></script>
-    
-    
+
+
   </head>
   <body ng-app="drupalionicDemo">
 
@@ -105,8 +57,8 @@
         <ion-nav-back-button class="button-icon ion-arrow-left-c">
         </ion-nav-back-button>
     </ion-nav-bar>
-    
+
   	<ion-nav-view></ion-nav-view>
-   
+
   </body>
 </html>

@@ -1,34 +1,35 @@
 <ion-view title="{{articleDetail.viewTitle || 'Detail'}}">
 
-<ion-nav-bar class="bar-dark">
+  <ion-nav-bar class="bar-dark">
 
-	<ion-nav-back-button class="button-clear">
-   			 <i class="ion-arrow-left-c"></i>
-  	</ion-nav-back-button>
+    <ion-nav-back-button class="button-clear">
+      <i class="ion-arrow-left-c"></i>
+    </ion-nav-back-button>
 
-	  
+
   </ion-nav-bar>
 
 
-
   <ion-content>
-<div class="list card">
-  <div class="item"  ng-class="articleDetail.pathToUserImg !== false?'item-avatar':''">
-    <img ng-if="articleDetail.pathToUserImg" ng-src="{{articleDetail.pathToUserImg}}">
-    <h2>{{articleDetail.title}}</h2>
-    <p>Created on {{articleDetail.created * 1000 | date }}</p>
-  </div>
+    <div class="list card">
+      <div class="item" ng-class="articleDetail.pathToUserImg !== false?'item-avatar':''">
+        <img ng-if="articleDetail.pathToUserImg" ng-src="{{articleDetail.pathToUserImg}}">
 
-  <div class="item item-body">
-    <img ng-if="articleDetail.pathToImg" class="full-image" ng-src="{{articleDetail.pathToImg}}">
-    <p>
-     {{articleDetail.body.und[0].value}}
-    </p>
-  </div>
-</div>
+        <h2>{{articleDetail.title}}</h2>
+
+        <p>Created on {{articleDetail.created * 1000 | date }}</p>
+      </div>
+
+      <div class="item item-body">
+        <img ng-if="articleDetail.pathToImg" class="full-image" ng-src="{{articleDetail.pathToImg}}">
+
+        <p>
+          {{articleDetail.body.und[0].value}}
+        </p>
+      </div>
+    </div>
 
 
-
-</ion-content>
+  </ion-content>
 
 </ion-view>

@@ -7,9 +7,9 @@
   line-height: 18px;
   bottom: 0px;
   text-transform: uppercase;
-  font-size:11px;
+  font-size: 11px;
   text-align: center;
-  padding : 0px;
+  padding: 0px;
   -webkit-transition: 200ms all;
 }
 
@@ -17,14 +17,14 @@
   -webkit-transition: 200ms top;
 }
 
-.has-bar-network .scroll  {
-padding-bottom:18px;
+.has-bar-network .scroll {
+  padding-bottom: 18px;
 }
 
 //make loading bar slide up/down
 .bar-network.ng-enter,
 .bar-network.ng-leave.ng-leave-active {
-  height: 0; 
+  height: 0;
   border-width: 0px;
 }
 

@@ -1,21 +1,24 @@
 <ion-view title="Profile" id="profile-view">
 
   <ion-content class="ionic" on-scroll="true" has-bouncing="false">
-             <div id="profile-wrapper" class="text-center">
-                <div class="content">
-                
-                    <div id="profile-image">
-	                    <ion-spinner class="overlay-spinner spinner-positive " ng-if="profile.isLoading"></ion-spinner>
-	                    <div ng-if="!profile.isLoading" class="avatar" style="background-image:url( {{ profile.pictureUrl || 'assets/images/default-avatar.png' }} )" />
-                    	</div>
-                    </div>
-                    <h3 class="light">{{profile.name}}</h3>
-                </div>
-            </div>
-            <br/>
-            <br/>
-            <br/>
-            <button class="button button-positive padding-vertical button-center" ui-sref="app.articleFeed">Visit articles feed</button>
+    <div id="profile-wrapper" class="text-center">
+      <div class="content">
+
+        <div id="profile-image">
+          <ion-spinner class="overlay-spinner spinner-positive " ng-if="profile.isLoading"></ion-spinner>
+          <div ng-if="!profile.isLoading" class="avatar"
+               style="background-image:url( {{ profile.pictureUrl || 'assets/images/default-avatar.png' }} )"/>
+        </div>
+      </div>
+      <h3 class="light">{{profile.name}}</h3>
+    </div>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <button class="button button-positive padding-vertical button-center" ui-sref="app.articleFeed">Visit articles
+      feed
+    </button>
   </ion-content>
-  
+
 </ion-view>

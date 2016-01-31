@@ -1,12 +1,12 @@
 <ion-side-menus enable-menu-with-back-views="true">
   <ion-side-menu-content>
-  
-    <ion-nav-bar class="bar-dark">     
-     <ion-nav-buttons side="left">
-       <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
-  		</ion-nav-buttons>
+
+    <ion-nav-bar class="bar-dark">
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+      </ion-nav-buttons>
     </ion-nav-bar>
-    
+
     <ion-nav-view class="test" name="menuContent"></ion-nav-view>
 
   </ion-side-menu-content>
@@ -16,26 +16,31 @@
     <ion-header-bar class="bar-dark">
       <h1 class="title">Menu</h1>
     </ion-header-bar>
-	  
+
     <ion-content class="" drag-content="true">
-      
+
       <ion-list class="list base-menu">
-		  <ion-item 													nav-clear menu-close 	ui-sref="app.tour">Tour</ion-item>
-	      <ion-item toggle-by-accesslevel="{{app.accessLevels.anon}}" 	nav-clear menu-close 	ui-sref="app.login">Login</ion-item>
-	  	  <ion-item toggle-by-accesslevel="{{app.accessLevels.anon}}" 	nav-clear menu-close 	ui-sref="app.register">Register</ion-item>
-	  	  <ion-item toggle-by-accesslevel="{{app.accessLevels.user}}" 	nav-clear menu-close 	ui-sref="app.profile">Profile</ion-item>
-	     
-	      <ion-item toggle-by-accesslevel="{{app.accessLevels.user}}" 	nav-clear  				ng-click="app.doLogout()" class="item-spinner-right" >
-	      	Logout
-	      	<ion-spinner ng-if="app.loggingOut"></ion-spinner>
-	      </ion-item>
-	      
-	      <ion-item														nav-clear menu-close	ui-sref="app.articleFeed"  class="item-spinner-right">
-		      Article Feed 
-		      <ion-spinner ng-if="app.loadingArticlt"></ion-spinner>
-	      </ion-item>
-		</ion-list>
-      
+        <ion-item nav-clear menu-close ui-sref="app.tour">Tour</ion-item>
+        <ion-item toggle-by-accesslevel="{{app.accessLevels.anon}}" nav-clear menu-close ui-sref="app.login">Login
+        </ion-item>
+        <ion-item toggle-by-accesslevel="{{app.accessLevels.anon}}" nav-clear menu-close ui-sref="app.register">
+          Register
+        </ion-item>
+        <ion-item toggle-by-accesslevel="{{app.accessLevels.user}}" nav-clear menu-close ui-sref="app.profile">Profile
+        </ion-item>
+
+        <ion-item toggle-by-accesslevel="{{app.accessLevels.user}}" nav-clear ng-click="app.doLogout()"
+                  class="item-spinner-right">
+          Logout
+          <ion-spinner ng-if="app.loggingOut"></ion-spinner>
+        </ion-item>
+
+        <ion-item nav-clear menu-close ui-sref="app.articleFeed" class="item-spinner-right">
+          Article Feed
+          <ion-spinner ng-if="app.loadingArticlt"></ion-spinner>
+        </ion-item>
+      </ion-list>
+
     </ion-content>
 
   </ion-side-menu>

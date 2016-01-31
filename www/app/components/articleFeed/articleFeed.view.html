@@ -1,46 +1,55 @@
 <ion-view title="Acticle Feed">
 
-<ion-nav-bar>
+  <ion-nav-bar>
 
-  	<ion-nav-buttons side="left">
-       	<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
-       	
-  	</ion-nav-buttons>
-  		
-	  <ion-nav-buttons side="right"> 
-	    <button toggle-by-accesslevel="{{app.accessLevels.user}}"  style="color:#0779bf" class="button button-icon icon no-animation ion-ios-plus" ng-click="articleFeed.openCreateModal()">
-	    </button>
-	    <button toggle-by-accesslevel="{{app.accessLevels.admin}}" class="button button-icon icon no-animation {{articleFeed.deleteVisible?'ion-ios-minus':'ion-ios-minus-outline'}}"  ng-click="articleFeed.deleteVisible = !articleFeed.deleteVisible">
-	    </button>
-	  </ion-nav-buttons>
+    <ion-nav-buttons side="left">
+      <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+
+    </ion-nav-buttons>
+
+    <ion-nav-buttons side="right">
+      <button toggle-by-accesslevel="{{app.accessLevels.user}}" style="color:#0779bf"
+              class="button button-icon icon no-animation ion-ios-plus" ng-click="articleFeed.openCreateModal()">
+      </button>
+      <button toggle-by-accesslevel="{{app.accessLevels.admin}}"
+              class="button button-icon icon no-animation {{articleFeed.deleteVisible?'ion-ios-minus':'ion-ios-minus-outline'}}"
+              ng-click="articleFeed.deleteVisible = !articleFeed.deleteVisible">
+      </button>
+    </ion-nav-buttons>
   </ion-nav-bar>
 
   <ion-content>
-   
-  	<ion-refresher on-refresh="articleFeed.doRefresh()"></ion-refresher>
 
-	<ion-list show-delete="articleFeed.deleteVisible" can-swipt="true">
-		<ion-item  ng-repeat="article in articleFeed.articles | orderBy:'-created' track by article.nid" class="item-icon-right item-thumbnail-left item-spinner-right" ng-click="articleFeed.openDetail(article)">
-		    <img ng-src="{{article.field_image.und[0].imgPath}}" />
-		    <h2>{{article.title}}</h2>
-		    <p>{{article.created * 1000 | date:'dd.MM.yyyy hh:mm:ss'}}</p>
-		    
-		    <ion-spinner ng-show="articleFeed.loadingDetail == article.nid"></ion-spinner>
-		    <i ng-show="articleFeed.loadingDetail != article.nid" class="icon ion-ios-arrow-right"  ng-click="articleFeed.openDetail(article.nid)"></i>
-		    
-		    <!--  
-		    <ion-option-button class="button-positive"  ng-click="articleFeed.openCreateModal(article, $index)">
-		    	Edit
-		    </ion-option-button>
-  			-->
-  			<ion-delete-button toggle-by-own-uid="{{article.uid}}" class="ion-minus-circled ion-delete-button" ng-click="articleFeed.deleteArticle(article, $index)">
-  				<ion-spinner ng-if="articleFeed.deletingArticle == article.nid"></ion-spinner>
-		    </ion-delete-button>
-		    
-	  	</ion-item>
-	</ion-list>
-	
-	<ion-infinite-scroll on-infinite="articleFeed.loadMore()" distance="5%"></ion-infinite-scroll>
-	
+    <ion-refresher on-refresh="articleFeed.doRefresh()"></ion-refresher>
+
+    <ion-list show-delete="articleFeed.deleteVisible" can-swipt="true">
+      <ion-item ng-repeat="article in articleFeed.articles | orderBy:'-created' track by article.nid"
+                class="item-icon-right item-thumbnail-left item-spinner-right"
+                ng-click="articleFeed.openDetail(article)">
+        <img ng-src="{{article.field_image.und[0].imgPath}}"/>
+
+        <h2>{{article.title}}</h2>
+
+        <p>{{article.created * 1000 | date:'dd.MM.yyyy hh:mm:ss'}}</p>
+
+        <ion-spinner ng-show="articleFeed.loadingDetail == article.nid"></ion-spinner>
+        <i ng-show="articleFeed.loadingDetail != article.nid" class="icon ion-ios-arrow-right"
+           ng-click="articleFeed.openDetail(article.nid)"></i>
+
+        <!--
+            <ion-option-button class="button-positive"  ng-click="articleFeed.openCreateModal(article, $index)">
+                Edit
+            </ion-option-button>
+              -->
+        <ion-delete-button toggle-by-own-uid="{{article.uid}}" class="ion-minus-circled ion-delete-button"
+                           ng-click="articleFeed.deleteArticle(article, $index)">
+          <ion-spinner ng-if="articleFeed.deletingArticle == article.nid"></ion-spinner>
+        </ion-delete-button>
+
+      </ion-item>
+    </ion-list>
+
+    <ion-infinite-scroll on-infinite="articleFeed.loadMore()" distance="5%"></ion-infinite-scroll>
+
   </ion-content>
 </ion-view>
