@@ -5,12 +5,11 @@
 This demo covers Authentication, CRUD operations on Nodes and Image upload from device camera.  
 
 
-You can see a **DEMO** of this repo [here](http://www.drupalionic.org/app_demo/)   
-or **DEMO-APP**over [Ionic View](http://view.ionic.io/) directly on your phone with this ID: **ccd889ce**.  
+You can see a **[WEB DEMO](http://www.drupalionic.org/app_demo/)** of this repo  
+or **DEMO-APP** over [Ionic View](http://view.ionic.io/) directly on your phone with this ID: **ccd889ce**.  
 
 
-Also worth checking is this **DEMO:** [Drupal-API-Explorer](https://github.com/BioPhoton/ng-drupal-services-tests-with-ng)   
-It covers every part of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services)
+Also worth checking is this **DEMO:** [Drupal-API-Explorer](https://github.com/BioPhoton/ng-drupal-services-tests-with-ng). It covers every part of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services)
 
 Following scenarios are covered:
 - Detecting first visit ever and skip tour on second fisit
