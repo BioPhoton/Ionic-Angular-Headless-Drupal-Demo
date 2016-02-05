@@ -98,7 +98,12 @@ $ cordova plugin add org.apache.cordova.camera --save
 
 #Setup Drupal
 - Setup drupal with  services as described in [Angular Drupal7 Services - Setup Drupal](https://github.com/BioPhoton/ng-drupal-7-services#setup-for-drupal)
-- In you permissions section enable create edit and delete nodes for authenticated users
+- In your Configuration -> People -> Permissions section enable following for authenticated users:
+  - Node Article: create
+  - Node Article: edit
+  - Node Article: delete
+  - Services: Save file information
+  - Services: Perform unlimited index queries
 - For a direct login after a user registers over the register form we need to  
   enable this in under Configuration -> People -> Account settings section.   Go there and leaf the "Require e-mail validation checkbox" unchecked.
 - To enable User Profile Pictures go to Configuration > People > Account settings and enable user pictures in the personalization settings. see also [here](- https://www.drupal.org/node/22271)
