@@ -1,6 +1,6 @@
 # Angular Drupal7 Services Ionic Demo
 
-####Deom of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services) Services in combination with the [Ionic SDK](https://github.com/driftyco/ionic)
+####Deom of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services) in combination with the [Ionic SDK](https://github.com/driftyco/ionic)
 
 This demo covers Authentication, CRUD operations on Nodes and Image upload from device camera.
 You can see a live demo of this repo here or over Ionic View directli on your phone with this id **ccd889ce**.  
@@ -51,14 +51,14 @@ $ npm install -g ionic cordova bower
   $ npm install
   ```
 3. Load bower lib's  
-  As all the thrid party libs are not in the repository we have to load them over bower  
+  As all the thrid party libs are not in the repository we have to load them over bower     
   ```bash
   $ bower update  
-  ```
-  Now you are ready to test it on desktop. Run following command:  
+  ```   
+  Now you are ready to test it on desktop. Run following command:    
   ```bash
-  $ ionic serve  
-  ```
+  $ ionic serve    
+  ```  
   
 ###Setup project for mobile development
 
