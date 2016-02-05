@@ -47,15 +47,16 @@ $ npm install -g ionic cordova bower
 2. Setup node_modules  
   In the ckecked out branch there is a package.json file   
   which contains all required node modules required for the gulp tasks as well   as the platforms and plugins of cordova  
-  ```bash
-  $ npm install
+ ```bash
+ $ npm install
   ```
+  
 3. Load bower lib's  
-  As all the thrid party libs are not in the repository we have to load them over bower     
+  As all the thrid party libs are not in the repository we have to load them over bower   
   ```bash
-  $ bower update  
-  ```   
-  Now you are ready to test it on desktop. Run following command:    
+  $ bower update 
+  ```
+  Now you are ready to test it on desktop. Run following command:     
   ```bash
   $ ionic serve    
   ```  
