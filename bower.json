@@ -2,7 +2,7 @@
   "name": "Ionic-Headless-Drupal-Demo",
   "dependencies": {
     "ionic": "driftyco/ionic-bower#~1.2",
-    "ng-drupal-7-services": "https://github.com/BioPhoton/ng-drupal-7-services.git",
+    "ng-drupal-7-services": "https://github.com/BioPhoton/ng-drupal-7-services.git#2.0.2",
     "ngstorage": "~0.3.9",
     "ngCordova": "~0.1",
     "bower": "*",

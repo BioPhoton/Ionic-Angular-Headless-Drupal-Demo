@@ -2,24 +2,24 @@
 
 }
 
-#toutView .slider {
-  height: 100%;
-}
-
-#toutView .slider .slider-slide {
-  padding-top: 60px;
-  text-align: center;
-  height: 100%;
-  width: 100%;
-}
-
-#toutView .slider-slide .slide h1 {
-
-}
-
-#toutView .slider-pager {
+#toutView .ion-slides {
+  bottom: 0px;
   position: absolute;
-  bottom: 90px;
+
+  .swiper-slide {
+    padding-top: 60px;
+    text-align: center;
+    background:#eee;
+    height: 100%;
+    width: 100%;
+  }
+
+  .swiper-pagination {
+    position: absolute;
+    bottom: 90px;
+  }
+
+
 }
 
 
