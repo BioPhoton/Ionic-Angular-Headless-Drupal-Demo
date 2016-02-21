@@ -19,7 +19,7 @@
   /** @ngInject */
   function configFunction($stateProvider, $urlRouterProvider, $localStorageProvider, AuthenticationServiceConstant) {
 
-    //http://angular-ui.github.io/ui-router/site/#/api/ui.router.router.$urlRouterProvider#methods_deferintercept
+    // http://angular-ui.github.io/ui-router/site/#/api/ui.router.router.$urlRouterProvider#methods_deferintercept
     // Prevent $urlRouter from automatically intercepting URL changes;
     // this allows you to configure custom behavior in between location changes and route synchronization
     //
@@ -127,7 +127,6 @@
 
   };
 
-
   runFunction.$inject = ['$rootScope', 'AuthenticationService', '$state', '$localStorage', 'DrupalApiConstant', '$urlRouter', '$ionicLoading'];
 
 
@@ -162,10 +161,11 @@
 
       if (AuthenticationService.getLastConnectTime() > 0) {
         //sync the current URL to the router
+
         $urlRouter.sync();
         return;
       }
-
+      console.log('locationChangeStartCallback');
       // Prevent $urlRouter's default handler from firing
       e.preventDefault();
       $rootScope.$broadcast('loading:show', {loading_settings: {template: "<p><ion-spinner></ion-spinner><br/>Connect with System...</p>"}});

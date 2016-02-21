@@ -41,7 +41,7 @@ $ npm install -g ionic cordova bower
   Then cd into the folder and check out the dev branch
   ```bash
   $ cd [project_name]  
-  $ git checkout dev
+  $ git checkout master
   ```
 
 2. Setup node_modules  

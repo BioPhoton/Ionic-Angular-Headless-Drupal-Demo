@@ -2,7 +2,6 @@
 
   <ion-nav-bar class="bar-dark">
     <ion-nav-buttons side="left">
-      <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
 
     <ion-nav-buttons side="secondary">
@@ -12,6 +11,29 @@
     </ion-nav-buttons>
   </ion-nav-bar>
 
+
+<ion-pane>
+
+    <ion-slides  drag-content="false" class="ion-slides has-header"  options="tour.options" slider="tour.data.slider">
+      <ion-slide-page>
+        <h1>NG Drupal7 Services</h1>
+        <p>Native app usecases with angular, ionic and cordova</p>
+      </ion-slide-page>
+
+      <ion-slide-page>
+        <h1>Registration, authentication and access</h1>
+        <p>Using the authentication service to with user authentication and access control</p>
+      </ion-slide-page>
+
+      <ion-slide-page>
+        <h1>CRUD operations and image from camera</h1>
+        <p>Using the resource services to create edit and update nodes. Upload images from the camera.</p>
+      </ion-slide-page>
+    </ion-slides>
+
+</ion-pane>
+
+  <!--
   <ion-slide-box class="has-header" ng-class="has-message" show-pager="true" on-slide-changed="slideChanged(index)">
     <ion-slide>
       <h1>First Slide!</h1>
@@ -29,5 +51,5 @@
       <p class="padding">Some text also here</p>
     </ion-slide>
   </ion-slide-box>
-
+-->
 </ion-view>
