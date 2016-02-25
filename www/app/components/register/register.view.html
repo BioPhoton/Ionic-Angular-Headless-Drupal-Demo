@@ -25,12 +25,9 @@
 
         </label>
 
-
         <ng-messages class="form-errors"
-                     ng-if="registerForm.name.$invalid && registerForm.name.$touched || registerForm.$submitted"
                      for="registerForm.name.$error">
-          <div class="form-error" ng-message="required">This field is required.</div>
-          <div class="form-error" ng-message="name-taken">User already taken</div>
+          <div class="form-error" ng-message="required"  ng-if="registerForm.name.$untouched" >This field is required.</div>
         </ng-messages>
 
         <label class="item item-input"
@@ -45,16 +42,14 @@
         </label>
 
         <ng-messages class="form-errors"
-                     ng-if="registerForm.mail.$invalid && registerForm.mail.$touched || registerForm.$submitted"
+                     ng-if="registerForm.email.$invalid && registerForm.email.$touched || registerForm.email.$invalid && registerForm.$submitted"
                      for="registerForm.mail.$error">
-          <div class="form-error" ng-message="required">This field is required.</div>
+          <ng-message when="required">This field is required.</ng-message>
           <div class="form-error" ng-message="email">This is not valid email address.</div>
-
-          <div class="form-error" ng-message="email-taken">Email already tqken</div>
         </ng-messages>
 
         <label class="item item-input"
-               ng-class="{ 'has-error':  registerForm.pass.$touched &&  registerForm.pass.$invalid ||  registerForm.pass.$invalid && registerForm.$submitted}">
+               ng-class="{ 'has-error':  registerForm.pass.$touched && registerForm.pass.$invalid ||  registerForm.pass.$invalid && registerForm.$submitted}">
           <input type="password"
                  placeholder="Password"
                  name="pass"
@@ -64,7 +59,7 @@
         </label>
 
         <ng-messages class="form-errors"
-                     ng-if="registerForm.pass.$invalid && registerForm.pass.$touched || registerForm.$submitted"
+                     ng-if="registerForm.pass.$invalid && registerForm.pass.$touched ||  registerForm.pass.$invalid && registerForm.$submitted"
                      for="registerForm.pass.$error">
           <div ng-message="required">This field is required.</div>
         </ng-messages>

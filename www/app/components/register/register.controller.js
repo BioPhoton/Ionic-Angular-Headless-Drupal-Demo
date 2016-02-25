@@ -4,7 +4,7 @@
 
 
   angular
-    .module('drupalionicDemo.register.controller', ['commons.validation.setValidAfterTouch', 'ngStorage'])
+    .module('drupalionicDemo.register.controller', ['commons.validation.setValidAfterTouch', 'ngStorage', 'ngMessages'])
     .controller('RegisterController', RegisterController);
 
   RegisterController.$inject = ['$scope', 'UserResource', 'AuthenticationService', '$localStorage'];
