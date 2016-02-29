@@ -1,10 +1,15 @@
 # Angular Drupal7 Services Ionic Demo
 
-####Deom of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services) Services in combination with the [Ionic SDK](https://github.com/driftyco/ionic)
+####Deom of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services) in combination with the [Ionic SDK](https://github.com/driftyco/ionic)
 
-This demo covers Authentication, CRUD operations on Nodes and Image upload from device camera.
-You can see a live demo of this repo here or over Ionic View directli on your phone with this id *ccd889ce*.  
-Also worth checking [Drupal-API-Explorer](https://github.com/BioPhoton/ng-drupal-services-tests-with-ng) which covers every part of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services)
+This demo covers Authentication, CRUD operations on Nodes and Image upload from device camera.  
+
+
+You can see a **[WEB DEMO](http://www.drupalionic.org/app_demo/)** of this repo  
+or **DEMO-APP** over [Ionic View](http://view.ionic.io/) directly on your phone with this ID: **ccd889ce**.  
+
+
+Also worth checking is this **DEMO:** [Drupal-API-Explorer](https://github.com/BioPhoton/ng-drupal-services-tests-with-ng). It covers every part of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services)
 
 Following scenarios are covered:
 - Detecting first visit ever and skip tour on second fisit
@@ -47,18 +52,19 @@ $ npm install -g ionic cordova bower
 2. Setup node_modules  
   In the ckecked out branch there is a package.json file   
   which contains all required node modules required for the gulp tasks as well   as the platforms and plugins of cordova  
-  ```bash
-  $ npm install
+ ```bash
+ $ npm install
   ```
+  
 3. Load bower lib's  
-  As all the thrid party libs are not in the repository we have to load them over bower  
+  As all the thrid party libs are not in the repository we have to load them over bower   
   ```bash
-  $ bower update  
+  $ bower update 
   ```
-  Now you are ready to test it on desktop. Run following command:  
+  Now you are ready to test it on desktop. Run following command:     
   ```bash
-  $ ionic serve  
-  ```
+  $ ionic serve    
+  ```  
   
 ###Setup project for mobile development
 
@@ -86,7 +92,7 @@ $ ionic run ios --device
 
 To easily share project progress we use [ionic view](http://view.ionic.io/) view to accomplish this.
 You can view it over the ionic app_id located in ionic.project in the root folder.  
-app ID: *ccd889ce*
+app ID: **ccd889ce**
 
 
 ###Cordova Plugins
@@ -97,7 +103,13 @@ $ cordova plugin add org.apache.cordova.camera --save
 ```
 
 #Setup Drupal
-- In you permissions section enable create edit and delete nodes for authenticated users
+- Setup drupal with  services as described in [Angular Drupal7 Services - Setup Drupal](https://github.com/BioPhoton/ng-drupal-7-services#setup-for-drupal)
+- In your Configuration -> People -> Permissions section enable following for authenticated users:
+  - Node Article: create
+  - Node Article: edit
+  - Node Article: delete
+  - Services: Save file information
+  - Services: Perform unlimited index queries
 - For a direct login after a user registers over the register form we need to  
   enable this in under Configuration -> People -> Account settings section.   Go there and leaf the "Require e-mail validation checkbox" unchecked.
 - To enable User Profile Pictures go to Configuration > People > Account settings and enable user pictures in the personalization settings. see also [here](- https://www.drupal.org/node/22271)
