@@ -6,50 +6,54 @@
 
   <ion-content>
 
-    <form name="registerForm" novalidate="" ng-submit="register.doRegister(registerForm)">
+    <form name="register.registerForm" novalidate="" ng-submit="register.doRegister()">
 
       <div class="list list-inset">
 
+
         <label class="item item-input"
-               ng-class="{ 'has-error':  registerForm.name.$touched &&  registerForm.name.$invalid ||  registerForm.name.$invalid && registerForm.$submitted}">
+               ng-class="{ 'has-error':  register.registerForm.name.$touched &&  register.registerForm.name.$invalid
+                                     ||  register.registerForm.name.$invalid && register.registerForm.$submitted}">
 
           <input type="text"
                  ng-model="register.registerData.name"
                  placeholder="Username"
                  name="name"
                  name-taken
-                 autocorrect="off"
-                 autocapitalize="off"
                  required
                  spellcheck="false">
-
         </label>
 
         <ng-messages class="form-errors"
-                     for="registerForm.name.$error">
-          <div class="form-error" ng-message="required"  ng-if="registerForm.name.$untouched" >This field is required.</div>
+                     for="register.registerForm.name.$error"
+                     ng-if="register.registerForm.name.$touched &&  register.registerForm.name.$invalid || register.registerForm.name.$invalid && register.registerForm.$submitted">
+          <div class="form-error" ng-message="required">This field is required.</div>
+          <div class="form-error" ng-message="name-taken">This name is already taken.</div>
         </ng-messages>
 
         <label class="item item-input"
-               ng-class="{ 'has-error':  registerForm.mail.$touched &&  registerForm.mail.$invalid ||  registerForm.mail.$invalid && registerForm.$submitted}">
+               ng-class="{ 'has-error':  register.registerForm.mail.$touched &&  register.registerForm.mail.$invalid ||  register.registerForm.mail.$invalid && register.registerForm.$submitted}">
+
           <input type="email"
-                 placeholder="Email Address"
-                 name="mail"
-                 email-taken
                  ng-model="register.registerData.mail"
+                 placeholder="Email"
+                 name="mail"
                  required
-            >
+                 email-taken
+                 spellcheck="false">
         </label>
 
         <ng-messages class="form-errors"
-                     ng-if="registerForm.email.$invalid && registerForm.email.$touched || registerForm.email.$invalid && registerForm.$submitted"
-                     for="registerForm.mail.$error">
-          <ng-message when="required">This field is required.</ng-message>
-          <div class="form-error" ng-message="email">This is not valid email address.</div>
+                     for="register.registerForm.mail.$error"
+                     ng-if="register.registerForm.mail.$touched &&  register.registerForm.mail.$invalid ||  register.registerForm.mail.$invalid && register.registerForm.$submitted">
+          <div class="form-error" ng-message="required">This field is required.</div>
+          <div class="form-error" ng-message="mail">This is no valid mail.</div>
+          <div class="form-error" ng-message="email-taken">This email is already taken.</div>
         </ng-messages>
 
+
         <label class="item item-input"
-               ng-class="{ 'has-error':  registerForm.pass.$touched && registerForm.pass.$invalid ||  registerForm.pass.$invalid && registerForm.$submitted}">
+               ng-class="{ 'has-error':  register.registerForm.pass.$touched && register.registerForm.pass.$invalid ||  register.registerForm.pass.$invalid && register.registerForm.$submitted}">
           <input type="password"
                  placeholder="Password"
                  name="pass"
@@ -59,18 +63,18 @@
         </label>
 
         <ng-messages class="form-errors"
-                     ng-if="registerForm.pass.$invalid && registerForm.pass.$touched ||  registerForm.pass.$invalid && registerForm.$submitted"
-                     for="registerForm.pass.$error">
+                     ng-if="register.registerForm.pass.$invalid && register.registerForm.pass.$touched"
+                     for="register.registerForm.pass.$error">
           <div ng-message="required">This field is required.</div>
         </ng-messages>
 
-        <button class="button button-block button-positive button-spinner" ng-click="createAccount()">
+        <button class="button button-block button-positive button-spinner">
           <span ng-if="!register.registerIsPending">Create Account</span>
           <span ng-if="register.registerIsPending">Creating Account</span>
           <ion-spinner ng-if="register.registerIsPending"></ion-spinner>
         </button>
 
-        <button class="button button-block button-positive" ui-sref="app.login">Login</button>
+        <a class="button button-block button-positive" ng-click="register.goToLogin(register.registerForm)">Login</a>
 
       </div>
 

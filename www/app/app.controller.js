@@ -18,9 +18,18 @@
     vm.accessLevels = AuthenticationServiceConstant.accessLevels;
     vm.loggingOut = false;
 
+    vm.resetForm = resetForm;
     vm.doLogout = doLogout;
 
+
+
     ///////////////////////
+
+    function resetForm(form) {
+      form.$setPristine();
+      form.$setUntouched();
+    }
+
 
     function doLogout() {
 

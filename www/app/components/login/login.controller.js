@@ -3,15 +3,16 @@
   'use strict';
 
   angular
-    .module('drupalionicDemo.login.controller', [])
+    .module('drupalionicDemo.login.controller', ['ngMessages'])
     .controller('LoginController', LoginController)
 
-  LoginController.$inject = ['$scope', '$timeout', 'AuthenticationService'];
-  function LoginController($scope, $timeout, AuthenticationService) {
+  LoginController.$inject = ['$scope', 'AuthenticationService'];
+  function LoginController($scope, AuthenticationService) {
 
     // jshint validthis: true
     var vm = this;
 
+    //data for vm.loginForm
     vm.loginData = {
       username: '',
       password: ''
@@ -21,12 +22,18 @@
     vm.loginIsPending = false;
 
     vm.doLogin = doLogin;
+    vm.goToRegister = goToRegister;
 
     ///////////////
 
-    function doLogin(form) {
+    function goToRegister() {
+      $scope.app.resetForm(vm.loginForm);
+      $scope.app.$state.go('app.register');
+    }
 
-      if (form.$valid) {
+    function doLogin() {
+
+      if (vm.loginForm.$valid) {
         vm.loginServerErrors = '';
         vm.loginIsPending = true;
 
@@ -34,20 +41,13 @@
           .then(
           function (data) {
             vm.loginIsPending = false;
-
-            //reste form
-            form.$error = {};
-            form.$pristine = true;
-            form.$dirty = false;
-            form.$valid = true;
-            form.$invalid = false;
-
+            $scope.app.resetForm(form);
             $scope.app.$state.go('app.profile');
           },
           //error
-          function (data) {
+          function (errorResult) {
             vm.loginIsPending = false;
-            vm.loginServerErrors = data;
+            vm.loginForm.username.$setValidity('inactive-or-blocked', false);
           }
         );
 

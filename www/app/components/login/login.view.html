@@ -4,38 +4,52 @@
   </ion-nav-buttons>
 
   <ion-content>
-    <form name="loginForm" novalidate="" ng-submit="login.doLogin(loginForm)">
+    <form name="login.loginForm" novalidate="" ng-submit="login.doLogin(login.loginForm)">
 
       <div class="list list-inset">
 
-        <label class="item item-input"
-               ng-class="{ 'has-error' : loginForm.username.$invalid && loginForm.$submitted, 'valid' : loginForm.password.$valid && loginForm.$submitted}">
-          <input ng-init="login.loginData.username = 'basic-user'" type="text" placeholder="Username" name="username"
-                 ng-model="login.loginData.username" autocorrect="off" autocapitalize="off" spellcheck="false" required>
-        </label>
-
-        <div class="form-errors"
-             ng-show="loginForm.username.$invalid && loginForm.$submitted"
-             ng-messages="registerForm.username.$error"
-          >
-          <div class="form-error" ng-message="required">This field is required.</div>
-        </div>
-        <label class="item item-input"
-               ng-class="{ 'has-error' : loginForm.password.$invalid && loginForm.$submitted, 'valid' : loginForm.password.$valid && loginForm.$submitted}">
-          <input ng-init="login.loginData.password = 'basic-user'" type="password" placeholder="Password"
-                 name="password" ng-model="login.loginData.password" required>
-        </label>
-
-        <div class="form-errors"
-             ng-show="loginForm.password.$invalid && loginForm.$submitted"
-             ng-messages="registerForm.password.$error"
-          >
-          <div class="form-error" ng-message="required">This field is required.</div>
-        </div>
-
-        <div class="form-errors" ng-show="loginForm.$submitted">
+        <div class="form-errors" ng-show="login.loginForm.$submitted">
           <div class="form-error" ng-bind-html="error" ng-repeat="error in loginServerErrors"></div>
         </div>
+
+        <label class="item item-input"
+               ng-class="{ 'has-error':  login.loginForm.username.$touched &&  login.loginForm.username.$invalid ||  login.loginForm.username.$invalid && login.loginForm.$submitted}">
+
+          <input type="text"
+                 ng-model="register.registerData.username"
+                 placeholder="Email"
+                 name="username"
+                 required
+                 inactive-or-blocked
+                 spellcheck="false">
+        </label>
+
+        <ng-messages class="form-errors"
+                     for="login.loginForm.username.$error"
+                     ng-if="login.loginForm.username.$touched &&  login.loginForm.username.$invalid ||  login.loginForm.username.$invalid && login.loginForm.$submitted">
+          <div class="form-error" ng-message="required">This field is required.</div>
+          <div class="form-error" ng-message="inactive-or-blocked">"The username {{register.registerData.username}} has not been activated or is blocked.</div>
+        </ng-messages>
+
+
+        <label class="item item-input"
+               ng-class="{ 'has-error':  login.loginForm.password.$touched &&  login.loginForm.password.$invalid ||  login.loginForm.password.$invalid && login.loginForm.$submitted}">
+
+          <input type="password"
+                 ng-model="register.registerData.password"
+                 placeholder="Password"
+                 name="password"
+                 required
+                 spellcheck="false">
+        </label>
+
+        <ng-messages class="form-errors"
+                     for="login.loginForm.password.$error"
+                     ng-if="login.loginForm.password.$touched &&  login.loginForm.password.$invalid">
+          <div class="form-error" ng-message="required">This field is required.</div>
+          <div class="form-error" ng-message="password">This is no valid password.</div>
+        </ng-messages>
+
 
         <div class="button-bar">
           <button class="button button-block button-positive button-spinner">
@@ -44,8 +58,14 @@
           </button>
         </div>
 
-        <a class="button button-block button-positive" ui-sref="app.register">Register</a>
-        </ion-list>
+        <a class="button button-block button-positive" ng-click="login.goToRegister()">Register</a>
+      </div>
+
+
+
+
+
+
     </form>
   </ion-content>
 </ion-view>
