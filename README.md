@@ -104,8 +104,8 @@ $ cordova plugin add org.apache.cordova.camera --save
 
 #Setup Drupal
 - Setup drupal with  services as described in [Angular Drupal7 Services - Setup Drupal](https://github.com/BioPhoton/ng-drupal-7-services#setup-for-drupal)
-- Import the [article-feed view settings]()
-- Import the [permissions settings]() with the [Export Roles & Permissions](https://www.drupal.org/project/export_roles_permissions) module
+- Import the [article-feed view settings](https://github.com/BioPhoton/Ionic-Angular-Headless-Drupal-Demo/blob/dev/drupal/article_view_export.txt)
+- Import the [permissions settings](https://github.com/BioPhoton/Ionic-Angular-Headless-Drupal-Demo/blob/dev/drupal/permissions_export.txt) with the [Export Roles & Permissions](https://www.drupal.org/project/export_roles_permissions) module
   In your Configuration -> People -> Permissions section enable following for authenticated users:
   - Node Article: create
   - Node Article: edit
