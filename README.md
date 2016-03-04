@@ -13,13 +13,17 @@ Also worth checking is this **DEMO:** [Drupal-API-Explorer](https://github.com/B
 
 Following scenarios are covered:
 - Detecting first visit ever and skip tour on second fisit
-- Registration
+- Registration and redirect if already registered
 - Authentication
+- form client and server side validation with ngMessages
 - Reauthentication on app start
-- CRUD operations
-- Image upload with camera plugin usage
-- Handle route access 
-- Using helper directives 
+- CRUD operations 
+  - restrictions by user role 
+- Image upload with camera plugin usage (or cordova plugin on chrome)
+- Handle route access over access levels
+- Directives for:
+  - Validation
+  - UI-Interaction over user data
 
 ##Setup
 For general information visit the official [ionic guide](http://ionicframework.com/docs/guide/).
