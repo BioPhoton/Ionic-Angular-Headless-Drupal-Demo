@@ -21,35 +21,62 @@
       </ion-slide-page>
 
       <ion-slide-page>
-        <h1>Registration, authentication and access</h1>
-        <p>Using the authentication service to with user authentication and access control</p>
+        <h1>Detecting first visit</h1>
+        <p>First visti flag is stored on device and skips tour on second fisit automatically</p>
       </ion-slide-page>
 
       <ion-slide-page>
-        <h1>CRUD operations and image from camera</h1>
-        <p>Using the resource services to create edit and update nodes. Upload images from the camera.</p>
+        <h1>Registration and redirects</h1>
+        <p>Registered flag is stored on device and redirects if  the user is already registered</p>
       </ion-slide-page>
+
+      <ion-slide-page>
+        <h1>Easy to implement Authentication</h1>
+        <p>Authentication is done over a Authentication Service for simplifying the workflow</p>
+      </ion-slide-page>
+
+      <ion-slide-page>
+        <h1>Client and server validation for forms</h1>
+        <p>Form are setup with  with ngMessages directive and handles server side error messages</p>
+      </ion-slide-page>
+
+      <ion-slide-page>
+        <h1>Reauthentication on app start</h1>
+        <p>On app start the authentication state gets refreshed and become either authed or not</p>
+      </ion-slide-page>
+
+      <ion-slide-page>
+        <h1>Content feed</h1>
+        <p>Nodes are listed over a view that implements refresh and infinite scroll functionality.</p>
+      </ion-slide-page>
+
+      <ion-slide-page>
+        <h1>CRUD operations</h1>
+        <p>Nodes can be created edited and deleted</p>
+      </ion-slide-page>
+
+      <ion-slide-page>
+        <h1>Camera usage</h1>
+        <p>Take images over the devices camera (or <a href="https://github.com/pbernasconi/chrome-cordova">cordova mocks plugin</a> on chrome) and upload attache them to a node.</p>
+      </ion-slide-page>
+
+      <ion-slide-page>
+        <h1>Restrictions by role</h1>
+        <p>CRUD operations are restricted over the user roles</p>
+      </ion-slide-page>
+
+      <ion-slide-page>
+        <h1>Route access</h1>
+        <p>Handle route access over access levels and roles</p>
+      </ion-slide-page>
+
+      <ion-slide-page>
+        <h1>Easy to use directives</h1>
+        <p>For now a validation helper and a ui-interactor directive are provided</p>
+      </ion-slide-page>
+
     </ion-slides>
 
 </ion-pane>
 
-  <!--
-  <ion-slide-box class="has-header" ng-class="has-message" show-pager="true" on-slide-changed="slideChanged(index)">
-    <ion-slide>
-      <h1>First Slide!</h1>
-
-      <p class="padding">Some text here</p>
-    </ion-slide>
-    <ion-slide>
-      <h1>Second Slide!</h1>
-
-      <p class="padding">Some other text here</p>
-    </ion-slide>
-    <ion-slide>
-      <h1>Third Slide!</h1>
-
-      <p class="padding">Some text also here</p>
-    </ion-slide>
-  </ion-slide-box>
--->
 </ion-view>
