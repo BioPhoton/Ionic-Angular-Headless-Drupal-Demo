@@ -14,11 +14,10 @@
 
     //data for vm.loginForm
     vm.loginData = {
-      username: '',
-      password: ''
+      username: 'basic-user',
+      password: 'basic-user'
     };
 
-    vm.loginServerErrors = '';
     vm.loginIsPending = false;
 
     vm.doLogin = doLogin;
@@ -32,16 +31,14 @@
     }
 
     function doLogin() {
-
       if (vm.loginForm.$valid) {
-        vm.loginServerErrors = '';
         vm.loginIsPending = true;
 
         AuthenticationService.login(vm.loginData)
           .then(
           function (data) {
             vm.loginIsPending = false;
-            $scope.app.resetForm(form);
+            $scope.app.resetForm(vm.loginForm);
             $scope.app.$state.go('app.profile');
           },
           //error

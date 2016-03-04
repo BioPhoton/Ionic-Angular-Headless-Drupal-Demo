@@ -4,7 +4,7 @@
   </ion-nav-buttons>
 
   <ion-content>
-    <form name="login.loginForm" novalidate="" ng-submit="login.doLogin(login.loginForm)">
+    <form name="login.loginForm" novalidate="" ng-submit="login.doLogin()">
 
       <div class="list list-inset">
 
@@ -16,8 +16,8 @@
                ng-class="{ 'has-error':  login.loginForm.username.$touched &&  login.loginForm.username.$invalid ||  login.loginForm.username.$invalid && login.loginForm.$submitted}">
 
           <input type="text"
-                 ng-model="register.registerData.username"
-                 placeholder="Email"
+                 ng-model="login.loginData.username"
+                 placeholder="Usernam"
                  name="username"
                  required
                  inactive-or-blocked
@@ -28,7 +28,7 @@
                      for="login.loginForm.username.$error"
                      ng-if="login.loginForm.username.$touched &&  login.loginForm.username.$invalid ||  login.loginForm.username.$invalid && login.loginForm.$submitted">
           <div class="form-error" ng-message="required">This field is required.</div>
-          <div class="form-error" ng-message="inactive-or-blocked">"The username {{register.registerData.username}} has not been activated or is blocked.</div>
+          <div class="form-error" ng-message="inactive-or-blocked">"The username {{login.loginData.username}} has not been activated or is blocked.</div>
         </ng-messages>
 
 
@@ -36,7 +36,7 @@
                ng-class="{ 'has-error':  login.loginForm.password.$touched &&  login.loginForm.password.$invalid ||  login.loginForm.password.$invalid && login.loginForm.$submitted}">
 
           <input type="password"
-                 ng-model="register.registerData.password"
+                 ng-model="login.loginData.password"
                  placeholder="Password"
                  name="password"
                  required

@@ -159,13 +159,14 @@
     //we need this to have out current auth state before any other thing in router happens
     function locationChangeStartCallback(e) {
 
+
       if (AuthenticationService.getLastConnectTime() > 0) {
         //sync the current URL to the router
 
         $urlRouter.sync();
         return;
       }
-      console.log('locationChangeStartCallback');
+
       // Prevent $urlRouter's default handler from firing
       e.preventDefault();
       $rootScope.$broadcast('loading:show', {loading_settings: {template: "<p><ion-spinner></ion-spinner><br/>Connect with System...</p>"}});
@@ -173,14 +174,16 @@
       AuthenticationService
         .refreshConnection()
         .then(
-        function () {
+        function (success) {
           $rootScope.$broadcast('loading:hide');
+
           //sync the current URL to the router
           $urlRouter.sync();
         }
       )
         .catch(
-        function () {
+        function (error) {
+
           $rootScope.$broadcast('loading:hide');
           //sync the current URL to the router
           $urlRouter.sync();
@@ -188,16 +191,21 @@
       );
 
       // Configures $urlRouter's listener *after* your custom listener
-      $urlRouter.listen();
+      //$urlRouter.listen();
     };
 
     function stateChangeStartCallback(event, toState, toParams, fromState, fromParams) {
 
+
       // if its the users first visit to the app show the apps tour
-      if (!$localStorage.firstVisit && toState.name !== 'app.tour') {
-        event.preventDefault();
-        $state.go('app.tour');
-        return;
+      if (toState.name !== 'app.tour') {
+
+        if (!$localStorage.firstVisit) {
+          event.preventDefault();
+          $state.go('app.tour');
+          return;
+        }
+
       }
 
       //redirects for logged in user away from login or register and show its profile instead
@@ -214,12 +222,11 @@
         event.preventDefault();
         if ($localStorage.isRegistered) {
           $state.go('app.login');
-          return;
-        }
-        else {
+        } else {
           $state.go('app.register');
-          return;
         }
+
+        return;
       }
     }
 

@@ -16,9 +16,9 @@
 
     //data for vm.registerForm
     vm.registerData = {
-      name: '',
-      mail: '',
-      pass: ''
+      name: 'basic-user',
+      mail: 'basic-user@drupalionic.org',
+      pass: 'basic-user'
     };
 
     vm.registerIsPending = false;
