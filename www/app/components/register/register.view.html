@@ -19,6 +19,7 @@
                  ng-model="register.registerData.name"
                  placeholder="Username"
                  name="name"
+                 set-valid-after-change="name-taken"
                  name-taken
                  required
                  spellcheck="false">
@@ -39,6 +40,7 @@
                  placeholder="Email"
                  name="mail"
                  required
+                 set-valid-after-change="email-taken"
                  email-taken
                  spellcheck="false">
         </label>

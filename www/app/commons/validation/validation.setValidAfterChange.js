@@ -3,13 +3,13 @@
   'use strict';
 
   angular
-    .module('commons.validation.setValidAfterTouch', [])
-    .directive('setValidAfterTouch', setValidAfterTouch);
+    .module('commons.validation.setValidAfterChange', [])
+    .directive('setValidAfterChange', setValidAfterChange);
 
-  //setValidAfterTouch.$inject = [''];
+  //setValidAfterChange.$inject = [''];
 
   /** @ngInject */
-  function setValidAfterTouch() {
+  function setValidAfterChange() {
 
     return {
       // restrict to an attribute type.
@@ -18,9 +18,10 @@
       require: 'ngModel',
       link: function (scope, ele, attrs, ngModelCtrl) {
 
-        var validation = attrs.setValidAfterTouch;
+        var validation = attrs.setValidAfterChange;
 
         ngModelCtrl.$parsers.unshift(function (value) {
+          console.log(value);
           if (ngModelCtrl.$invalid) {
             if (value) {
               ngModelCtrl.$setValidity(validation, true);

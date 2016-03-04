@@ -1,5 +1,6 @@
 {
   "name": "Ionic-Headless-Drupal-Demo",
+  "version": "1.1.0",
   "dependencies": {
     "ionic": "driftyco/ionic-bower#~1.2",
     "ng-drupal-7-services": "https://github.com/BioPhoton/ng-drupal-7-services.git#2.1.0",

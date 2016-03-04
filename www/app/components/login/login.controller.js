@@ -3,7 +3,7 @@
   'use strict';
 
   angular
-    .module('drupalionicDemo.login.controller', ['ngMessages'])
+    .module('drupalionicDemo.login.controller', ['ngMessages', 'commons.validation.setValidAfterChange'])
     .controller('LoginController', LoginController)
 
   LoginController.$inject = ['$scope', 'AuthenticationService'];

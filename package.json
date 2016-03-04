@@ -1,6 +1,6 @@
 {
   "name": "Ionic-Headless-Drupal-Demo",
-  "version": "0.3.1",
+  "version": "1.1.0",
   "description": "Ionic-Headless-Drupal-Demo: An Ionic project that demonstrates the client side use of Drupals services 3.x module",
   "dependencies": {
     "gulp": "^3.5.6",
