@@ -36,7 +36,7 @@
       loadMore: loadMore,
       saveArtilce: saveArtilce,
       deleteArticle: deleteArticle
-    };
+    }
 
     return articleFeedService;
 
@@ -64,13 +64,13 @@
       );
 
       return defer.promise;
-    };
+    }
 
 
     //prepare article after fetched from server
     function prepareArticle(article) {
       angular.forEach(article.field_image.und, function (value, key) {
-
+console.log(article.field_image.und[key].uri.split('//'));
         article.field_image.und[key].imgPath = DrupalHelperService.getPathToImgByStyle(DrupalApiConstant.imageStyles.medium) + article.field_image.und[key].uri.split('//')[1];
         article.nid = parseInt(article.nid);
       });
@@ -78,7 +78,7 @@
       article.nid = parseInt(article.nid);
 
       return article;
-    };
+    }
 
     //returns all articles
     //@TODO implement exposed filters for request and cache like in get
@@ -179,7 +179,7 @@
         .then(
         function (response) {
           if (response.data.length != 0) {
-            articles = DrupalHelperService.mergeItems(response.data, articles, undefined, prepareArticle);
+            articles = mergeItems(response.data, articles, undefined, prepareArticle);
           }
 
           if (response.data.length == 0) {
@@ -187,7 +187,7 @@
             paginationOptions.pageLast = viewsOptions.page;
             paginationOptions.maxPage = viewsOptions.page;
           }
-          //articles = DrupalHelperService.mergeItems(response.data, articles, undefined, prepareArticle);
+
           defer.resolve(articles);
         }
       )
@@ -258,6 +258,40 @@
 
     function deleteArticle(article) {
       return NodeResource.delete(article);
+    }
+
+    function mergeItems(newItems, currentItems , type, callback) {
+
+      callback = (typeof(callback) === "function")?callback:function(obj) {return obj;};
+
+      if(!type) {
+        var uniqueNodes = [];
+        var isUnique;
+        angular.forEach(newItems, function(newItems) {
+          isUnique = true;
+          angular.forEach(currentItems, function(currentItem, key) {
+            if(newItems.nid == currentItem.nid) { isUnique = false; }
+          }, isUnique);
+
+          if(isUnique) {
+            uniqueNodes.push(callback(newItems));
+          }
+        }, uniqueNodes);
+
+        currentItems =  uniqueNodes.concat(currentItems);
+
+        return currentItems;
+      }
+      else {
+        angular.forEach(newItems, function(newItem) {
+          //@TODO add this to if => || currentItems[newItem[type]].updated > newItem.updated
+          if(!currentItems[newItem[type]] ) {
+            currentItems[parseInt(newItem[type])] = callback(newItem);
+          }
+
+        });
+        return currentItems;
+      }
     };
 
 
