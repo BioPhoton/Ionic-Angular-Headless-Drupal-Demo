@@ -1,6 +1,6 @@
 # Angular Drupal7 Services Ionic Demo
 
-####Deom of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services) in combination with the [Ionic SDK](https://github.com/driftyco/ionic)
+####Demo of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services) in combination with the [Ionic SDK](https://github.com/driftyco/ionic)
 
 This demo covers Authentication, CRUD operations on Nodes and Image upload from device camera.  
 
