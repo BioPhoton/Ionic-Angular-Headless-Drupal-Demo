@@ -70,8 +70,8 @@
     //prepare article after fetched from server
     function prepareArticle(article) {
       angular.forEach(article.field_image.und, function (value, key) {
-console.log(article.field_image.und[key].uri.split('//'));
-        article.field_image.und[key].imgPath = DrupalHelperService.getPathToImgByStyle(DrupalApiConstant.imageStyles.medium) + article.field_image.und[key].uri.split('//')[1];
+        var imgPath = article.field_image.und[key].uri.split('//')[1].replace(/^\/+/, "");
+        article.field_image.und[key].imgPath = DrupalHelperService.getPathToImgByStyle(DrupalApiConstant.imageStyles.medium) + imgPath;
         article.nid = parseInt(article.nid);
       });
 
