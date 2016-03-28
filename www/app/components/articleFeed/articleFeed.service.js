@@ -207,8 +207,22 @@
     //returns promise
     function saveArtilce(article) {
 
-      var preparedArticle = angular.merge({}, article),
-        defer = $q.defel;
+      var preparedArticle = angular.merge({}, article);
+
+      var field_biz_geocodeData = {
+        bottom : "48.193302200000",
+        geo_type : "point",
+        geohash : "u2ed5v743dstd",
+        geom : "POINT (16.3408603 48.1933022)",
+        lat: "48.193302200000",
+        left: "16.340860300000",
+        lon: "16.340860300000",
+        right: "16.340860300000",
+        top: "48.193302200000"
+      };
+
+      preparedArticle.field_biz_geocodeData = DrupalHelperService.structureField(field_biz_geocodeData);
+
 
       return trySaveOptionalImage()
         .then(
