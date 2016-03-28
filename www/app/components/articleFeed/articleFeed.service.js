@@ -69,13 +69,15 @@
 
     //prepare article after fetched from server
     function prepareArticle(article) {
-      angular.forEach(article.field_image.und, function (value, key) {
-        var imgPath = article.field_image.und[key].uri.split('//')[1].replace(/^\/+/, "");
-        article.field_image.und[key].imgPath = DrupalHelperService.getPathToImgByStyle(DrupalApiConstant.imageStyles.medium) + imgPath;
-        article.nid = parseInt(article.nid);
-      });
+      if("field_image" in article && "und" in article.field_image) {
+        angular.forEach(article.field_image.und, function (value, key) {
 
-      article.nid = parseInt(article.nid);
+          var imgPath = article.field_image.und[key].uri.split('//')[1].replace(/^\/+/, "");
+          article.field_image.und[key].imgPath = DrupalHelperService.getPathToImgByStyle(DrupalApiConstant.imageStyles.medium) + imgPath;
+          article.nid = parseInt(article.nid);
+        });
+
+      }
 
       return article;
     }
