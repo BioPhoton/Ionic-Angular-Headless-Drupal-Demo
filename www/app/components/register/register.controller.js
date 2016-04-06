@@ -71,9 +71,6 @@
               if (errorResult.status == 404) {
                 vm.serverErrors.push("Service not available!");
               }
-              else if (errorResult.status == 403) {
-                vm.serverErrors.push(errorResult.data[0]);
-              }
               //Not Acceptable
               else if (errorResult.status == 406) {
                 //errors for specific fields
@@ -92,9 +89,12 @@
               }
               //400 - 500 default message
               else {
-                vm.serverErrors.push(errorResult.statusText);
+                vm.serverErrors.push(errorResult.data[0]);
               }
+
             }
+
+
 
           }
         )
