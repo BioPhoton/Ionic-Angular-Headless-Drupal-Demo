@@ -69,7 +69,6 @@
               if (errorResult.status == 404) {
                 vm.serverErrors.push("Service not available!");
               }
-
               else if (errorResult.status == 403) {
                 vm.serverErrors.push(errorResult.data[0]);
               }
