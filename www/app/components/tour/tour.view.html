@@ -12,71 +12,105 @@
   </ion-nav-bar>
 
 
-<ion-pane>
+  <ion-pane>
 
-    <ion-slides  drag-content="false" class="ion-slides has-header"  options="tour.options" slider="tour.data.slider">
+    <ion-slides drag-content="false" class="ion-slides has-header" options="tour.options" slider="tour.data.slider">
       <ion-slide-page>
         <h1>NG Drupal7 Services</h1>
+
         <p>Native app usecases with angular, ionic and cordova</p>
       </ion-slide-page>
 
       <ion-slide-page>
         <h1>Detecting first visit</h1>
+
         <p>First visti flag is stored on device and skips tour on second fisit automatically</p>
       </ion-slide-page>
 
       <ion-slide-page>
         <h1>Registration and redirects</h1>
-        <p>Registered flag is stored on device and redirects if  the user is already registered</p>
+
+        <p>Registered flag is stored on device and redirects if the user is already registered</p>
+        <br/>
+        <p>The registration it self detects following results:</p>
+        <ul>
+          <li>401 => Unauthorized (is this even possible?)</li>
+          <li>404 => Not found : Could not find the controlle (custom message "Service not available")</li>
+          <li>406 => Not Acceptable : 406 Not Acceptable
+            <ul>
+              <li>name-taken => The name test_registration_valid is already taken.</li>
+              <li>email-taken => The e-mail address test_registration_valid@test.at is already registered. Have you
+                forgotten your password?.
+              </li>
+            </ul>
+          </li>
+        <li>403 => Forbidden
+          <ul>
+            <li>The username test_registration_valid has not been activated or is blocked.</li>
+            <li>Access denied for user test (try register as logged in authed user)</li>
+          </ul>
+        </li>
+        </ul>
+
       </ion-slide-page>
 
       <ion-slide-page>
         <h1>Easy to implement Authentication</h1>
+
         <p>Authentication is done over a Authentication Service for simplifying the workflow</p>
       </ion-slide-page>
 
       <ion-slide-page>
         <h1>Client and server validation for forms</h1>
-        <p>Form are setup with  with ngMessages directive and handles server side error messages</p>
+
+        <p>Form are setup with with ngMessages directive and handles server side error messages</p>
       </ion-slide-page>
 
       <ion-slide-page>
         <h1>Reauthentication on app start</h1>
+
         <p>On app start the authentication state gets refreshed and become either authed or not</p>
       </ion-slide-page>
 
       <ion-slide-page>
         <h1>Content feed</h1>
+
         <p>Nodes are listed over a view that implements refresh and infinite scroll functionality.</p>
       </ion-slide-page>
 
       <ion-slide-page>
         <h1>CRUD operations</h1>
+
         <p>Nodes can be created edited and deleted</p>
       </ion-slide-page>
 
       <ion-slide-page>
         <h1>Camera usage</h1>
-        <p>Take images over the devices camera (or <a href="https://github.com/pbernasconi/chrome-cordova">cordova mocks plugin</a> on chrome) and upload attache them to a node.</p>
+
+        <p>Take images over the devices camera (or <a href="https://github.com/pbernasconi/chrome-cordova">cordova mocks
+          plugin</a> on chrome) and upload attache them to a node.</p>
       </ion-slide-page>
 
       <ion-slide-page>
         <h1>Restrictions by role</h1>
+
         <p>CRUD operations are restricted over the user roles</p>
       </ion-slide-page>
 
       <ion-slide-page>
         <h1>Route access</h1>
+
         <p>Handle route access over access levels and roles</p>
       </ion-slide-page>
 
       <ion-slide-page>
         <h1>Easy to use directives</h1>
+
         <p>For now a validation helper and a ui-interactor directive are provided</p>
       </ion-slide-page>
 
     </ion-slides>
 
-</ion-pane>
+  </ion-pane>
 
 </ion-view>

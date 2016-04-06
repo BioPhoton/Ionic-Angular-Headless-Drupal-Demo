@@ -21,7 +21,6 @@
         var validation = attrs.setValidAfterChange;
 
         ngModelCtrl.$parsers.unshift(function (value) {
-          console.log(value);
           if (ngModelCtrl.$invalid) {
             if (value) {
               ngModelCtrl.$setValidity(validation, true);

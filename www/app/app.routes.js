@@ -142,7 +142,7 @@
     $rootScope.$on('$locationChangeStart', locationChangeStartCallback)
 
     //state change logic
-    $rootScope.$on("$stateChangeStart", stateChangeStartCallback);
+    //$rootScope.$on("$stateChangeStart", stateChangeStartCallback);
 
     ////////////
 

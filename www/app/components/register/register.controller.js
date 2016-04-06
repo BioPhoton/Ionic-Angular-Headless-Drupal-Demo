@@ -1,5 +1,4 @@
-;
-(function () {
+;(function () {
   'use strict';
 
 
@@ -13,6 +12,8 @@
   function RegisterController($scope, UserResource, AuthenticationService, $localStorage) {
     // jshint validthis: true
     var vm = this;
+
+    vm.serverErrors = [];
 
     //data for vm.registerForm
     vm.registerData = {
@@ -39,6 +40,8 @@
 
       if (vm.registerForm.$valid) {
         vm.registerIsPending = true;
+        vm.serverErrors = [];
+
         UserResource.register(vm.registerData)
           //register
           .then(
@@ -61,13 +64,36 @@
         )
           .catch(
           function (errorResult) {
-            vm.registerServerErrors = errorResult.data.form_errors;
 
-            if (errorResult.data.form_errors.name) {
-              vm.registerForm.name.$setValidity('name-taken', false);
-            }
-            if (errorResult.data.form_errors.mail) {
-              vm.registerForm.mail.$setValidity('email-taken', false);
+
+            if (errorResult.status >= 400 && errorResult.status < 500) {
+              //Not found
+              if (errorResult.status == 404) {
+                vm.serverErrors.push("Service not available!");
+              }
+              else if (errorResult.status == 403) {
+                vm.serverErrors.push(errorResult.data[0]);
+              }
+              //Not Acceptable
+              else if (errorResult.status == 406) {
+                //errors for specific fields
+                if (angular.isObject(errorResult.data) && 'form_errors' in errorResult.data) {
+                  if (errorResult.data.form_errors.name) {
+                    vm.registerForm.name.$setValidity('name-taken', false);
+                  }
+                  if (errorResult.data.form_errors.mail) {
+                    vm.registerForm.mail.$setValidity('email-taken', false);
+                  }
+                }
+                //general errors
+                else {
+                  vm.serverErrors.push(errorResult.statusText);
+                }
+              }
+              //400 - 500 default message
+              else {
+                vm.serverErrors.push(errorResult.statusText);
+              }
             }
 
           }
@@ -79,9 +105,9 @@
         );
       }
 
-    };
+    }
 
 
-  };
+  }
 
 })();

@@ -69,13 +69,15 @@
 
     //prepare article after fetched from server
     function prepareArticle(article) {
-      angular.forEach(article.field_image.und, function (value, key) {
-        var imgPath = article.field_image.und[key].uri.split('//')[1].replace(/^\/+/, "");
-        article.field_image.und[key].imgPath = DrupalHelperService.getPathToImgByStyle(DrupalApiConstant.imageStyles.medium) + imgPath;
-        article.nid = parseInt(article.nid);
-      });
+      if("field_image" in article && "und" in article.field_image) {
+        angular.forEach(article.field_image.und, function (value, key) {
 
-      article.nid = parseInt(article.nid);
+          var imgPath = article.field_image.und[key].uri.split('//')[1].replace(/^\/+/, "");
+          article.field_image.und[key].imgPath = DrupalHelperService.getPathToImgByStyle(DrupalApiConstant.imageStyles.medium) + imgPath;
+          article.nid = parseInt(article.nid);
+        });
+
+      }
 
       return article;
     }
@@ -205,8 +207,22 @@
     //returns promise
     function saveArtilce(article) {
 
-      var preparedArticle = angular.merge({}, article),
-        defer = $q.defel;
+      var preparedArticle = angular.merge({}, article);
+
+      var field_biz_geocodeData = {
+        bottom : "48.193302200000",
+        geo_type : "point",
+        geohash : "u2ed5v743dstd",
+        geom : "POINT (16.3408603 48.1933022)",
+        lat: "48.193302200000",
+        left: "16.340860300000",
+        lon: "16.340860300000",
+        right: "16.340860300000",
+        top: "48.193302200000"
+      };
+
+      preparedArticle.field_biz_geocodeData = DrupalHelperService.structureField(field_biz_geocodeData);
+
 
       return trySaveOptionalImage()
         .then(

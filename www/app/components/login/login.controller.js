@@ -12,6 +12,8 @@
     // jshint validthis: true
     var vm = this;
 
+    vm.serverErrors = [];
+
     //data for vm.loginForm
     vm.loginData = {
       username: 'basic-user',
@@ -33,20 +35,25 @@
     function doLogin() {
       if (vm.loginForm.$valid) {
         vm.loginIsPending = true;
+        vm.serverErrors = [];
 
         AuthenticationService.login(vm.loginData)
           .then(
           function (data) {
-            vm.loginIsPending = false;
             $scope.app.resetForm(vm.loginForm);
             $scope.app.$state.go('app.profile');
           },
           //error
           function (errorResult) {
-            vm.loginIsPending = false;
-            vm.loginForm.username.$setValidity('inactive-or-blocked', false);
+            if (errorResult.status >= 400 && errorResult.status < 500) {
+                vm.serverErrors.push(errorResult.data[0]);
+            }
+            else {
+              vm.serverErrors.push(errorResult.statusText);
+            }
+
           }
-        );
+        ).finally(function() { vm.loginIsPending = false; });
 
       }
 
