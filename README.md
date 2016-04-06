@@ -1,4 +1,4 @@
-# Angular Drupal7 Services Ionic Demo
+# Ionic Drupal 7 Services Example/Demo
 
 ####Demo of [Angular Drupal7 Services](https://github.com/BioPhoton/ng-drupal-7-services) in combination with the [Ionic SDK](https://github.com/driftyco/ionic)
 
