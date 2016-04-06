@@ -14,16 +14,14 @@ var paths = {
 gulp.task('default', ['sass']);
 
 gulp.task('sass', function(done) {
-	
+
   gulp.src(paths.sass)
     .pipe(sass({
       errLogToConsole: true
     }))
     .pipe(concat('ionic.app.css'))
     .pipe(gulp.dest('www/assets/css/'))
-    .pipe(minifyCss({
-      keepSpecialComments: 0
-    }))
+    .pipe(minifyCss({keepSpecialComments: 0}))
     .pipe(rename({ extname: '.min.css' }))
     .pipe(gulp.dest('www/assets/css/'))
     .on('end', done);
@@ -37,7 +35,7 @@ gulp.task('move-images', function() {
 	gulp.src(imgFrom)
      	.pipe(gulp.dest(imgTo))
      	.on('end', function(){  gutil.log(gutil.colors.green('moved image from '+imgFrom+' to '+imgTo)); });
-  
+
 });
 
 gulp.task('watch', function() {

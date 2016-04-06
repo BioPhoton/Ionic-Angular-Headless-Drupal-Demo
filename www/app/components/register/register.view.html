@@ -10,6 +10,9 @@
 
       <div class="list list-inset">
 
+        <div class="form-errors" ng-show="register.registerForm.$submitted">
+          <div class="form-error" ng-bind-html="error" ng-repeat="error in register.serverErrors track by $index"></div>
+        </div>
 
         <label class="item item-input"
                ng-class="{ 'has-error':  register.registerForm.name.$touched &&  register.registerForm.name.$invalid

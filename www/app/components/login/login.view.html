@@ -9,7 +9,7 @@
       <div class="list list-inset">
 
         <div class="form-errors" ng-show="login.loginForm.$submitted">
-          <div class="form-error" ng-bind-html="error" ng-repeat="error in loginServerErrors"></div>
+          <div class="form-error" ng-bind-html="error" ng-repeat="error in login.serverErrors track by $index"></div>
         </div>
 
         <label class="item item-input"
