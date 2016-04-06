@@ -35,6 +35,7 @@
     function doLogin() {
       if (vm.loginForm.$valid) {
         vm.loginIsPending = true;
+        vm.serverErrors = [];
 
         AuthenticationService.login(vm.loginData)
           .then(

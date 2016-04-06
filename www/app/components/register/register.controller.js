@@ -40,6 +40,8 @@
 
       if (vm.registerForm.$valid) {
         vm.registerIsPending = true;
+        vm.serverErrors = [];
+
         UserResource.register(vm.registerData)
           //register
           .then(
